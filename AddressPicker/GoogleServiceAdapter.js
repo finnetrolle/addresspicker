@@ -29,7 +29,7 @@ define([
                 sensor: this.defaults.params.sensor,
                 language: this.defaults.params.language,
                 bounds: this.defaults.params.bounds,
-                address: this.addressText
+                address: addressText
             }
         },
 
@@ -43,6 +43,18 @@ define([
         },
 
         convertToEsriAddressObject: function(address) {
+
+            function createEsriBounds(googleBounds, googleLatLng) {
+                var bounds = new L.LatLngBounds();
+                if (googleBounds) {
+                    bounds.extend(googleBounds.northeast);
+                    bounds.extend(googleBounds.southwest);
+                    return bounds;
+                }
+                bounds.extend(googleLatLng);
+                return bounds;
+            };
+
             return {
                 text: address.text,
                 bounds: createEsriBounds(address.bounds, address.latlng),
@@ -89,16 +101,7 @@ define([
                 };
             };
 
-            function createEsriBounds(googleBounds, googleLatLng) {
-                var bounds = new L.LatLngBounds();
-                if (googleBounds) {
-                    bounds.extend(googleBounds.northeast);
-                    bounds.extend(googleBounds.southwest);
-                    return bounds;
-                }
-                bounds.extend(googleLatLng);
-                return bounds;
-            };
+
 
 
         }

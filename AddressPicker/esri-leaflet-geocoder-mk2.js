@@ -21,18 +21,11 @@
 
         initialize: function (url, options) {
             this.url = adapter.getUrl();
-//            this.url = "http://maps.googleapis.com/maps/api/geocode/";
         },
 
         geocode: function(text, opts, callback, context) {
-            params = {
-                address: text,
-                sensor: false,
-                language: 'ru',
-                bounds: '58,27|62,36'
-            };
-            //&sensor=false&language=ru&bounds=58,27|62,36
-            this.get("json", params, function(error, response){
+            this.get("json", adapter.getParams(text), function(error, response){
+            //this.get("json", params, function(error, response){
                 if(error) {
                     callback.call(context, error);
                 } else {
@@ -47,14 +40,7 @@
         },
 
         reverse: function(latlng, opts, callback, context) {
-            var params = {
-                latlng: latlng.lat + "," + latlng.lng,
-                sensor: false,
-                language: 'ru',
-                bounds: '58,27|62,36'
-            };
-//            params.location = [latlng.lng, latlng.lat].join(',');
-            this.get('json', params, function(error, response){
+            this.get('json', adapter.getParamsReverse(latlng), function(error, response){
                 if(error) {
                     callback.call(context, error);
                 } else {
@@ -77,79 +63,11 @@
         },
 
         suggest: function(text, opts, callback, context) {
-//            var params = opts || {};
-//            var params = opts || {};
-//            params.text = text;
-//            this.get("http://maps.googleapis.com/maps/api/geocode/json", {address: text}, callback, context);
-            var params = {
-                address: text,
-                sensor: false,
-                language: 'ru',
-                bounds: '58,27|62,36'
-            };
-            this.get("json", params, callback, context);
-
+            this.get("json", adapter.getParams(text), callback, context);
         },
 
         _processResult: function(text, result) {
-
-            function parseGoogleAddressComponent(addressComponent) {
-                return {
-                    type: addressComponent.types[0],
-                    long: addressComponent.long_name,
-                    short: addressComponent.short_name,
-
-                    toString: function () {
-                        return this.long;
-                    }
-                };
-            }
-
-            var addressComponents = result.address_components;
-            var address = {};
-            for (var i = 0; i < addressComponents.length; ++i) {
-                var acomp = parseGoogleAddressComponent(addressComponents[i]);
-                address[acomp.type] = acomp;
-            }
-            address.latlng = result.geometry.location;
-            address.text = result.formatted_address;
-            if ("bounds" in result.geometry)
-                address.bounds = result.geometry.bounds;
-
-            if ("route" in address) {
-                address.routeAndBuilding = address.route;
-                if ("street number" in address)
-                    address.routeAndBuilding += " " + address.street_number;
-            }
-
-
-
-//            var attributes = result.feature.attributes;
-//            var bounds = L.esri.Util.extentToBounds(result.extent);
-//
-            function createEsriBounds(googleBounds, googleLatLng) {
-                var bounds = new L.LatLngBounds();
-                if (googleBounds) {
-                    bounds.extend(googleBounds.northeast);
-                    bounds.extend(googleBounds.southwest);
-                    return bounds;
-                }
-                bounds.extend(googleLatLng);
-                return bounds;
-            }
-
-            return {
-                text: address.text,
-                bounds: createEsriBounds(address.bounds, address.latlng),
-                latlng: new L.LatLng(address.latlng.lat, address.latlng.lng),
-                name: '[Name]',
-                match: '[Match]',
-                country: ("country" in address) ? address.country : "" ,
-                region: ("administrative_area_level_1" in address) ? address.administrative_area_level_1 : "",
-                subregion: ("administrative_area_level_2" in address) ? address.administrative_area_level_2 : "",
-                city: ("locality" in address) ? address.locality : "",
-                address: ("routeAndBuilding" in address) ? address.routeAndBuilding : ''
-            };
+            return adapter.convertToEsriAddressObject(adapter.parseResult(result));
         }
     });
 
@@ -293,16 +211,6 @@
                 if(results && results.length) {
                     var bounds = new L.LatLngBounds();
                     var i;
-
-//
-//                    for (i = results.length - 1; i >= 0; i--) {
-//                        if ("northeast" in results[i].bounds) {
-//                            bounds.extend(results[i].bounds.northeast);
-//                            bounds.extend(results[i].bounds.southwest);
-//                        } else {
-//                            bounds.extend(results[i].latlng);
-//                        }
-//                    }
 
                     for (i = results.length - 1; i >= 0; i--) {
                         bounds.extend(results[i].bounds);
