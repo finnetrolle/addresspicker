@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Load Leaflet from CDN-->
+    <link rel="stylesheet" href="leaflets/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css">
+
+
+    <style>
+        #basemaps-wrapper {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            padding: 3px;
+            height: 25px;
+        }
+
+        #address-searcher {
+            position: absolute;
+            width: 80%;
+            top: 10px;
+            left: 50px;
+            z-index: 10;
+            padding: 3px;
+            height: 25px;
+        }
+
+        #searchLineEdit {
+            width: 99.5%;
+
+        }
+
+        html, body, #map {
+            width: 90%;
+            height: 90%;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+        }
+
+        .row {
+            margin-bottom: 4px;
+        }
+
+
+    </style>
+
+
+
+</head>
+<body>
+
+
+
+
+
+
+    <script>
+        var dojoConfig = {
+            async: true,
+            packages: [{
+                name: "MapDecorator",
+                location: location.pathname.replace(/\/[^/]*$/, '') + '/AddressPicker'
+            },{
+                name: "esri-leaflet",
+                location: location.pathname.replace(/\/[^/]*$/, '') + ''
+            }]
+        };
+    </script>
+    <!-- load Dojo -->
+    <script src="dojo/dojo.js"></script>
+
+
+
+
+    <script>
+        require([
+            'AddressPicker/MapDecorator'
+        ], function (MapDecorator) {
+            var mapDecorator = new MapDecorator();
+            mapDecorator.initMap('http://gis-node-1.atr-sz.ru/arcgis/rest/services/BaseMaps/OSMapBase/MapServer');
+            mapDecorator.initBasemapsList('basemaps');
+        });
+    </script>
+
+
+
+    <div id="map">
+
+        <div id="basemaps-wrapper" class="leaflet-bar">
+            <select name="basemaps" id="basemaps">
+                <option value="http://gis-node-1.atr-sz.ru/arcgis/rest/services/BaseMaps/OSMapBase/MapServer">Open Street Map</option>
+                <option value="http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">Google</option>
+            </select>
+        </div>
+    </div>
+
+
+</body>
+</html>
