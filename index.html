@@ -31,6 +31,10 @@
 
         }
 
+        .infoInput {
+            width: 300px;
+        }
+
         html, body, #map {
             width: 90%;
             height: 90%;
@@ -97,6 +101,18 @@
                 <option value="http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">Google</option>
             </select>
         </div>
+    </div>
+
+    <div id="infoWindow">
+        <input class="infoInput" type="text" id="icountry" value="undefined"><br>
+        <input class="infoInput" type="text" id="iregion" value="undefined"><br>
+        <input class="infoInput" type="text" id="isubregion" value="undefined"><br>
+        <input class="infoInput" type="text" id="icity" value="undefined"><br>
+        <input class="infoInput" type="text" id="iaddress" value="undefined"><br>
+        <input class="infoInput" type="text" id="igeocodeLevel" value="undefined"><br>
+        <input class="infoInput" type="text" id="ilatlng" value="undefined"><br>
+        <input class="infoInput" type="text" id="itext" value="undefined"><br>
+        <input type="button" id="ibutton" value="nothing to save" disabled>
     </div>
 
 

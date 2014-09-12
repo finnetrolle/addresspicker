@@ -6,8 +6,9 @@ define([
     'dojo/dom',
     'dojo/on',
     'leaflets/leaflet',
+    'AddressPicker/GeocodedObject',
     'dojo/domReady!'
-], function(declare, dom, on, leaflet){
+], function(declare, dom, on, leaflet, GeocodedObject){
 
     return declare(null, {
 
@@ -37,9 +38,26 @@ define([
             return {
                 sensor: this.defaults.params.sensor,
                 language: this.defaults.params.language,
-                bounds: this.defaults.params.bounds,
                 latlng: latlng.lat + "," + latlng.lng
             }
+        },
+
+        createEsriAddressObject: function(address) {
+            this.obj = null;
+            var geocodedObject = new GeocodedObject();
+            geocodedObject.setText(address.text);
+            geocodedObject.setLatLng(address.latlng.lat, address.latlng.lng);
+            (address.bounds)
+                ? geocodedObject.setBounds(address.bounds.northeast, address.bounds.southwest)
+                : geocodedObject.setBounds(address.latlng, address.latlng);
+            geocodedObject.setAddress(
+                (address.country) ? address.country.toString() : null,
+                (address.administrative_area_level_1) ? address.administrative_area_level_1.toString() : null,
+                (address.administrative_area_level_2) ? address.administrative_area_level_2.toString() : null,
+                (address.locality) ? address.locality.toString() : null,
+                (address.route) ? address.route.toString() : null,
+                (address.street_number) ? address.street_number.toString() : null);
+            return geocodedObject;
         },
 
         convertToEsriAddressObject: function(address) {
@@ -61,11 +79,11 @@ define([
                 latlng: new L.LatLng(address.latlng.lat, address.latlng.lng),
                 name: '[Name]',
                 match: '[Match]',
-                country: ("country" in address) ? address.country : "" ,
-                region: ("administrative_area_level_1" in address) ? address.administrative_area_level_1 : "",
-                subregion: ("administrative_area_level_2" in address) ? address.administrative_area_level_2 : "",
-                city: ("locality" in address) ? address.locality : "",
-                address: ("routeAndBuilding" in address) ? address.routeAndBuilding : ''
+                country: ("country" in address) ? address.country.toString() : "" ,
+                region: ("administrative_area_level_1" in address) ? address.administrative_area_level_1.toString() : "",
+                subregion: ("administrative_area_level_2" in address) ? address.administrative_area_level_2.toString() : "",
+                city: ("locality" in address) ? address.locality.toString() : "",
+                address: ("routeAndBuilding" in address) ? address.routeAndBuilding.toString() : ''
             };
         },
 

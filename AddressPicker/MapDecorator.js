@@ -7,8 +7,9 @@ define([
     'dojo/on',
     'leaflets/leaflet',
     'AddressPicker/GoogleServiceAdapter',
+    'AddressPicker/GeocodedObject',
     'dojo/domReady!'
-], function(declare, dom, on, leaflet){
+], function(declare, dom, on, leaflet, GeocodedObject){
 
     // This returned object becomes the defined value of this module
     return declare(null, {
@@ -21,6 +22,7 @@ define([
         map: null,
         layer: null,
         basemaps: null,
+        geocodedObject: null,
 
         initMap: function (defaultLayerLink) {
             var o = this.centerPoint;
@@ -33,32 +35,47 @@ define([
                         self.layer = L.esri.tiledMapLayer(defaultLayerLink);
                         self.map.addLayer(self.layer);
 
-                                            var searchControl = new L.esri.Controls.Geosearch({url:'http://www.ru'}).addTo(self.map);
-                                            var results = new L.LayerGroup().addTo(self.map);
-                                            searchControl.on('results', function(data){
-                                                console.log('results');
-                                                console.log(data);
-                                                results.clearLayers();
-                                                for (var i = data.results.length - 1; i >= 0; i--) {
-                                                    results.addLayer(L.marker(data.results[i].latlng));
-                                                }
-                                            });
-
-                        self.map.on('click', function(e){
-                            searchControl._service.reverse(e.latlng, {}, function(error, result){
-                                L.marker(result.latlng).addTo(map).bindPopup(result.address).openPopup();
-                            });
+                        var searchControl = new L.esri.Controls.Geosearch({url:'http://www.ru'}).addTo(self.map);
+                        var results = new L.LayerGroup().addTo(self.map);
+                        searchControl.on('results', function(data){
+                            results.clearLayers();
+                            for (var i = data.results.length - 1; i >= 0; i--) {
+                                results.addLayer(L.marker(data.results[i].latlng));
+                            }
+                            this.geocodedObject = data.results[0];
+                            if (self.geocodedObject)
+                                self.fillInfo(self.geocodedObject);
                         });
 
-//                        var sc = new L.Control.GeoSearch({
-//                            provider: new L.GeoSearch.Provider.Google()
-//                        }).addTo(self.map);
-//                    })
+                        self.map.on('click', function(e){
+                            searchControl._service.reverse(e.latlng, {}, function(error, result, response){
+                                var A = e.latlng;
+                                var B = result.latlng;
+                                var poly = L.polygon([[A.lat, A.lng],[B.lat, B.lng]]).addTo(self.map);
+                                poly.bindPopup("azaza");
+                                L.marker(e.latlng).addTo(self.map).bindPopup(result.text).openPopup();
+                                self.geocodedObject = result;
+                                if (self.geocodedObject)
+                                    self.fillInfo(self.geocodedObject);
+                            }, this);
+                        });
                 })
             })
 
 
 
+        },
+
+        fillInfo: function(o) {
+            dom.byId("icountry").value = o.country;
+            dom.byId("iregion").value = o.region;
+            dom.byId("isubregion").value = o.subregion;
+            dom.byId("icity").value = o.city;
+            dom.byId("iaddress").value = o.address;
+            dom.byId("igeocodeLevel").value = o.geocodeLevel;
+            dom.byId("ilatlng").value = o.latlng;
+            dom.byId("itext").value = o.text;
+            dom.byId("ibutton").disabled = !o.isSuccessfullyGeocoded();
         },
 
         initBasemapsList: function (baseMapsId) {

@@ -44,20 +44,15 @@
                 if(error) {
                     callback.call(context, error);
                 } else {
+                    var error = null;
                     console.log(response);
-                    var address = response.address;
-                    var result = {
-                        latlng: new L.LatLng(response.location.y, response.location.x),
-                        address: address.Address,
-                        neighborhood: address.Neighborhood,
-                        city: address.City,
-                        subregion: address.Subregion,
-                        region: address.Region,
-                        postal: address.Postal,
-                        postalExt: address.PostalExt,
-                        countryCode: address.CountryCode
-                    };
-                    callback.call(context, error, result, response);
+                    // get only first result
+                    if (response.results.length > 0) {
+                        var address = adapter.parseResult(response.results[0]);
+//                        var result = adapter.convertToEsriAddressObject(address);
+                        var result = adapter.createEsriAddressObject(address);
+                        callback.call(context, error, result, response);
+                    }
                 }
             }, this);
         },
@@ -67,7 +62,8 @@
         },
 
         _processResult: function(text, result) {
-            return adapter.convertToEsriAddressObject(adapter.parseResult(result));
+            return adapter.createEsriAddressObject(adapter.parseResult(result));
+//            return adapter.convertToEsriAddressObject(adapter.parseResult(result));
         }
     });
 
