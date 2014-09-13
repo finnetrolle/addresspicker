@@ -6,7 +6,8 @@ define([
     'dojo/domReady!'
 ], function(declare){
     return declare(null, {
-        serviceAdapter: 'AddressPicker/YandexServiceAdapter',
+//        serviceAdapter: 'AddressPicker/YandexServiceAdapter',
+        serviceAdapter: 'AddressPicker/GoogleServiceAdapter',
         minimumLetters: 3,
         basemapLayers: [
             {
