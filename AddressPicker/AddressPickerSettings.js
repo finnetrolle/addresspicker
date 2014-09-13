@@ -6,16 +6,22 @@ define([
     'dojo/domReady!'
 ], function(declare){
     return declare(null, {
-//        serviceAdapter: 'AddressPicker/YandexServiceAdapter',
-        serviceAdapter: 'AddressPicker/GoogleServiceAdapter',
+        serviceAdapter: 'AddressPicker/YandexServiceAdapter',
+//        serviceAdapter: 'AddressPicker/GoogleServiceAdapter',
         minimumLetters: 3,
         basemapLayers: [
             {
+                link: "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+                name: "Satellite"
+            },
+            {
                 link: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/BaseMaps/OSMapBase/MapServer",
-                name: "Open Street Map"},
+                name: "Open Street Map"
+            },
             {
                 link: "http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
-                name: "Some other map"}
+                name: "Some other map"
+            }
         ],
         centerPoint: {
             longitude: 30.3279556,
