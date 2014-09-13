@@ -31,6 +31,12 @@ define([
             this.bounds.extend(southwest);
         },
 
+        setBoundsLatLng: function(lat1, lon1, lat2, lon2) {
+            var A = new L.LatLng(lat1, lon1);
+            var B = new L.LatLng(lat2, lon2);
+            this.setBounds(A, B);
+        },
+
         setLatLng: function(latitude, longitude) {
             this.latlng = new L.LatLng(latitude, longitude);
         },
@@ -68,6 +74,18 @@ define([
                 }
             }
         },
+
+        getExpectingAddressFields: function() {
+            var a = [];
+            if (this.country) a.push('Country');
+            if (this.region) a.push('Region');
+            if (this.subregion) a.push('Subregion');
+            if (this.city) a.push('City');
+            if (this.route) a.push('Route');
+            if (this.street_number) a.push('Street number');
+            return a;
+        },
+
 
         isValid: function() {
             if (this.latlng !== null)

@@ -4,53 +4,72 @@
 (function(L){
 
     var adapter = null;
+    var settings = null;
 
     require([
-        'AddressPicker/GoogleServiceAdapter'
-    ], function (GoogleServiceAdapter) {
-        adapter = new GoogleServiceAdapter();
+        'AddressPicker/AbstractServiceAdapter',
+        'AddressPicker/AddressPickerSettings'
+    ], function (ServiceAdapter, AddressPickerSettings) {
+        adapter = new ServiceAdapter();
+        settings = new AddressPickerSettings();
+        adapter.initService(settings.serviceAdapter);
     });
 
 
 
     IGITGeocoding = L.esri.Services.Service.extend({
-        statics: {
-            // some statics variables
-        },
-        includes: L.Mixin.Events,
+
+        previousSuggestResults: null,
 
         initialize: function (url, options) {
             this.url = adapter.getUrl();
         },
 
         geocode: function(text, opts, callback, context) {
-            this.get("json", adapter.getParams(text), function(error, response){
-            //this.get("json", params, function(error, response){
+            this.filterResult = null;
+            if (this.previousSuggestResults !== null) {
+                for (var i = 0; i < this.previousSuggestResults.length; ++i) {
+                    if (this.previousSuggestResults[i].text === text) {
+                        this.filterResult = this.previousSuggestResults[i];
+                    }
+                }
+            }
+
+            this.get(adapter.getQuery(), adapter.getParams(text), function(error, response){
                 if(error) {
                     callback.call(context, error);
                 } else {
                     var results = [];
-                    for (var i = response.results.length - 1; i >= 0; i--) {
-                        var result = response.results[i];
-                        results.push(this._processResult(text, result));
+                    var preResults = adapter.convertResults(response);
+                    if (this.filterResult) {
+                        for (var i = preResults.length -1; i >= 0; i--) {
+                            var result = preResults[i];
+                            if (result.text === this.filterResult.text) {
+                                results.push(result);
+                            }
+                        }
+                    } else {
+                        for (var i = preResults.length - 1; i >= 0; i--) {
+                            var result = preResults[i];
+                            results.push(result);
+                        }
                     }
+
                     callback.call(context, error, results, response);
                 }
             }, this);
         },
 
         reverse: function(latlng, opts, callback, context) {
-            this.get('json', adapter.getParamsReverse(latlng), function(error, response){
+            this.get(adapter.getQuery(), adapter.getReverseParams(latlng), function(error, response){
                 if(error) {
                     callback.call(context, error);
                 } else {
                     var error = null;
-                    console.log(response);
+                    var results = adapter.convertResults(response);
                     // get only first result
-                    if (response.results.length > 0) {
-                        var address = adapter.parseResult(response.results[0]);
-//                        var result = adapter.convertToEsriAddressObject(address);
-                        var result = adapter.createEsriAddressObject(address);
+                    if (results.length > 0) {
+                        var result = results[0];
                         callback.call(context, error, result, response);
                     }
                 }
@@ -58,100 +77,15 @@
         },
 
         suggest: function(text, opts, callback, context) {
-            this.get("json", adapter.getParams(text), callback, context);
+            this.get(adapter.getQuery(), adapter.getParams(text), callback, context);
         },
-
-        _processResult: function(text, result) {
-            return adapter.createEsriAddressObject(adapter.parseResult(result));
-//            return adapter.convertToEsriAddressObject(adapter.parseResult(result));
-        }
     });
 
     IGITgeocoding = function(options){
         return new IGITGeocoding(options);
     };
 
-    L.esri.Services.Geocoding = L.esri.Services.Service.extend({
-        statics: {
-            WorldGeocodingService: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/"
-        },
-        includes: L.Mixin.Events,
-        initialize: function (url, options) {
-            url = (typeof url === 'string') ? url : L.esri.Services.Geocoding.WorldGeocodingService;
-            options = (typeof url === 'object') ? url : options;
-            this.url = L.esri.Util.cleanUrl(url);
-            L.Util.setOptions(this, options);
-            L.esri.Services.Service.prototype.initialize.call(this, url, options);
-        },
-        geocode: function(text, opts, callback, context){
-            var defaults = {
-                outFields: 'Subregion, Region, PlaceName, Match_addr, Country, Addr_type, City, Place_addr'
-            };
-            var params = L.extend(defaults, opts);
-            params.text = text;
-            this.get("find", params, function(error, response){
-                if(error) {
-                    callback.call(context, error);
-                } else {
-                    var results = [];
-                    for (var i = response.locations.length - 1; i >= 0; i--) {
-                        var result = response.locations[i];
-                        results.push(this._processResult(text, result));
-                    }
-                    callback.call(context, error, results, response);
-                }
-            }, this);
-        },
-        reverse: function(latlng, opts, callback, context){
-            var params = opts || {};
-            params.location = [latlng.lng, latlng.lat].join(',');
-            this.get('reverseGeocode', params, function(error, response){
-                if(error) {
-                    callback.call(context, error);
-                } else {
-                    var address = response.address;
-                    var result = {
-                        latlng: new L.LatLng(response.location.y, response.location.x),
-                        address: address.Address,
-                        neighborhood: address.Neighborhood,
-                        city: address.City,
-                        subregion: address.Subregion,
-                        region: address.Region,
-                        postal: address.Postal,
-                        postalExt: address.PostalExt,
-                        countryCode: address.CountryCode
-                    };
-                    callback.call(context, error, result, response);
-                }
-            }, this);
-        },
-        suggest: function(text, opts, callback, context){
-            var params = opts || {};
-            params.text = text;
-            this.get("suggest", params, callback, context);
-        },
-        _processResult: function(text, result){
-            var attributes = result.feature.attributes;
-            var bounds = L.esri.Util.extentToBounds(result.extent);
 
-            return {
-                text: text,
-                bounds: bounds,
-                latlng: new L.LatLng(result.feature.geometry.y, result.feature.geometry.x),
-                name: attributes.PlaceName,
-                match: attributes.Addr_type,
-                country: attributes.Country,
-                region: attributes.Region,
-                subregion: attributes.Subregion,
-                city: attributes.City,
-                address: attributes.Place_addr ? attributes.Place_addr : attributes.Match_addr
-            };
-        }
-    });
-
-    L.esri.Services.geocoding = function(options){
-        return new L.esri.Services.Geocoding(options);
-    };
 
     L.esri.Controls.Geosearch = L.Control.extend({
         includes: L.Mixin.Events,
@@ -171,7 +105,8 @@
             this._service = new IGITGeocoding(options);
             this._service = new IGITGeocoding(options);
             this._service.on('authenticationrequired requeststart requestend requesterror requestsuccess', function (e) {
-                console.log(e);
+//                uncomment this string to see requests and responses
+//                console.log(e);
                 e = L.extend({
                     target: this
                 }, e);
@@ -247,29 +182,17 @@
             var options = {};
 
             this._service.suggest(text, options, function(error, response){
-                // make sure something is still in the input field before putting in suggestions.
                 if(this._input.value){
                     this._suggestions.innerHTML = "";
                     this._suggestions.style.display = "none";
 
-
-                    if (response && response.status == "OK") {
-                        this._suggestions.style.display = "block";
-                        for (var i = 0; i < response.results.length; ++i) {
-                            var suggestion = L.DomUtil.create('li', 'geocoder-control-suggestion', this._suggestions);
-                            suggestion.innerHTML = response.results[i].formatted_address;
-//                            suggestion["data-magic-key"] = response.suggestions[i].
-                        }
+                    var results = adapter.convertResults(response);
+                    this._service.previousSuggestResults = results;
+                    this._suggestions.style.display = "block";
+                    for (var i = 0; i < results.length; ++i) {
+                        var suggestion = L.DomUtil.create('li', 'geocoder-control-suggestion', this._suggestions);
+                        suggestion.innerHTML = results[i].text;
                     }
-//                    if(response && response.suggestions){
-//                        this._suggestions.style.display = "block";
-//                        for (var i = 0; i < response.suggestions.length; i++) {
-//                            console.log("ololo");
-//                            var suggestion = L.DomUtil.create('li', 'geocoder-control-suggestion', this._suggestions);
-//                            suggestion.innerHTML = response.suggestions[i].text;
-//                            suggestion["data-magic-key"] = response.suggestions[i].magicKey;
-//                        }
-//                    }
 
                     L.DomUtil.removeClass(this._input, "geocoder-control-loading");
                 }
@@ -288,7 +211,7 @@
             this._map = map;
 
             if (map.attributionControl) {
-                map.attributionControl.addAttribution('Geocoding by IGIT');
+                map.attributionControl.addAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
             }
 
             this._container = L.DomUtil.create('div', "geocoder-control" + ((this.options.expanded) ? " " + "geocoder-control-expanded"  : ""));
@@ -363,7 +286,7 @@
                 var text = (e.target || e.srcElement).value;
 
                 // require at least 2 characters for suggestions
-                if(text.length < 2) {
+                if(text.length < settings.minimumLetters) {
                     return;
                 }
 
@@ -385,7 +308,7 @@
             return this._container;
         },
         onRemove: function (map) {
-            map.attributionControl.removeAttribution('Geocoding by IGIT');
+            map.attributionControl.removeAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
         }
     });
 

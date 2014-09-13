@@ -3,58 +3,8 @@
 <head>
     <!-- Load Leaflet from CDN-->
     <link rel="stylesheet" href="leaflets/leaflet.css" />
+    <link rel="stylesheet" href="AddressPicker/AddressPicker.css" />
     <link rel="stylesheet" type="text/css" href="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css">
-
-
-    <style>
-        #basemaps-wrapper {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 10;
-            padding: 3px;
-            height: 25px;
-        }
-
-        #address-searcher {
-            position: absolute;
-            width: 80%;
-            top: 10px;
-            left: 50px;
-            z-index: 10;
-            padding: 3px;
-            height: 25px;
-        }
-
-        #searchLineEdit {
-            width: 99.5%;
-
-        }
-
-        .infoInput {
-            width: 300px;
-        }
-
-        html, body, #map {
-            width: 90%;
-            height: 90%;
-        }
-
-        label {
-            display: inline-block;
-            width: 100px;
-            text-align: right;
-        }
-
-        .row {
-            margin-bottom: 4px;
-        }
-
-
-    </style>
-
-
-
 </head>
 <body>
 
@@ -75,17 +25,13 @@
             }]
         };
     </script>
-    <!-- load Dojo -->
     <script src="dojo/dojo.js"></script>
-
-
-
-
     <script>
         require([
             'AddressPicker/MapDecorator'
         ], function (MapDecorator) {
             var mapDecorator = new MapDecorator();
+            mapDecorator.createBasemapCombobox('map');
             mapDecorator.initMap('http://gis-node-1.atr-sz.ru/arcgis/rest/services/BaseMaps/OSMapBase/MapServer');
             mapDecorator.initBasemapsList('basemaps');
         });
@@ -94,16 +40,21 @@
 
 
     <div id="map">
-
-        <div id="basemaps-wrapper" class="leaflet-bar">
-            <select name="basemaps" id="basemaps">
-                <option value="http://gis-node-1.atr-sz.ru/arcgis/rest/services/BaseMaps/OSMapBase/MapServer">Open Street Map</option>
-                <option value="http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">Google</option>
-            </select>
+        <!--<div id="basemaps-wrapper" class="leaflet-bar">-->
+            <!--<select name="basemaps" id="basemaps">-->
+                <!--<option value="http://gis-node-1.atr-sz.ru/arcgis/rest/services/BaseMaps/OSMapBase/MapServer">Open Street Map</option>-->
+                <!--<option value="http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">Google</option>-->
+            <!--</select>-->
+        <!--</div>-->
+        <div id="savebutton" class="leaflet-bar">
+            <input type="button" id="ibutton" value="Save" disabled>
+        </div>
+        <div id="alertWindow" class="leaflet-bar" style="visibility: hidden">
+            <p>In spite of fine geoposition, geocoding is falied</p>
         </div>
     </div>
 
-    <div id="infoWindow">
+    <div id="infoWindow" style="visibility: hidden">
         <input class="infoInput" type="text" id="icountry" value="undefined"><br>
         <input class="infoInput" type="text" id="iregion" value="undefined"><br>
         <input class="infoInput" type="text" id="isubregion" value="undefined"><br>
@@ -112,7 +63,7 @@
         <input class="infoInput" type="text" id="igeocodeLevel" value="undefined"><br>
         <input class="infoInput" type="text" id="ilatlng" value="undefined"><br>
         <input class="infoInput" type="text" id="itext" value="undefined"><br>
-        <input type="button" id="ibutton" value="nothing to save" disabled>
+
     </div>
 
 
