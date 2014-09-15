@@ -25,6 +25,10 @@
             this.url = adapter.getUrl();
         },
 
+        getAdapter: function() {
+            return adapter;
+        },
+
         geocode: function(text, opts, callback, context) {
             this.filterResult = null;
             if (this.previousSuggestResults !== null) {
@@ -78,7 +82,7 @@
 
         suggest: function(text, opts, callback, context) {
             this.get(adapter.getQuery(), adapter.getParams(text), callback, context);
-        },
+        }
     });
 
     IGITgeocoding = function(options){
@@ -103,7 +107,7 @@
             L.Util.setOptions(this, options);
             //this._service = new L.esri.Services.Geocoding(options);
             this._service = new IGITGeocoding(options);
-            this._service = new IGITGeocoding(options);
+
             this._service.on('authenticationrequired requeststart requestend requesterror requestsuccess', function (e) {
 //                uncomment this string to see requests and responses
 //                console.log(e);

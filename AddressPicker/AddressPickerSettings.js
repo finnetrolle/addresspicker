@@ -27,6 +27,16 @@ define([
             longitude: 30.3279556,
             latitude: 59.935885,
             zoom: 10
-        }
+        },
+        geocodingServices: [
+            {
+                link: "AddressPicker/YandexServiceAdapter",
+                name: "Yandex"
+            },
+            {
+                link: "AddressPicker/GoogleServiceAdapter",
+                name: "Google"
+            }
+        ]
     });
 });

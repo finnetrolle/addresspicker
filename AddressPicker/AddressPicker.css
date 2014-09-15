@@ -7,6 +7,15 @@
     height: 25px;
 }
 
+#geocoders-wrapper {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    z-index: 10;
+    padding: 3px;
+    height: 25px;
+}
+
 #address-searcher {
     position: absolute;
     width: 80%;
