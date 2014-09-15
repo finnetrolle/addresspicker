@@ -56,8 +56,8 @@ define([
                 require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
                     self.layer = L.esri.tiledMapLayer(self.defaultBasemapLayer);
                     self.map.addLayer(self.layer);
-                    var clayer = L.esri.tiledMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
-                    self.map.addLayer(clayer);
+//                    var clayer = L.esri.tiledMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
+//                    self.map.addLayer(clayer);
 
                     self.initBasemapLayerCombobox();
                     self.initGeocodingServiceCombobox();
