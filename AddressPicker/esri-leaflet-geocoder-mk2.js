@@ -215,7 +215,7 @@
             this._map = map;
 
             if (map.attributionControl) {
-                map.attributionControl.addAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
+//                map.attributionControl.addAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
             }
 
             this._container = L.DomUtil.create('div', "geocoder-control" + ((this.options.expanded) ? " " + "geocoder-control-expanded"  : ""));
@@ -312,7 +312,7 @@
             return this._container;
         },
         onRemove: function (map) {
-            map.attributionControl.removeAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
+//            map.attributionControl.removeAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
         }
     });
 
