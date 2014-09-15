@@ -85,9 +85,9 @@
         }
     });
 
-    IGITgeocoding = function(options){
-        return new IGITGeocoding(options);
-    };
+//    IGITgeocoding = function(options){
+//        return new IGITGeocoding(options);
+//    };
 
 
 

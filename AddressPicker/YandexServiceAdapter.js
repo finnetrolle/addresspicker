@@ -43,7 +43,7 @@ define([
             this.obj = null;
             var geocodedObject = new GeocodedObject();
             var o = address.GeoObject;
-            console.log(o);
+//            console.log(o);
 
             var latlng = o.Point.pos.split(' ');
             geocodedObject.setLatLng(latlng[1],latlng[0]); // lng first because yandex is retarded.

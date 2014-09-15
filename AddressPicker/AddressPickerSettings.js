@@ -21,6 +21,15 @@ define([
             {
                 link: "http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
                 name: "Some other map"
+            },
+            {
+                link: "http://maps.rosreestr.ru/arcgis/rest/services/BaseMaps/BaseMap/MapServer",
+                name: "Rosreestr",
+                additionalLayers: [
+                    "http://maps.rosreestr.ru/arcgis/rest/services/BaseMaps/Anno/MapServer"
+                ]
+                // idea Todo - all layers from additionalLayers array loading with baselayer
+                // idea will be fine for cadaster map
             }
         ],
         centerPoint: {

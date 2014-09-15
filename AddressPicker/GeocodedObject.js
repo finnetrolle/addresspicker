@@ -39,6 +39,10 @@ define([
             this.setBounds(A, B);
         },
 
+        setCadasterNumber: function(cadasterNumber) {
+            this.cadasterNumber = cadasterNumber;
+        },
+
         setLatLng: function(latitude, longitude) {
             this.latlng = new L.LatLng(latitude, longitude);
         },
@@ -113,7 +117,7 @@ define([
                 },
                 elements: {
                     country: this.country,
-                    cadasternumber: null,   // Todo - make cadaster filled
+                    cadasternumber: this.cadasterNumber,
                     district1: this.region,
                     district2: this.subregion,
                     index: this.postal,

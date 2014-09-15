@@ -16,13 +16,20 @@
     <script>
         var dojoConfig = {
             async: true,
-            packages: [{
-                name: "MapDecorator",
-                location: location.pathname.replace(/\/[^/]*$/, '') + '/AddressPicker'
-            },{
-                name: "esri-leaflet",
-                location: location.pathname.replace(/\/[^/]*$/, '') + ''
-            }]
+            packages: [
+                {
+                    name: "esri-leaflet",
+                    location: location.pathname.replace(/\/[^/]*$/, '') + ''
+                },
+                {
+                    name: "MapDecorator",
+                    location: location.pathname.replace(/\/[^/]*$/, '') + '/AddressPicker'
+                },
+                {
+                    name: "CadasterService",
+                    location: location.pathname.replace(/\/[^/]*$/, '') + '/AddressPicker'
+                }
+            ]
         };
     </script>
     <script src="dojo/dojo.js"></script>

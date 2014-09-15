@@ -13,6 +13,7 @@ define([
     'AddressPicker/YandexServiceAdapter',
     'AddressPicker/GeocodedObject',
     'AddressPicker/AddressPickerSettings',
+    'AddressPicker/CadasterService',
     'dojo/domReady!'
 ], function(declare
             ,dom
@@ -25,6 +26,7 @@ define([
             ,YandexServiceAdapter
             ,GeocodedObject
             ,AddressPickerSettings
+            ,CadasterService
     ){
 
     // This returned object becomes the defined value of this module
@@ -54,6 +56,8 @@ define([
                 require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
                     self.layer = L.esri.tiledMapLayer(self.defaultBasemapLayer);
                     self.map.addLayer(self.layer);
+                    var clayer = L.esri.tiledMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
+                    self.map.addLayer(clayer);
 
                     self.initBasemapLayerCombobox();
                     self.initGeocodingServiceCombobox();
@@ -83,10 +87,21 @@ define([
                         }, this);
                     });
 
+                    self.cadasterService = new CadasterService();
+                    self.cadasterService.initialize();
+//                    var r = self.cadasterService.getCadasterNumber();
+//                    console.log(r);
+
                     var button = dom.byId('ibutton');
                     button.onclick = function(){
-                        if (self.geocodedObject)
-                            alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
+                        if (self.geocodedObject) {
+                            self.cadasterService.service.getCadasterNumber(self.geocodedObject.latlng, {}, function (error, result, response) {
+                                //console.log(result);
+                                self.geocodedObject.setCadasterNumber(result);
+                                alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
+                            }, this);
+
+                        }
                     };
                 })
             })
