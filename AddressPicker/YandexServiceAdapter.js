@@ -39,6 +39,7 @@ define([
         },
 
         createEsriAddressObject: function(address) {
+//            console.log(address);
             this.obj = null;
             var geocodedObject = new GeocodedObject();
             var o = address.GeoObject;

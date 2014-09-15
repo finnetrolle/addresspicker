@@ -82,6 +82,12 @@ define([
                             }
                         }, this);
                     });
+
+                    var button = dom.byId('ibutton');
+                    button.onclick = function(){
+                        if (self.geocodedObject)
+                            alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
+                    };
                 })
             })
         },

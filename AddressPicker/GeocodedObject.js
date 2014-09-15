@@ -14,6 +14,7 @@ define([
         latlng: null,
         name: null,
         match: null,
+        postal: null,   // Todo - postal field must be filled
         country: null,      // level 1
         region: null,       // level 2
         subregion: null,    // level 3
@@ -21,6 +22,7 @@ define([
         route: null,        // level 5 - GOOGLE field
         street_number: null,// level 6 - GOOGLE field
         address: null,      // level 5 or 6 - ARCGIS field
+        cadasterNumber: null,
 
         geocodeLevel: 0,
         SUCCESSFULL_GEOCODE_LEVEL: 6,
@@ -39,6 +41,10 @@ define([
 
         setLatLng: function(latitude, longitude) {
             this.latlng = new L.LatLng(latitude, longitude);
+        },
+
+        setPostalCode: function(postal_code) {
+            this.postal = postal_code;
         },
 
         setText: function(text) {
@@ -75,18 +81,6 @@ define([
             }
         },
 
-        getExpectingAddressFields: function() {
-            var a = [];
-            if (this.country) a.push('Country');
-            if (this.region) a.push('Region');
-            if (this.subregion) a.push('Subregion');
-            if (this.city) a.push('City');
-            if (this.route) a.push('Route');
-            if (this.street_number) a.push('Street number');
-            return a;
-        },
-
-
         isValid: function() {
             if (this.latlng !== null)
                 return true;
@@ -107,6 +101,42 @@ define([
                 return true;
             }
             return false;
+        },
+
+        getResult: function() {
+            return {
+                type: '_object',
+                info: null, // Todo - insert info ???
+                geometry: {
+                    x: this.latlng.lng,
+                    y: this.latlng.lat
+                },
+                elements: {
+                    country: this.country,
+                    cadasternumber: null,   // Todo - make cadaster filled
+                    district1: this.region,
+                    district2: this.subregion,
+                    index: this.postal,
+                    locality: this.city,
+                    toponim: this.route,
+                    housenumber: this.street_number,
+                    housebld: '',
+                    houseliter: '',
+                    RES: null // Todo - insert RES ??? WTF is res?
+                }
+            };
+        },
+
+        resultToString: function(result) {
+            var s = "Result object:\n";
+            s += "type: " + result.type + '\n';
+            s += "info: " + result.info + '\n';
+            s += "geometry: " + result.geometry.x + ',' + result.geometry.y + '\n';
+            s += "elements: \n";
+            for (var key in result.elements) {
+                s += '    ' + String(key) + ': ' + String(result.elements[key] + '\n');
+            }
+            return s;
         }
     });
 })

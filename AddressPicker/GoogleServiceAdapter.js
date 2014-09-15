@@ -41,6 +41,7 @@ define([
                 this.obj = null;
                 var geocodedObject = new GeocodedObject();
                 geocodedObject.setText(address.text);
+                geocodedObject.setPostalCode(address.postal_code);
                 geocodedObject.setLatLng(address.latlng.lat, address.latlng.lng);
                 (address.bounds)
                     ? geocodedObject.setBounds(address.bounds.northeast, address.bounds.southwest)
