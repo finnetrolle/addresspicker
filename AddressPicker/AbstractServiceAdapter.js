@@ -13,11 +13,13 @@ define([
         defaults: {
             url: '',
             query: '',
+            suggestionQuery: '',
             geocoderName: 'Abstract',
             params: {}
         },
         forwardParameter: null,
         reverseParameter: null,
+        suggestParameter: null,
 
         getUrl: function() {
             return this.defaults.url;
@@ -31,22 +33,42 @@ define([
             return this.defaults.query;
         },
 
+        getSuggestionQuery: function() {
+            return this.defaults.suggestionQuery;
+        },
+
         getParams: function(value) {
-            var a = {};
-            for (var key in this.defaults.params) {
-                a[key] = this.defaults.params[key];
-            }
+//            var a = {};
+//            for (var key in this.defaults.params) {
+//                a[key] = this.defaults.params[key];
+//            }
+            var a = this.cloneParams();
             a[this.forwardParameter] = value;
             return a;
         },
 
         getReverseParams: function(latlng) {
+//            var a = {};
+//            for (var key in this.defaults.params) {
+//                a[key] = this.defaults.params[key];
+//            }
+            var a = this.cloneParams();
+            var point = concreteServiceAdapter.adaptLatLng(latlng);
+            a[this.reverseParameter] = point.lat + "," + point.lng;
+            return a;
+        },
+
+        cloneParams: function() {
             var a = {};
             for (var key in this.defaults.params) {
                 a[key] = this.defaults.params[key];
             }
-            var point = concreteServiceAdapter.adaptLatLng(latlng);
-            a[this.reverseParameter] = point.lat + "," + point.lng;
+            return a;
+        },
+
+        getSuggestParams: function(value) {
+            var a = this.cloneParams();
+            a[this.suggestParameter] = value;
             return a;
         },
 
@@ -64,6 +86,8 @@ define([
                 self.defaults.params = concreteServiceAdapter.defaults.params;
                 self.forwardParameter = concreteServiceAdapter.forwardParameter;
                 self.reverseParameter = concreteServiceAdapter.reverseParameter;
+                self.defaults.suggestionQuery = concreteServiceAdapter.defaults.suggestionQuery;
+                self.suggestParameter = concreteServiceAdapter.suggestParameter;
 //                self._convertResults = concreteServiceAdapter.convertResponseToResults;
 //                self.adaptLatLng = concreteServiceAdapter.adaptLatLng;
             });

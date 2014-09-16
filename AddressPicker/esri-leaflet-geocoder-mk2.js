@@ -81,7 +81,7 @@
         },
 
         suggest: function(text, opts, callback, context) {
-            this.get(adapter.getQuery(), adapter.getParams(text), callback, context);
+            this.get(adapter.getSuggestionQuery(), adapter.getSuggestParams(text), callback, context);
         }
     });
 

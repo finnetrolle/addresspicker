@@ -15,6 +15,7 @@ define([
         defaults: {
             geocoderName: 'Yandex',
             query: "1.x/",
+            suggestionQuery: "1.x/",
             url: "http://geocode-maps.yandex.ru/",
             params: {
                 format: 'json'
@@ -22,6 +23,7 @@ define([
         },
         forwardParameter: 'geocode',
         reverseParameter: 'geocode',
+        suggestParameter: 'geocode',
 
         adaptLatLng: function(latlng) {
             return {lat: latlng.lng, lng: latlng.lat};

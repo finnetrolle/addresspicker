@@ -15,6 +15,7 @@ define([
         defaults: {
             geocoderName: 'Google',
             query: "json",
+            suggestionQuery: "json",
             url: "http://maps.googleapis.com/maps/api/geocode/",
             params: {
                 sensor: false,
@@ -24,6 +25,7 @@ define([
         },
         forwardParameter: 'address',
         reverseParameter: 'latlng',
+        suggestParameter: 'address',
 
         convertResponseToResults: function(response) {
             var results = [];

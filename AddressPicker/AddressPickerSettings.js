@@ -45,6 +45,10 @@ define([
             {
                 link: "AddressPicker/GoogleServiceAdapter",
                 name: "Google"
+            },
+            {
+                link: "AddressPicker/ArcGISServiceAdapter",
+                name: "IGIT"
             }
         ]
     });

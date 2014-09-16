@@ -11,6 +11,7 @@ define([
     'AddressPicker/AbstractServiceAdapter',
     'AddressPicker/GoogleServiceAdapter',
     'AddressPicker/YandexServiceAdapter',
+    'AddressPicker/ArcGISServiceAdapter',
     'AddressPicker/GeocodedObject',
     'AddressPicker/AddressPickerSettings',
     'AddressPicker/CadasterService',
@@ -24,6 +25,7 @@ define([
 //            ,AbstractServiceAdapter
             ,GoogleServiceAdapter
             ,YandexServiceAdapter
+            ,ArcGISServiceAdapter
             ,GeocodedObject
             ,AddressPickerSettings
             ,CadasterService
@@ -56,8 +58,10 @@ define([
                 require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
                     self.layer = L.esri.tiledMapLayer(self.defaultBasemapLayer);
                     self.map.addLayer(self.layer);
-//                    var clayer = L.esri.tiledMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
-//                    self.map.addLayer(clayer);
+
+//                    var clayer = L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
+//                        .ArcGISDynamicMapServiceLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
+                    self.map.addLayer(L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreWMS/MapServer'));
 
                     self.initBasemapLayerCombobox();
                     self.initGeocodingServiceCombobox();
@@ -103,6 +107,9 @@ define([
 
                         }
                     };
+
+                    var checkbox = dom.byId('cadasterCheckBox');
+
                 })
             })
         },
