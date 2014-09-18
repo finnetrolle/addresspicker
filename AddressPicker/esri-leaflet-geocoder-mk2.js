@@ -21,7 +21,7 @@
 
         previousSuggestResults: null,
 
-        initialize: function (url, options) {
+        initialize: function () {
             this.url = adapter.getUrl();
         },
 
@@ -71,7 +71,7 @@
                 } else {
                     var error = null;
                     var results = adapter.convertResults(response);
-                    // get only first result
+                    // get only first result (this result is best)
                     if (results.length > 0) {
                         var result = results[0];
                         callback.call(context, error, result, response);
@@ -84,12 +84,6 @@
             this.get(adapter.getSuggestionQuery(), adapter.getSuggestParams(text), callback, context);
         }
     });
-
-//    IGITgeocoding = function(options){
-//        return new IGITGeocoding(options);
-//    };
-
-
 
     L.esri.Controls.Geosearch = L.Control.extend({
         includes: L.Mixin.Events,
@@ -105,18 +99,26 @@
         },
         initialize: function (options) {
             L.Util.setOptions(this, options);
-            //this._service = new L.esri.Services.Geocoding(options);
-            this._service = new IGITGeocoding(options);
+//            this.initService(new IGITGeocoding(options));
+//            this._service = new IGITGeocoding(options);
+//            this._service.on('authenticationrequired requeststart requestend requesterror requestsuccess', function (e) {
+//                e = L.extend({
+//                    target: this
+//                }, e);
+//                this.fire(e.type, e);
+//            }, this);
+        },
 
+        initService: function (service) {
+            this._service = service;
             this._service.on('authenticationrequired requeststart requestend requesterror requestsuccess', function (e) {
-//                uncomment this string to see requests and responses
-//                console.log(e);
                 e = L.extend({
                     target: this
                 }, e);
                 this.fire(e.type, e);
             }, this);
         },
+
         _geocode: function(text, key){
             var options = {};
 
@@ -289,7 +291,7 @@
                 var key = e.which || e.keyCode;
                 var text = (e.target || e.srcElement).value;
 
-                // require at least 2 characters for suggestions
+                // require at least [settings.minimumLetters] characters for suggestions
                 if(text.length < settings.minimumLetters) {
                     return;
                 }

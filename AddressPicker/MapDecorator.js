@@ -8,6 +8,7 @@ define([
     'leaflets/leaflet',
 //    'leaflets/esri-leaflet',
 //    'AddressPicker/esri-leaflet-geocoder-mk2',
+//    'AddressPicker/IgitGeocodingService',
     'AddressPicker/AbstractServiceAdapter',
     'AddressPicker/GoogleServiceAdapter',
     'AddressPicker/YandexServiceAdapter',
@@ -20,9 +21,10 @@ define([
             ,dom
             ,on
             ,leaflet
-            ,esri_leaflet
+//            ,esri_leaflet
 //            ,esri_leaflet_geocoder_mk2
-//            ,AbstractServiceAdapter
+//            ,IgitGeocodingService
+            ,AbstractServiceAdapter
             ,GoogleServiceAdapter
             ,YandexServiceAdapter
             ,ArcGISServiceAdapter
@@ -92,23 +94,23 @@ define([
                         }, this);
                     });
 
-                    function getRandomArbitary(min, max)
-                    {
-                        return Math.random() * (max - min) + min;
-                    };
-
-                    function createIcon() {
-                        return new L.icon({
-                            iconUrl: 'icon.png',
-                            shadowUrl: 'icon.png',
-
-                            iconSize: [16, 16], // size of the icon
-                            shadowSize: [16, 16], // size of the shadow
-                            iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
-                            shadowAnchor: [16, 16],  // the same for the shadow
-                            popupAnchor: [8, 0] // point from which the popup should open relative to the iconAnchor
-                        });
-                    }
+//                    function getRandomArbitary(min, max)
+//                    {
+//                        return Math.random() * (max - min) + min;
+//                    };
+//
+//                    function createIcon() {
+//                        return new L.icon({
+//                            iconUrl: 'icon.png',
+//                            shadowUrl: 'icon.png',
+//
+//                            iconSize: [16, 16], // size of the icon
+//                            shadowSize: [16, 16], // size of the shadow
+//                            iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
+//                            shadowAnchor: [16, 16],  // the same for the shadow
+//                            popupAnchor: [8, 0] // point from which the popup should open relative to the iconAnchor
+//                        });
+//                    }
 
 //                    for (var i = 0; i < 1000; ++i) {
 //                        var ico = createIcon();
@@ -213,6 +215,7 @@ define([
 
         initGeocodingServiceCombobox: function() {
             this.searchControl = new L.esri.Controls.Geosearch().addTo(this.map);
+            this.searchControl.initService(new IGITGeocoding());
             this.resultsLayerGroup = new L.LayerGroup().addTo(this.map);
             var self = this;
             this.searchControl.on('results', function(data) {
