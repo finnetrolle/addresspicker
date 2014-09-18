@@ -15,6 +15,7 @@ define([
         defaults: {
             geocoderName: 'Google',
             query: "json",
+            reverseQuery: 'json',
             suggestionQuery: "json",
             url: "http://maps.googleapis.com/maps/api/geocode/",
             params: {

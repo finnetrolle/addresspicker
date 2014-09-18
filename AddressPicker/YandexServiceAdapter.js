@@ -15,6 +15,7 @@ define([
         defaults: {
             geocoderName: 'Yandex',
             query: "1.x/",
+            reverseQuery: '1.x/',
             suggestionQuery: "1.x/",
             url: "http://geocode-maps.yandex.ru/",
             params: {

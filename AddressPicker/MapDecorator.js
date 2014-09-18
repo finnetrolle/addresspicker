@@ -61,7 +61,7 @@ define([
 
 //                    var clayer = L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
 //                        .ArcGISDynamicMapServiceLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
-                    self.map.addLayer(L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreWMS/MapServer'));
+//                    self.map.addLayer(L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreWMS/MapServer'));
 
                     self.initBasemapLayerCombobox();
                     self.initGeocodingServiceCombobox();
@@ -70,12 +70,13 @@ define([
                         dom.byId("alertWindow").style.visibility = 'hidden';
                         self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
                             console.log("results coming after reverse geocoding");
+                            console.log(result);
                             self.resultsLayerGroup.clearLayers();
 //                            uncomment this block to see difference between geocoded point and pressed
-                            var A = e.latlng;
-                            var B = result.latlng;
-                            var poly = L.polygon([[A.lat, A.lng],[B.lat, B.lng]]);
-                            self.resultsLayerGroup.addLayer(poly);
+                                var A = e.latlng;
+                                var B = result.latlng;
+                                var poly = L.polygon([[A.lat, A.lng],[B.lat, B.lng]]);
+                                self.resultsLayerGroup.addLayer(poly);
 
                             var marker = L.marker(e.latlng);//
                             self.resultsLayerGroup.addLayer(marker);
@@ -90,6 +91,32 @@ define([
                             }
                         }, this);
                     });
+
+                    function getRandomArbitary(min, max)
+                    {
+                        return Math.random() * (max - min) + min;
+                    };
+
+                    function createIcon() {
+                        return new L.icon({
+                            iconUrl: 'icon.png',
+                            shadowUrl: 'icon.png',
+
+                            iconSize: [16, 16], // size of the icon
+                            shadowSize: [16, 16], // size of the shadow
+                            iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
+                            shadowAnchor: [16, 16],  // the same for the shadow
+                            popupAnchor: [8, 0] // point from which the popup should open relative to the iconAnchor
+                        });
+                    }
+
+//                    for (var i = 0; i < 1000; ++i) {
+//                        var ico = createIcon();
+//                        var lat = getRandomArbitary(59, 61);
+//                        var lng = getRandomArbitary(29, 31);
+//                        L.marker([lat, lng], {icon: ico}).addTo(self.map);
+//                    }
+
 
                     self.cadasterService = new CadasterService();
                     self.cadasterService.initialize();
@@ -195,7 +222,11 @@ define([
                 if (self.geocodedObject) {
                     self.fillInfo(self.geocodedObject);
                     if (self.geocodedObject.isSuccessfullyGeocoded()) {
-                        self.resultsLayerGroup.addLayer(L.marker(data.results[0].latlng).bindPopup(self.geocodedObject.text).openPopup());
+                        var marker = L.marker(data.results[0].latlng);
+                        var popup = marker.bindPopup(self.geocodedObject.text);
+                        self.resultsLayerGroup.addLayer(marker);
+                        popup.openPopup();
+
                     }
                 }
             });

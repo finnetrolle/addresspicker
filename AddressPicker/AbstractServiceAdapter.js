@@ -14,6 +14,7 @@ define([
             url: '',
             query: '',
             suggestionQuery: '',
+            reverseQuery: '',
             geocoderName: 'Abstract',
             params: {}
         },
@@ -31,6 +32,10 @@ define([
 
         getQuery: function() {
             return this.defaults.query;
+        },
+
+        getReverseQuery: function() {
+            return this.defaults.reverseQuery;
         },
 
         getSuggestionQuery: function() {
@@ -88,6 +93,7 @@ define([
                 self.reverseParameter = concreteServiceAdapter.reverseParameter;
                 self.defaults.suggestionQuery = concreteServiceAdapter.defaults.suggestionQuery;
                 self.suggestParameter = concreteServiceAdapter.suggestParameter;
+                self.defaults.reverseQuery = concreteServiceAdapter.defaults.reverseQuery;
 //                self._convertResults = concreteServiceAdapter.convertResponseToResults;
 //                self.adaptLatLng = concreteServiceAdapter.adaptLatLng;
             });
