@@ -43,6 +43,7 @@ define([
 
         map: null,
         layer: null,
+        cadasterLayer: null,
         basemaps: null,
         geocoders: null,
         geocodedObject: null,
@@ -53,13 +54,32 @@ define([
 //            this.settings = new AddressPickerSettings();
             var o = this.settings.centerPoint;
             this.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
+
             var self = this;
+
+
+
+
+
+
 
 
             require(['leaflets/esri-leaflet'], function(){
                 require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
                     self.layer = L.esri.tiledMapLayer(self.defaultBasemapLayer);
                     self.map.addLayer(self.layer);
+
+                    self.checkbox = dom.byId("cadasterCheckBox");
+                    self.cadasterLayer = L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
+                    on(self.checkbox, 'change', function(e) {
+//                    self.checkbox.on('click', function(e) {
+                        if (self.checkbox.checked) {
+                            self.map.addLayer(self.cadasterLayer);
+                        } else {
+                            self.map.removeLayer(self.cadasterLayer);
+                        }
+                    });
+
 
 //                    var clayer = L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
 //                        .ArcGISDynamicMapServiceLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
@@ -68,7 +88,10 @@ define([
                     self.initBasemapLayerCombobox();
                     self.initGeocodingServiceCombobox();
 
-                    self.map.on('click', function(e){
+//                    self.map.on('click', function(e){
+                    on(self.map, 'click', function (e) {
+                        if (self.map.focused == false)
+                            return;
                         dom.byId("alertWindow").style.visibility = 'hidden';
                         self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
                             console.log("results coming after reverse geocoding");
