@@ -52,7 +52,11 @@ define([
 
         // additional layers
         additionalLayers: {
-            cadasterLayer: 'http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer'
+            cadasterLayer:
+            {
+                link: 'http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer',
+                opacity: 0.5
+            }
         },
 
         serviceAdapter: 'AddressPicker/YandexServiceAdapter',

@@ -108,7 +108,9 @@ define([
             this.mapDiv.appendChild(this.cadasterCheckboxDiv);
 
             var self = this;
-            this.cadasterLayer = L.esri.dynamicMapLayer(this.settings.additionalLayers.cadasterLayer);
+            this.cadasterLayer = L.esri.dynamicMapLayer(this.settings.additionalLayers.cadasterLayer.link,{
+                opacity: this.settings.additionalLayers.cadasterLayer.opacity
+            });
             on(this.cadasterCheckbox, 'change', function(e) {
                 if (self.cadasterCheckbox.checked) {
                     self.map.addLayer(self.cadasterLayer);
