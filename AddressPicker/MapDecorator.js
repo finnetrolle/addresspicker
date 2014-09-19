@@ -90,8 +90,12 @@ define([
 
 //                    self.map.on('click', function(e){
                     on(self.map, 'click', function (e) {
-                        if (self.map.focused == false)
+                        var mapDiv = dom.byId('map');
+                        var e = e || window.event;
+                        var target = e.target || e.srcElement;
+                        if (mapDiv != target)
                             return;
+
                         dom.byId("alertWindow").style.visibility = 'hidden';
                         self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
                             console.log("results coming after reverse geocoding");
