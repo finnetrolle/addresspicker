@@ -153,7 +153,7 @@
                         bounds.extend(results[i].bounds);
                     }
 
-                    console.log(bounds);
+//                    console.log(bounds);
 
                     this.fire('results', {
                         results: results,

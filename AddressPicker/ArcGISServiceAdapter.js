@@ -37,7 +37,7 @@ define([
         suggestParameter: 'SingleLine',
 
         convertResponseToResults: function(response) {
-            console.log(response);
+//            console.log(response);
 
             // Todo - define what type of response we have and what to do with
 
@@ -99,7 +99,7 @@ define([
                     (address.City) ? address.City : null,
                     (address.StreetName) ? address.StreetName : null,
                     (address.House) ? address.House : null);
-                console.log(geocodedObject);
+//                console.log(geocodedObject);
                 return geocodedObject;
             };
 

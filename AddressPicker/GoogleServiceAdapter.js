@@ -30,7 +30,7 @@ define([
 
         convertResponseToResults: function(response) {
             var results = [];
-            console.log(response);
+//            console.log(response);
             if (response) {
                 var resp = response.results;
                 for (var i = 0; i < resp.length; ++i) {

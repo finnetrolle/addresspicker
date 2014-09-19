@@ -63,12 +63,12 @@ define([
 
                     getCadasterNumber: function (latlng, opts, callback, context) {
                         var par = this.getParams(latlng);
-                        console.log(par);
+//                        console.log(par);
                         this.get(this.query, par, function (error, response) {
                             if (error) {
                                 callback.call(context, error);
                             } else {
-                                console.log(response);
+//                                console.log(response);
                                 var result = response.features[0].attributes.PARCEL_ID;
                                 callback.call(context, error, result, response);
                             }

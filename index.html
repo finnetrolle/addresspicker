@@ -1,35 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Load Leaflet from CDN-->
     <link rel="stylesheet" href="leaflets/leaflet.css" />
     <link rel="stylesheet" href="AddressPicker/AddressPicker.css" />
     <link rel="stylesheet" type="text/css" href="leaflets/esri-leaflet-geocoder.css">
 </head>
 <body>
-    <script>
-        var dojoConfig = {
-            async: true,
-            packages: [
-                {
-                    name: "esri-leaflet",
-                    location: location.pathname.replace(/\/[^/]*$/, '') + ''
-                },
-                {
-                    name: "MapDecorator",
-                    location: location.pathname.replace(/\/[^/]*$/, '') + '/AddressPicker'
-                }
-            ]
-        };
-    </script>
+    <script src="AddressPicker/AddressPickerDojoConfig.js"></script>
     <script src="dojo/dojo.js"></script>
-    <script>
-        require([
-            'AddressPicker/MapDecorator'
-        ], function (MapDecorator) {
-            var mapDecorator = new MapDecorator();
-        });
-    </script>
+    <script src="AddressPicker/AddressPicker.js"></script>
+
     <div id="map"></div>
+
 </body>
 </html>
