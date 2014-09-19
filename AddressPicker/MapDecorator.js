@@ -6,9 +6,6 @@ define([
     'dojo/dom',
     'dojo/on',
     'leaflets/leaflet',
-//    'leaflets/esri-leaflet',
-//    'AddressPicker/esri-leaflet-geocoder-mk2',
-//    'AddressPicker/IgitGeocodingService',
     'AddressPicker/AbstractServiceAdapter',
     'AddressPicker/GoogleServiceAdapter',
     'AddressPicker/YandexServiceAdapter',
@@ -21,9 +18,6 @@ define([
             ,dom
             ,on
             ,leaflet
-//            ,esri_leaflet
-//            ,esri_leaflet_geocoder_mk2
-//            ,IgitGeocodingService
             ,AbstractServiceAdapter
             ,GoogleServiceAdapter
             ,YandexServiceAdapter
@@ -36,217 +30,144 @@ define([
     // This returned object becomes the defined value of this module
     return declare(null, {
 
+        // inside services
         searchControl: null,
         resultsLayerGroup: null,
 
+        // settings
         settings: new AddressPickerSettings(),
-
-        map: null,
-        layer: null,
-        cadasterLayer: null,
-        basemaps: null,
-        geocoders: null,
-        geocodedObject: null,
         defaultBasemapLayer: null,
 
-//        initMap: function (defaultLayerLink) {
-        initMap: function () {
-//            this.settings = new AddressPickerSettings();
-            var o = this.settings.centerPoint;
-            this.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
+        // wrappers (DIVs)
+        mapDiv: null,
+        basemapsDiv: null,
+        geocodersDiv: null,
+        saveButtonDiv: null,
+        cadasterCheckboxDiv: null,
+
+        // controls
+        map: null,
+        basemaps: null,
+        geocoders: null,
+        saveButton: null,
+        cadasterCheckbox: null,
+        alertWindow: null,
+
+        // special (for map)
+        layer: null,
+        cadasterLayer: null,
+        geocodedObject: null,
+
+        // methods for creating controls
+
+        createDiv: function(divId) {
+            var div = document.createElement('div');
+            div.className = 'igit-leaflet-wrapper-class';
+            div.id = divId;
+            return div;
+        },
+
+        createAlertWindow: function() {
+            this.alertWindow = this.createDiv('alertWindow');
+            this.alertWindow.hidden = '';
+            this.alertWindow.style.visibility = 'hidden';
+            var p = document.createElement('p');
+            p.innerHTML = this.settings.strings.unfilledGeocodingResult;
+            this.alertWindow.appendChild(p);
+            this.mapDiv.appendChild(this.alertWindow);
+        },
+
+        createBasemapCombobox: function() {
+            var array = this.settings.basemapLayers;
+
+            this.basemapsDiv = this.createDiv('basemaps-wrapper');
+            this.basemaps = document.createElement('select');
+            this.basemaps.id = 'basemaps';
+
+            this.fillSelectControl(this.basemaps, array);
+            this.basemapsDiv.appendChild(this.basemaps);
+            this.mapDiv.appendChild(this.basemapsDiv);
 
             var self = this;
-
-
-
-
-
-
-
-
-            require(['leaflets/esri-leaflet'], function(){
-                require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
-                    self.layer = L.esri.tiledMapLayer(self.defaultBasemapLayer);
-                    self.map.addLayer(self.layer);
-
-                    self.checkbox = dom.byId("cadasterCheckBox");
-                    self.cadasterLayer = L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
-                    on(self.checkbox, 'change', function(e) {
-//                    self.checkbox.on('click', function(e) {
-                        if (self.checkbox.checked) {
-                            self.map.addLayer(self.cadasterLayer);
-                        } else {
-                            self.map.removeLayer(self.cadasterLayer);
-                        }
-                    });
-
-
-//                    var clayer = L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
-//                        .ArcGISDynamicMapServiceLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer');
-//                    self.map.addLayer(L.esri.dynamicMapLayer('http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreWMS/MapServer'));
-
-                    self.initBasemapLayerCombobox();
-                    self.initGeocodingServiceCombobox();
-
-//                    self.map.on('click', function(e){
-                    on(self.map, 'click', function (e) {
-                        var mapDiv = dom.byId('map');
-                        var e = e || window.event;
-                        var target = e.target || e.srcElement;
-                        if (mapDiv != target)
-                            return;
-
-                        dom.byId("alertWindow").style.visibility = 'hidden';
-                        self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
-                            console.log("results coming after reverse geocoding");
-                            console.log(result);
-                            self.resultsLayerGroup.clearLayers();
-//                            uncomment this block to see difference between geocoded point and pressed
-                                var A = e.latlng;
-                                var B = result.latlng;
-                                var poly = L.polygon([[A.lat, A.lng],[B.lat, B.lng]]);
-                                self.resultsLayerGroup.addLayer(poly);
-
-                            var marker = L.marker(e.latlng);//
-                            self.resultsLayerGroup.addLayer(marker);
-                            marker.bindPopup(result.text).openPopup();
-                            self.geocodedObject = result;
-                            if (self.geocodedObject) {
-                                self.fillInfo(self.geocodedObject);
-                                if (!self.geocodedObject.isSuccessfullyGeocoded()) {
-                                    dom.byId("alertWindow").style.visibility = 'visible';
-                                    self.setSaveButtonEnabled(true);
-                                }
-                            }
-                        }, this);
-                    });
-
-//                    function getRandomArbitary(min, max)
-//                    {
-//                        return Math.random() * (max - min) + min;
-//                    };
-//
-//                    function createIcon() {
-//                        return new L.icon({
-//                            iconUrl: 'icon.png',
-//                            shadowUrl: 'icon.png',
-//
-//                            iconSize: [16, 16], // size of the icon
-//                            shadowSize: [16, 16], // size of the shadow
-//                            iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
-//                            shadowAnchor: [16, 16],  // the same for the shadow
-//                            popupAnchor: [8, 0] // point from which the popup should open relative to the iconAnchor
-//                        });
-//                    }
-
-//                    for (var i = 0; i < 1000; ++i) {
-//                        var ico = createIcon();
-//                        var lat = getRandomArbitary(59, 61);
-//                        var lng = getRandomArbitary(29, 31);
-//                        L.marker([lat, lng], {icon: ico}).addTo(self.map);
-//                    }
-
-
-                    self.cadasterService = new CadasterService();
-                    self.cadasterService.initialize();
-//                    var r = self.cadasterService.getCadasterNumber();
-//                    console.log(r);
-
-                    var button = dom.byId('ibutton');
-                    button.onclick = function(){
-                        if (self.geocodedObject) {
-                            self.cadasterService.service.getCadasterNumber(self.geocodedObject.latlng, {}, function (error, result, response) {
-                                //console.log(result);
-                                self.geocodedObject.setCadasterNumber(result);
-                                alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
-                            }, this);
-
-                        }
-                    };
-
-                    var checkbox = dom.byId('cadasterCheckBox');
-
-                })
-            })
-        },
-
-        fillInfo: function(o) {
-//            dom.byId("icountry").value = o.country;
-//            dom.byId("iregion").value = o.region;
-//            dom.byId("isubregion").value = o.subregion;
-//            dom.byId("icity").value = o.city;
-//            dom.byId("iaddress").value = o.address;
-//            dom.byId("igeocodeLevel").value = o.geocodeLevel;
-//            dom.byId("ilatlng").value = o.latlng;
-//            dom.byId("itext").value = o.text;
-            this.setSaveButtonEnabled(o.isSuccessfullyGeocoded());
-//            dom.byId("ibutton").disabled = !o.isSuccessfullyGeocoded();
-        },
-
-        setSaveButtonEnabled: function(value) {
-            if (value) {
-                dom.byId("savebutton").style.backgroundColor = "#44FF44";
-                dom.byId("ibutton").disabled = false;
-            } else {
-                dom.byId("savebutton").style.backgroundColor = "#FF4444";
-                dom.byId("ibutton").disabled = true;
-            }
-        },
-
-//        initBasemapsList: function (baseMapsId) {
-//            this.basemaps = dom.byId(baseMapsId);
-//            var self = this;
-//            on(this.basemaps, 'change', function() {
-//                if (self.layer) {
-//                    self.map.removeLayer(self.layer);
-//                }
-//                self.layer = L.esri.tiledMapLayer(self.basemaps.value);
-//                self.map.addLayer(self.layer);
-//            })
-//        },
-
-        createBasemapCombobox: function(mapDivId) {
-            dom.byId(mapDivId).appendChild(makeBasemapWrapperDiv(this.settings.basemapLayers));
-            this.defaultBasemapLayer = this.settings.basemapLayers[0].link;
-
-            function makeBasemapWrapperDiv(array) {
-                var ediv = document.createElement('div');
-                ediv.id = 'basemaps-wrapper';
-                ediv.className = 'leaflet-bar';
-                var eselect = document.createElement('select');
-                eselect.id = 'basemaps';
-                eselect.name = 'basemaps';
-                for (var i = 0; i < array.length; ++i) {
-                    var eoption = document.createElement('option');
-                    eoption.value = array[i].link;
-                    eoption.innerHTML = array[i].name;
-                    eselect.appendChild(eoption);
-                }
-                ediv.appendChild(eselect);
-                return ediv;
-            }
-        },
-
-        initBasemapLayerCombobox: function() {
-            this.basemaps = this.createLinkAndNameCombobox('basemaps-wrapper', 'basemaps', 'map',
-                this.settings.basemapLayers);
-            var self = this;
-            on(this.basemaps, 'change', function() {
+            on(this.basemaps, 'change', function () {
                 if (self.layer) {
                     self.map.removeLayer(self.layer);
                 }
                 self.layer = L.esri.tiledMapLayer(self.basemaps.value);
                 self.map.addLayer(self.layer);
-            })
+            });
         },
 
-        initGeocodingServiceCombobox: function() {
+        createCadasterCheckbox: function() {
+            this.cadasterCheckboxDiv = this.createDiv('cadaster-wrapper');
+            this.cadasterCheckboxDiv.innerHTML = this.settings.strings.cadaster;
+            this.cadasterCheckbox = document.createElement('input');
+            this.cadasterCheckbox.type = 'checkbox';
+            this.cadasterCheckbox.id = 'cadasterCheckBox';
+            this.cadasterCheckboxDiv.appendChild(this.cadasterCheckbox);
+            this.mapDiv.appendChild(this.cadasterCheckboxDiv);
+
+            var self = this;
+            this.cadasterLayer = L.esri.dynamicMapLayer(this.settings.additionalLayers.cadasterLayer);
+            on(this.cadasterCheckbox, 'change', function(e) {
+                if (self.cadasterCheckbox.checked) {
+                    self.map.addLayer(self.cadasterLayer);
+                } else {
+                    self.map.removeLayer(self.cadasterLayer);
+                }
+            });
+        },
+
+        createSaveButtonControl: function() {
+            this.saveButtonDiv = this.createDiv('savebutton-wrapper');
+            this.saveButton = document.createElement('input');
+            this.saveButton.type = 'button';
+            this.saveButton.id = 'saveButton';
+            this.saveButton.value = this.settings.strings.saveButton;
+            this.saveButton.disabled = true;
+            this.saveButtonDiv.appendChild(this.saveButton);
+            this.mapDiv.appendChild(this.saveButtonDiv);
+
+            var self = this;
+            on(this.saveButton, 'click', function(){
+                if (self.geocodedObject) {
+                    self.cadasterService.service.getCadasterNumber(self.geocodedObject.latlng, {}, function (error, result, response) {
+                        self.geocodedObject.setCadasterNumber(result);
+                        alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
+                    }, this);
+                }
+            });
+        },
+
+        createGeocodingControl: function() {
+            this.initGeocodingService();
+            var self = this;
+            var array = this.settings.geocodingServices;
+
+            this.geocodersDiv = document.createElement('div');
+            this.geocodersDiv.id = 'geocoders-wrapper';
+            this.geocodersDiv.className = 'igit-leaflet-wrapper-class';
+            this.geocoders = document.createElement('select');
+            this.geocoders.id = 'geocoders';
+
+            this.fillSelectControl(this.geocoders, array);
+
+            this.geocodersDiv.appendChild(this.geocoders);
+            this.mapDiv.appendChild(this.geocodersDiv);
+
+            on(this.geocoders, 'change', function() {
+                self.searchControl._service.getAdapter().initService(self.geocoders.value);
+                self.searchControl._service.initialize();
+            });
+        },
+
+        initGeocodingService: function() {
             this.searchControl = new L.esri.Controls.Geosearch().addTo(this.map);
             this.searchControl.initService(new IGITGeocoding());
             this.resultsLayerGroup = new L.LayerGroup().addTo(this.map);
             var self = this;
-            this.searchControl.on('results', function(data) {
-                dom.byId('alertWindow').style.visibility = 'hidden';
+            on(this.searchControl, 'results', function(data) {
+                self.alertWindow.style.visibility = 'hidden';
                 self.geocodedObject = data.results[0];
                 self.resultsLayerGroup.clearLayers();
                 if (self.geocodedObject) {
@@ -260,33 +181,146 @@ define([
                     }
                 }
             });
-            this.geocoders = this.createLinkAndNameCombobox('geocoders-wrapper', 'geocoders', 'map',
-                this.settings.geocodingServices);
-            on(this.geocoders, 'change', function() {
-                self.searchControl._service.getAdapter().initService(self.geocoders.value);
-                self.searchControl._service.initialize();
-            });
         },
 
-        createLinkAndNameCombobox: function(divId, selectId, mapId, array) {
-            var eDiv = document.createElement('div');
-                eDiv.id = divId;
-                eDiv.className = 'leaflet-bar';
-            var eSelect = document.createElement('select');
-                eSelect.id = selectId;
+        // initialization (overriden)
+
+        initMap: function () {
+            this.settings = new AddressPickerSettings();
+            var o = this.settings.centerPoint;
+            this.mapDiv = dom.byId('map');
+            this.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
+            var self = this;
+
+
+            require(['leaflets/esri-leaflet'], function(){
+                require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
+                    // loading basemap
+                    self.layer = L.esri.tiledMapLayer(self.settings.basemapLayers[0].link);
+                    self.map.addLayer(self.layer);
+
+                    self.createAlertWindow();
+                    self.createBasemapCombobox();
+//                    self.initGeocodingServiceCombobox();
+                    self.createGeocodingControl();
+                    self.createSaveButtonControl();
+                    self.createCadasterCheckbox();
+
+                    on(self.map, 'click', function (e) {
+                        var src = e.originalEvent.srcElement;
+                        if (src == self.basemaps) return;
+                        if (src == self.geocoders) return;
+                        if (src == self.cadasterCheckbox) return;
+                        if (src == self.saveButton) return;
+
+                        dom.byId("alertWindow").style.visibility = 'hidden';
+                        self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
+                            self.resultsLayerGroup.clearLayers();
+
+                            if (self.settings.showLineToGeocodingResultPoint) {
+                                var A = e.latlng;
+                                var B = result.latlng;
+                                var poly = L.polygon([
+                                    [A.lat, A.lng],
+                                    [B.lat, B.lng]
+                                ]);
+                                self.resultsLayerGroup.addLayer(poly);
+                            }
+
+                            var marker = L.marker(e.latlng);
+                            self.resultsLayerGroup.addLayer(marker);
+                            marker.bindPopup(result.text).openPopup();
+                            self.geocodedObject = result;
+                            if (self.geocodedObject) {
+                                self.fillInfo(self.geocodedObject);
+                                if (!self.geocodedObject.isSuccessfullyGeocoded()) {
+                                    dom.byId("alertWindow").style.visibility = 'visible';
+                                    self.setSaveButtonEnabled(true);
+                                }
+                            }
+                        }, this);
+                    });
+
+                    self.cadasterService = new CadasterService();
+                    self.cadasterService.initialize();
+                })
+            })
+        },
+
+
+        fillInfo: function(o) {
+            this.setSaveButtonEnabled(o.isSuccessfullyGeocoded());
+        },
+
+        setSaveButtonEnabled: function(value) {
+            if (value) {
+                this.saveButtonDiv.style.backgroundColor = this.settings.colors.enabledColor;
+                this.saveButton.disabled = false;
+            } else {
+                this.saveButtonDiv.style.backgroundColor = this.settings.colors.disabledColor;
+                this.saveButton.disabled = true;
+            }
+        },
+
+
+
+//        initGeocodingServiceCombobox: function() {
+//            this.searchControl = new L.esri.Controls.Geosearch().addTo(this.map);
+//            this.searchControl.initService(new IGITGeocoding());
+//            this.resultsLayerGroup = new L.LayerGroup().addTo(this.map);
+//            var self = this;
+//            this.searchControl.on('results', function(data) {
+//                dom.byId('alertWindow').style.visibility = 'hidden';
+//                self.geocodedObject = data.results[0];
+//                self.resultsLayerGroup.clearLayers();
+//                if (self.geocodedObject) {
+//                    self.fillInfo(self.geocodedObject);
+//                    if (self.geocodedObject.isSuccessfullyGeocoded()) {
+//                        var marker = L.marker(data.results[0].latlng);
+//                        var popup = marker.bindPopup(self.geocodedObject.text);
+//                        self.resultsLayerGroup.addLayer(marker);
+//                        popup.openPopup();
+//
+//                    }
+//                }
+//            });
+//            this.geocoders = this.createLinkAndNameCombobox('geocoders-wrapper', 'geocoders', 'map',
+//                this.settings.geocodingServices);
+//            on(this.geocoders, 'change', function() {
+//                self.searchControl._service.getAdapter().initService(self.geocoders.value);
+//                self.searchControl._service.initialize();
+//            });
+//        },
+
+        fillSelectControl: function(control, array) {
             for (var i = 0; i < array.length; ++i) {
                 var eOption = document.createElement('option');
-                    eOption.value = array[i].link;
-                    eOption.innerHTML = array[i].name;
-                eSelect.appendChild(eOption);
+                eOption.value = array[i].link;
+                eOption.innerHTML = array[i].name;
+                control.appendChild(eOption);
             }
-            eDiv.appendChild(eSelect);
-            var map = dom.byId(mapId);
-            if (map) {
-                map.appendChild(eDiv);
-            }
-            return eSelect;
+            return control;
         }
+
+//        createLinkAndNameCombobox: function(divId, selectId, mapId, array) {
+//            var eDiv = document.createElement('div');
+//                eDiv.id = divId;
+//                eDiv.className = 'igit-leaflet-wrapper-class';
+//            var eSelect = document.createElement('select');
+//                eSelect.id = selectId;
+//            for (var i = 0; i < array.length; ++i) {
+//                var eOption = document.createElement('option');
+//                    eOption.value = array[i].link;
+//                    eOption.innerHTML = array[i].name;
+//                eSelect.appendChild(eOption);
+//            }
+//            eDiv.appendChild(eSelect);
+//            var map = dom.byId(mapId);
+//            if (map) {
+//                map.appendChild(eDiv);
+//            }
+//            return eSelect;
+//        }
 
     });
 });

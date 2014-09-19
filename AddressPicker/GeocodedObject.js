@@ -116,25 +116,25 @@ define([
                     y: this.latlng.lat
                 },
                 elements: {
-                    country: this.country,
                     cadasternumber: this.cadasterNumber,
+                    country: this.country,
                     district1: this.region,
                     district2: this.subregion,
                     index: this.postal,
                     locality: this.city,
                     toponim: this.route,
-                    housenumber: this.street_number,
-                    housebld: '',
-                    houseliter: '',
-                    RES: null // Todo - insert RES ??? WTF is res?
+                    housenumber: this.street_number
+//                    housebld: '',
+//                    houseliter: '',
+//                    RES: null // Todo - insert RES ??? WTF is res?
                 }
             };
         },
 
         resultToString: function(result) {
             var s = "Result object:\n";
-            s += "type: " + result.type + '\n';
-            s += "info: " + result.info + '\n';
+//            s += "type: " + result.type + '\n';
+//            s += "info: " + result.info + '\n';
             s += "geometry: " + result.geometry.x + ',' + result.geometry.y + '\n';
             s += "elements: \n";
             for (var key in result.elements) {

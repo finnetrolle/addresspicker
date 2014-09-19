@@ -6,9 +6,15 @@ define([
     'dojo/domReady!'
 ], function(declare){
     return declare(null, {
-        serviceAdapter: 'AddressPicker/YandexServiceAdapter',
-//        serviceAdapter: 'AddressPicker/GoogleServiceAdapter',
-        minimumLetters: 3,
+
+        // strings for localization
+        strings: {
+            saveButton: 'Save',
+            cadaster: 'Show cadaster layer',
+            unfilledGeocodingResult: 'Position can be accepted, but the geocoding is not satisfied'
+        },
+
+        // basemap layers
         basemapLayers: [
             {
                 link: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/BaseMaps/OSMapBase/MapServer",
@@ -24,32 +30,45 @@ define([
             },
             {
                 link: "http://maps.rosreestr.ru/arcgis/rest/services/BaseMaps/BaseMap/MapServer",
-                name: "Rosreestr",
-                additionalLayers: [
-                    "http://maps.rosreestr.ru/arcgis/rest/services/BaseMaps/Anno/MapServer"
-                ]
-                // idea Todo - all layers from additionalLayers array loading with baselayer
-                // idea will be fine for cadaster map
+                name: "Rosreestr"
             }
         ],
-        centerPoint: {
-            longitude: 30.3279556,
-            latitude: 59.935885,
-            zoom: 10
-        },
+
+        // geocoding services (adapters)
         geocodingServices: [
-            {
-                link: "AddressPicker/YandexServiceAdapter",
-                name: "Yandex"
-            },
             {
                 link: "AddressPicker/GoogleServiceAdapter",
                 name: "Google"
             },
             {
+                link: "AddressPicker/YandexServiceAdapter",
+                name: "Yandex"
+            },
+            {
                 link: "AddressPicker/ArcGISServiceAdapter",
                 name: "IGIT"
             }
-        ]
+        ],
+
+        // additional layers
+        additionalLayers: {
+            cadasterLayer: 'http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer'
+        },
+
+        serviceAdapter: 'AddressPicker/YandexServiceAdapter',
+        showLineToGeocodingResultPoint: true,
+        minimumLetters: 3,
+
+        colors: {
+            enabledColor: '#44FF44',
+            disabledColor: '#FF4444'
+        },
+
+        centerPoint: {
+            longitude: 30.3279556,
+            latitude: 59.935885,
+            zoom: 10
+        }
+
     });
 });
