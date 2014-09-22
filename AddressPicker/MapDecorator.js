@@ -231,7 +231,11 @@ define([
                         self.resultsLayerGroup.addLayer(marker);
                         popup.openPopup();
 
+                    } else {
+                        alert(self.settings.strings.geocodingNoPosition);
                     }
+                } else {
+                    alert(self.settings.strings.geocodingNoResults);
                 }
             });
         },
