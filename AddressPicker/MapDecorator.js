@@ -52,6 +52,7 @@ define([
         saveButton: null,
         cadasterCheckbox: null,
         alertWindow: null,
+        alertText: null,
 
         // special (for map)
         layer: null,
@@ -71,9 +72,10 @@ define([
             this.alertWindow = this.createDiv('alertWindow');
             this.alertWindow.hidden = '';
             this.alertWindow.style.visibility = 'hidden';
-            var p = document.createElement('p');
-            p.innerHTML = this.settings.strings.unfilledGeocodingResult;
-            this.alertWindow.appendChild(p);
+            this.alertText = document.createElement('p');
+            this.alertText.id = 'alertText';
+            this.alertText.innerHTML = this.settings.strings.unfilledGeocodingResult;
+            this.alertWindow.appendChild(this.alertText);
             this.mapDiv.appendChild(this.alertWindow);
         },
 
@@ -214,6 +216,12 @@ define([
                         if (src == self.geocoders) return;
                         if (src == self.cadasterCheckbox) return;
                         if (src == self.saveButton) return;
+                        if (src == self.saveButtonDiv) return;
+                        if (src == self.cadasterCheckboxDiv) return;
+                        if (src == self.geocodersDiv) return;
+                        if (src == self.basemapsDiv) return;
+                        if (src == self.alertWindow) return;
+                        if (src == self.alertText) return;
 
                         dom.byId("alertWindow").style.visibility = 'hidden';
                         self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
