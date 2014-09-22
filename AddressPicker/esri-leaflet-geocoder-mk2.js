@@ -195,7 +195,11 @@
                     var results = adapter.convertResults(response);
                     this._service.previousSuggestResults = results;
                     this._suggestions.style.display = "block";
-                    for (var i = 0; i < results.length; ++i) {
+
+                    var count = (results.length > settings.maximumSuggestResults) ?
+                        settings.maximumSuggestResults :
+                        results.length;
+                    for (var i = 0; i < count; ++i) {
                         var suggestion = L.DomUtil.create('li', 'geocoder-control-suggestion', this._suggestions);
                         suggestion.innerHTML = results[i].text;
                     }
