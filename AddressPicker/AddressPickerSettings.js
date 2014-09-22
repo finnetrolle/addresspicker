@@ -12,6 +12,8 @@ define([
             saveButton: 'Save',
             cadaster: 'Show cadaster layer',
             unfilledGeocodingResult: 'Position can be accepted, but the geocoding is not satisfied',
+            geocodingNoResults: 'Geocoding returns zero results',
+            geocodingNoPosition: 'Geocoding can not set position',
             tooltips: {
                 search: 'Search',
                 basemaps: 'Select basemap',
