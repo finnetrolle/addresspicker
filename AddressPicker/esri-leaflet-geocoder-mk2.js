@@ -196,9 +196,11 @@
                     this._service.previousSuggestResults = results;
                     this._suggestions.style.display = "block";
 
-                    var count = (results.length > settings.maximumSuggestResults) ?
-                        settings.maximumSuggestResults :
-                        results.length;
+                    var count = results.length;
+                    if (results.length > settings.maximumSuggestResults) {
+                        count = settings.maximumSuggestResults;
+                    }
+
                     for (var i = 0; i < count; ++i) {
                         var suggestion = L.DomUtil.create('li', 'geocoder-control-suggestion', this._suggestions);
                         suggestion.innerHTML = results[i].text;

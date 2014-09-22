@@ -70,7 +70,7 @@ define([
         serviceAdapter: 'AddressPicker/YandexServiceAdapter',
         showLineToGeocodingResultPoint: true,
         minimumLetters: 3,
-        maximumSuggestResults: 15,
+        maximumSuggestResults: 10,
 
         colors: {
             enabledColor: '#44FF44',
