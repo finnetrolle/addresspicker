@@ -11,7 +11,15 @@ define([
         strings: {
             saveButton: 'Save',
             cadaster: 'Show cadaster layer',
-            unfilledGeocodingResult: 'Position can be accepted, but the geocoding is not satisfied'
+            unfilledGeocodingResult: 'Position can be accepted, but the geocoding is not satisfied',
+            tooltips: {
+                search: 'Search',
+                basemaps: 'Select basemap',
+                geocoder: 'Select geocoder',
+                cadaster: 'Show cadaster layer',
+                save: 'Save results',
+                alert: 'Alert!'
+            }
         },
 
         // basemap layers

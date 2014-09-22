@@ -77,6 +77,9 @@ define([
             this.alertText.innerHTML = this.settings.strings.unfilledGeocodingResult;
             this.alertWindow.appendChild(this.alertText);
             this.mapDiv.appendChild(this.alertWindow);
+
+            this.alertText.title = this.settings.strings.tooltips.alert;
+            this.alertWindow.title = this.settings.strings.tooltips.alert;
         },
 
         createBasemapCombobox: function() {
@@ -98,6 +101,9 @@ define([
                 self.layer = L.esri.tiledMapLayer(self.basemaps.value);
                 self.map.addLayer(self.layer);
             });
+
+            this.basemaps.title = this.settings.strings.tooltips.basemaps;
+            this.basemapsDiv.title = this.settings.strings.tooltips.basemaps;
         },
 
         createCadasterCheckbox: function() {
@@ -120,6 +126,9 @@ define([
                     self.map.removeLayer(self.cadasterLayer);
                 }
             });
+
+            this.cadasterCheckbox.title = this.settings.strings.tooltips.cadaster;
+            this.cadasterCheckboxDiv.title = this.settings.strings.tooltips.cadaster;
         },
 
         createSaveButtonControl: function() {
@@ -141,6 +150,9 @@ define([
                     }, this);
                 }
             });
+
+            this.saveButton.title = this.settings.strings.tooltips.save;
+            this.saveButtonDiv.title = this.settings.strings.tooltips.save;
         },
 
         createGeocodingControl: function() {
@@ -163,6 +175,9 @@ define([
                 self.searchControl._service.getAdapter().initService(self.geocoders.value);
                 self.searchControl._service.initialize();
             });
+
+            this.geocoders.title = this.settings.strings.tooltips.geocoder;
+            this.geocodersDiv.title = this.settings.strings.tooltips.geocoder;
         },
 
         initGeocodingService: function() {
