@@ -69,7 +69,9 @@ define([
                                 callback.call(context, error);
                             } else {
 //                                console.log(response);
-                                var result = response.features[0].attributes.PARCEL_ID;
+                                var result = '';
+                                if (response.features.length > 0)
+                                    result = response.features[0].attributes.PARCEL_ID;
                                 callback.call(context, error, result, response);
                             }
                         }, this);

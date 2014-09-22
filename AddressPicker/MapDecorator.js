@@ -53,6 +53,8 @@ define([
         cadasterCheckbox: null,
         alertWindow: null,
         alertText: null,
+        saveSpinner: null,
+        saveSpinnerIsOn: false,
 
         // special (for map)
         layer: null,
@@ -144,8 +146,14 @@ define([
             var self = this;
             on(this.saveButton, 'click', function(){
                 if (self.geocodedObject) {
+                    self.saveButtonDiv.appendChild(self.saveSpinner);
+                    self.saveSpinnerIsOn = true;
                     self.cadasterService.service.getCadasterNumber(self.geocodedObject.latlng, {}, function (error, result, response) {
                         self.geocodedObject.setCadasterNumber(result);
+                        if (self.saveSpinnerIsOn) {
+                            self.saveButtonDiv.removeChild(self.saveSpinner);
+                            self.saveSpinnerIsOn = false;
+                        }
                         alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
                     }, this);
                 }
@@ -153,6 +161,10 @@ define([
 
             this.saveButton.title = this.settings.strings.tooltips.save;
             this.saveButtonDiv.title = this.settings.strings.tooltips.save;
+
+            this.saveSpinner = document.createElement('img');
+            this.saveSpinner.src = 'leaflets/img/loading.gif';
+//            this.saveButtonDiv.appendChild(this.saveSpinner);
         },
 
         createGeocodingControl: function() {
