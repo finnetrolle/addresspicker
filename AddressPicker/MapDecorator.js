@@ -164,11 +164,13 @@ define([
                 if (self.geocodedObject) {
                     self.saveButtonDiv.appendChild(self.saveSpinner);
                     self.saveSpinnerIsOn = true;
+                    self.saveButton.disabled = true;
                     self.cadasterService.service.getCadasterNumber(self.geocodedObject.latlng, {}, function (error, result, response) {
                         self.geocodedObject.setCadasterNumber(result);
                         if (self.saveSpinnerIsOn) {
                             self.saveButtonDiv.removeChild(self.saveSpinner);
                             self.saveSpinnerIsOn = false;
+                            self.saveButton.disabled = false;
                         }
                         alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
                     }, this);

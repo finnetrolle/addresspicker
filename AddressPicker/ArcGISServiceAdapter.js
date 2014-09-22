@@ -40,11 +40,13 @@ define([
 //            console.log(response);
 
             // Todo - define what type of response we have and what to do with
+            console.log(response);
 
             var results = [];
 
             if (response) {
                 if ('address' in response) {
+
                     // this is reverse geocoding
                     // dirty hack to add location into results
                     response.address.X = response.location.x;
