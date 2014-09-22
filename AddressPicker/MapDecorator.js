@@ -118,14 +118,30 @@ define([
             this.mapDiv.appendChild(this.cadasterCheckboxDiv);
 
             var self = this;
-            this.cadasterLayer = L.esri.dynamicMapLayer(this.settings.additionalLayers.cadasterLayer.link,{
-                opacity: this.settings.additionalLayers.cadasterLayer.opacity
+            self.cadasterLayer = L.esri.dynamicMapLayer(self.settings.additionalLayers.cadasterLayer.link,{
+                opacity: self.settings.additionalLayers.cadasterLayer.opacity
             });
+
+            /* This block of code required to dodge error #12
+                Server gives layer data after some time
+                If user clears checkbox while response is not arrived, layer will be rendered
+                To dodge this shit we catch event "onload" for this layer
+                And if checkbox is off - remove this layer from map with
+                hacking refreshing - add layer (removed by checkbox event) and remove it once again
+            * */
+            on(this.cadasterLayer, 'load', function() {
+                if (!self.cadasterCheckbox.checked) {
+                    self.map.addLayer(self.cadasterLayer);
+                    self.map.removeLayer(self.cadasterLayer);
+                }
+            });
+
             on(this.cadasterCheckbox, 'change', function(e) {
                 if (self.cadasterCheckbox.checked) {
                     self.map.addLayer(self.cadasterLayer);
                 } else {
                     self.map.removeLayer(self.cadasterLayer);
+
                 }
             });
 
