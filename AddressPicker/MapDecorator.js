@@ -174,6 +174,10 @@ define([
             on(this.geocoders, 'change', function() {
                 self.searchControl._service.getAdapter().initService(self.geocoders.value);
                 self.searchControl._service.initialize();
+                self.resultsLayerGroup.clearLayers();
+                self.geocodedObject = null;
+                self.setSaveButtonEnabled(false);
+                dom.byId("alertWindow").style.visibility = 'hidden';
             });
 
             this.geocoders.title = this.settings.strings.tooltips.geocoder;
