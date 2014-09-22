@@ -231,6 +231,7 @@
             this._suggestions = L.DomUtil.create('ul', "geocoder-control-suggestions leaflet-bar", this._container);
 
             this._input.title = settings.strings.tooltips.search;
+            this._container.title = settings.strings.tooltips.search;
             L.DomEvent.addListener(this._input, "focus", function(e){
                 L.DomUtil.addClass(this._container, "geocoder-control-expanded");
             }, this);
