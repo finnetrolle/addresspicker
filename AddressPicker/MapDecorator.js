@@ -264,7 +264,8 @@ define([
                     self.createCadasterCheckbox();
 
                     on(self.map, 'click', function (e) {
-                        var src = e.originalEvent.srcElement;
+//                        var src = e.originalEvent.srcElement;
+                        var src = e.originalEvent.target;
                         if (src == self.basemaps) return;
                         if (src == self.geocoders) return;
                         if (src == self.cadasterCheckbox) return;
