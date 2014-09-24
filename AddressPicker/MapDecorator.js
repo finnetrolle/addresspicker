@@ -266,6 +266,18 @@ define([
                     on(self.map, 'click', function (e) {
 //                        var src = e.originalEvent.srcElement;
                         var src = e.originalEvent.target;
+//                        switch (src) {
+//                            case  self.basemaps: return;
+//                            case  self.geocoders: return;
+//                            case  self.cadasterCheckbox: return;
+//                            case  self.saveButton: return;
+//                            case  self.saveButtonDiv: return;
+//                            case  self.cadasterCheckboxDiv: return;
+//                            case  self.geocodersDiv: return;
+//                            case  self.basemapsDiv: return;
+//                            case  self.alertWindow: return;
+//                            case  self.alertText: return;
+//                        }
                         if (src == self.basemaps) return;
                         if (src == self.geocoders) return;
                         if (src == self.cadasterCheckbox) return;
