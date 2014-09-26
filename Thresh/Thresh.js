@@ -18,8 +18,16 @@ define([
     "Thresh/CreatePOIChain",
     "Thresh/DragPOIChain",
     "Thresh/HighlighterChain",
+    "Thresh/behavior/BehaviorModel",
+    "Thresh/behavior/HighlightBehavior",
+    "Thresh/behavior/MoveBehavior",
     "dojo/domReady!"
-], function(declare, dom, on, Map, FeatureLayer, Point, SimpleMarkerSymbol, Graphic, Mouse, Chain, SimpleLoggingChain, DummyChain, EventTerminatorChain, CreatePOIChain, DragPOIChain, HighlighterChain){
+], function(declare, dom, on, Map, FeatureLayer, Point,
+            SimpleMarkerSymbol, Graphic, Mouse, Chain,
+            SimpleLoggingChain, DummyChain, EventTerminatorChain,
+            CreatePOIChain, DragPOIChain, HighlighterChain,
+            BehaviorModel, HighlightBehavior, MoveBehavior
+    ){
     return declare(null, {
 
         map: null,
@@ -35,20 +43,23 @@ define([
             this.map.addLayer(this.editLayer);
             var self = this;
 
-//            on(this.editLayer, 'mouse-move', function(event) {
-//                console.log('move: ' + event.mapPoint);
-//            });
+////            var logChain = new SimpleLoggingChain(this.editLayer);
+////            logChain.enableEventLogging();
+//            var highlishtChain = new HighlighterChain(this.editLayer);
+//            var dragChain = new DragPOIChain(this.editLayer);
+//            var eventTerminator = new EventTerminatorChain(this.editLayer);
+////            var createPOIChain = new CreatePOIChain(this.map, this.editLayer);
+////            var logChain = new SimpleLoggingChain(this.map);
 
-//            var logChain = new SimpleLoggingChain(this.editLayer);
-//            logChain.enableEventLogging();
+            // new features - Behavior;
 
-            var highlishtChain = new HighlighterChain(this.editLayer);
-            var dragChain = new DragPOIChain(this.editLayer);
+            this.editLayerBehaviorModel = new BehaviorModel(this.editLayer);
 
-            var eventTerminator = new EventTerminatorChain(this.editLayer);
-//            var createPOIChain = new CreatePOIChain(this.map, this.editLayer);
+            this.editLayerHighlightBehavior = new HighlightBehavior(this.editLayer);
+            this.editLayerBehaviorModel.addBehavior(this.editLayerHighlightBehavior);
 
-//            var logChain = new SimpleLoggingChain(this.map);
+            this.editLayerMoveBehavior = new MoveBehavior(this.editLayer);
+            this.editLayerBehaviorModel.addBehavior(this.editLayerMoveBehavior);
 
             on(this.map, 'click', function(event) {
                 self.editLayer.add(new Graphic(new Point(event.mapPoint), new SimpleMarkerSymbol()));
