@@ -84,7 +84,7 @@ define([
 
             function createEsriAddressObject(address) {
                 this.obj = null;
-//                var geocodedObject = new GeocodedObject();
+                var geocodedObject = new GeocodedObject();
                 geocodedObject.setText(address.Match_addr);
                 geocodedObject.setPostalCode(address.Postal);
 //                geocodedObject.setLatLng(address.latlng.lat, address.latlng.lng); // Todo

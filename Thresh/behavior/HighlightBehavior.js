@@ -20,7 +20,7 @@ define([
             this.lastSymbol = null;
             this.highlightedSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 15,
                 new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-                    new Color([0,0,0]), 1),
+                    new Color([0,0,0]), 2),
                 new Color([0,255,0,0.25]));
             var self = this;
 

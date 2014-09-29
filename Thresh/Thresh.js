@@ -10,23 +10,15 @@ define([
     "esri/geometry/Point",
     "esri/symbols/SimpleMarkerSymbol",
     "esri/graphic",
-    "dojo/mouse",
-    "Thresh/ListenersChain",
-    "Thresh/SimpleLoggingChain",
-    "Thresh/DummyChain",
-    "Thresh/EventTerminatorChain",
-    "Thresh/CreatePOIChain",
-    "Thresh/DragPOIChain",
-    "Thresh/HighlighterChain",
     "Thresh/behavior/BehaviorModel",
     "Thresh/behavior/HighlightBehavior",
     "Thresh/behavior/MoveBehavior",
+    "Thresh/behavior/EventsFromArrayLogBehavior",
     "dojo/domReady!"
-], function(declare, dom, on, Map, FeatureLayer, Point,
-            SimpleMarkerSymbol, Graphic, Mouse, Chain,
-            SimpleLoggingChain, DummyChain, EventTerminatorChain,
-            CreatePOIChain, DragPOIChain, HighlighterChain,
-            BehaviorModel, HighlightBehavior, MoveBehavior
+], function(declare, dom, on,
+            Map, FeatureLayer,
+            Point, SimpleMarkerSymbol, Graphic,
+            BehaviorModel, HighlightBehavior, MoveBehavior, EFALBehavior
     ){
     return declare(null, {
 
@@ -53,13 +45,29 @@ define([
 
             // new features - Behavior;
 
+
+            // для созданного объекта (в примере - FeatureLayer) создаем объект модели поведения
             this.editLayerBehaviorModel = new BehaviorModel(this.editLayer);
 
+            // Создаем объект поведения подсветки и добавляем его к модели поведения объекта
             this.editLayerHighlightBehavior = new HighlightBehavior(this.editLayer);
             this.editLayerBehaviorModel.addBehavior(this.editLayerHighlightBehavior);
 
+            // Создаем объект поведения перетаскивания и добавляем его к модели поведения объекта
             this.editLayerMoveBehavior = new MoveBehavior(this.editLayer);
             this.editLayerBehaviorModel.addBehavior(this.editLayerMoveBehavior);
+
+            this.efal = new EFALBehavior([
+                'mouse-move',
+                'mouse-over',
+                'mouse-out',
+                'mouse-drag',
+                'mouse-up',
+                'mouse-down',
+                'click',
+                'dbl-click'
+            ],false);
+            this.editLayerBehaviorModel.addBehavior(this.efal);
 
             on(this.map, 'click', function(event) {
                 self.editLayer.add(new Graphic(new Point(event.mapPoint), new SimpleMarkerSymbol()));
