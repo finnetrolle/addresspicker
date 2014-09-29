@@ -5,20 +5,32 @@ define([
     "dojo/_base/declare",
     "dojo/dom",
     "dojo/on",
+
     "esri/map",
     "esri/layers/FeatureLayer",
+
     "esri/geometry/Point",
     "esri/symbols/SimpleMarkerSymbol",
     "esri/graphic",
+
     "Thresh/behavior/BehaviorModel",
     "Thresh/behavior/HighlightBehavior",
     "Thresh/behavior/MoveBehavior",
     "Thresh/behavior/EventsFromArrayLogBehavior",
+    "Thresh/behavior/CreatePolygonBehavior",
+
+    "esri/geometry/Polygon",
+    "esri/Color",
+    "esri/geometry/Geometry",
+    "esri/symbols/SimpleFillSymbol",
+    "esri/symbols/SimpleLineSymbol",
+
     "dojo/domReady!"
 ], function(declare, dom, on,
             Map, FeatureLayer,
             Point, SimpleMarkerSymbol, Graphic,
-            BehaviorModel, HighlightBehavior, MoveBehavior, EFALBehavior
+            BehaviorModel, HighlightBehavior, MoveBehavior, EFALBehavior, CreatePolygonBehavior,
+            Polygon, Color, Geometry, SimpleFillSymbol, SimpleLineSymbol
     ){
     return declare(null, {
 
@@ -50,28 +62,83 @@ define([
             this.editLayerBehaviorModel = new BehaviorModel(this.editLayer);
 
             // Создаем объект поведения подсветки и добавляем его к модели поведения объекта
-            this.editLayerHighlightBehavior = new HighlightBehavior(this.editLayer);
-            this.editLayerBehaviorModel.addBehavior(this.editLayerHighlightBehavior);
+//            this.editLayerHighlightBehavior = new HighlightBehavior(this.editLayer);
+//            this.editLayerBehaviorModel.addBehavior(this.editLayerHighlightBehavior);
 
             // Создаем объект поведения перетаскивания и добавляем его к модели поведения объекта
-            this.editLayerMoveBehavior = new MoveBehavior(this.editLayer);
-            this.editLayerBehaviorModel.addBehavior(this.editLayerMoveBehavior);
+//            this.editLayerMoveBehavior = new MoveBehavior(this.editLayer);
+//            this.editLayerBehaviorModel.addBehavior(this.editLayerMoveBehavior);
 
-            this.efal = new EFALBehavior([
-                'mouse-move',
-                'mouse-over',
-                'mouse-out',
-                'mouse-drag',
-                'mouse-up',
-                'mouse-down',
-                'click',
-                'dbl-click'
-            ],false);
-            this.editLayerBehaviorModel.addBehavior(this.efal);
+            this.mapBM = new BehaviorModel(this.map);
+            this.cpb = new CreatePolygonBehavior(this.map, this.editLayer);
+            this.mapBM.addBehavior(this.cpb);
 
-            on(this.map, 'click', function(event) {
-                self.editLayer.add(new Graphic(new Point(event.mapPoint), new SimpleMarkerSymbol()));
-            });
+//            this.efal = new EFALBehavior([
+//                'mouse-move',
+//                'mouse-over',
+//                'mouse-out',
+//                'mouse-drag',
+//                'mouse-up',
+//                'mouse-down',
+//                'click',
+//                'dbl-click'
+//            ],false);
+//            this.editLayerBehaviorModel.addBehavior(this.efal);
+
+//            on(this.map, 'click', function(event) {
+////                self.editLayer.add(new Graphic(new Point(event.mapPoint), new SimpleMarkerSymbol()));
+//                var myPolygon = {
+//                    "geometry":{
+//                        "rings":[
+//                            [
+//                                [-115.3125,37.96875],
+//                                [-111.4453125,37.96875],
+//                                [-99.84375,36.2109375],
+//                                [-99.84375,23.90625],
+//                                [-116.015625,24.609375],
+//                                [-115.3125,37.96875]
+//                            ]
+//                        ],
+//                            "spatialReference":{"wkid":4326}
+//                        },
+//                    "symbol":{
+//                        "color":[0,0,0,64],
+//                        "outline":{
+//                            "color":[0,0,0,255],
+//                            "width":1,
+//                            "type":"esriSLS",
+//                            "style":"esriSLSSolid"
+//                        },
+//                        "type":"esriSFS",
+//                        "style":"esriSFSSolid"
+//                    }
+//                };
+//                var gra = new Graphic(myPolygon);
+//
+//                var g = new Graphic(
+//                    new Polygon([
+////                        [1265389, 7201992],
+////                        [3261313, 8415201],
+////                        [2537301, 9784952]
+//                        [-115.3125,37.96875],
+//                        [-111.4453125,37.96875],
+//                        [-99.84375,36.2109375],
+//                        [-99.84375,23.90625],
+//                        [-116.015625,24.609375],
+//                        [-115.3125,37.96875]
+//                    ]),
+//                    new SimpleFillSymbol((
+//                        SimpleFillSymbol.STYLE_SOLID,
+//                            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+//                                new Color([255,0,0]), 2
+//                            ),
+//                            new Color([255,255,0,0.25]))
+//                    )
+//                );
+//                console.log(g);
+//                self.editLayer.add(gra);
+//            });
+
 
         },
 

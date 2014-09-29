@@ -13,6 +13,16 @@ define([
             this.triggers = {};
         },
 
+        setDebugMode: function () {
+            this.debugMode = true;
+        },
+
+        isDebugModeOn: function () {
+            if (this.debugMode)
+                return true;
+            return false;
+        },
+
         _addHandler: function (trigger, functor, propagationStopper, terminator) {
             var handler = new Handler(functor);
             if (propagationStopper)

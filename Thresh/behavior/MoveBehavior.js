@@ -18,17 +18,22 @@ define([
 
             this._addHandler('mouse-down', function (event) {
                 self.selectedObject = event.graphic;
-            }, false, false);
+            }, true, false);
 
             this._addHandler('mouse-up', function () {
                 self.selectedObject = null;
-            }, false, false);
+            }, true, false);
 
             this._addHandler('mouse-drag', function() {
                 if (self.selectedObject) {
+
                     self.selectedObject.setGeometry(new Point(event.mapPoint));
                 }
-            }, false, false);
+            }, true, false);
+
+            this._addHandler('mouse-out', function() {
+                self.selectedObject = null;
+            });
         }
 
     });

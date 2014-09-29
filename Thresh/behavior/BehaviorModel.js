@@ -39,6 +39,9 @@ define([
                     var handler = behavior.getHandler(trigger);
                     if (handler) {
                         handler.execute(event);
+                        if (behavior.isDebugModeOn()) {
+                            console.log(trigger);
+                        }
                         if (handler.isPropagationStopper())
                             event.stopPropagation();
                         if (handler.isTerminator())
