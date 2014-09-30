@@ -9,19 +9,25 @@ define([
     "esri/Color",
     "esri/Symbol",
     "esri/symbols/SimpleMarkerSymbol",
-    "esri/symbols/SimpleLineSymbol"
-], function(declare, Behavior, Map, FeatureLayer, Color, Symbol, SimpleMarkerSymbol, SimpleLineSymbol) {
+    "esri/symbols/SimpleLineSymbol",
+    "esri/symbols/SimpleFillSymbol"
+], function(declare, Behavior, Map, FeatureLayer, Color, Symbol, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol) {
 
     return declare(Behavior, {
 
-        constructor: function (editLayer) {
+        constructor: function (editLayer, highlightedSymbol) {
             this.layer = editLayer;
             this.selectedGraphic = null,
             this.lastSymbol = null;
-            this.highlightedSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 15,
-                new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-                    new Color([0,0,0]), 2),
-                new Color([0,255,0,0.25]));
+
+            if (highlightedSymbol) {
+                this.highlightedSymbol = highlightedSymbol;
+            } else {
+                this.highlightedSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+                    new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT, new Color([225, 0, 0]), 2),
+                    new Color([255, 255, 0, 0.25]));
+            }
+
             var self = this;
 
             var _removeHighlight = function() {

@@ -3,10 +3,11 @@
  */
 define([
     "dojo/_base/declare",
+    "dojo/Evented",
     "Thresh/behavior/Handler"
-], function(declare, Handler) {
+], function(declare, Evented, Handler) {
 
-    return declare(null, {
+    return declare(Evented, {
 
         constructor: function (servicableObject) {
             this.servicableObject = servicableObject;
