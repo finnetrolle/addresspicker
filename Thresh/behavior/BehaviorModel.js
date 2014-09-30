@@ -53,7 +53,7 @@ define([
 
         removeBehavior: function (behavior) {
             for (var i = 0; i < this.behaviors.length; ++i) {
-                if (this.behavior[i] === behavior) {
+                if (this.behaviors[i] == behavior) {
                     return this.behaviors.splice(i, 1);
                 }
             }

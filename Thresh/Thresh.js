@@ -61,6 +61,8 @@ define([
             this.saveLayerBehaviorModel = new BehaviorModel(this.saveLayer);
             this.saveLayerHighlightBehavior = new HighlightBehavior(this.saveLayer);
             this.saveLayerBehaviorModel.addBehavior(this.saveLayerHighlightBehavior);
+            this.saveLayerMoveBehavior = new MoveBehavior(this.saveLayer);
+            this.saveLayerBehaviorModel.addBehavior(this.saveLayerMoveBehavior);
 
             // add behavior model for map
             this.mapBehaviorModel = new BehaviorModel(this.map);
@@ -74,6 +76,7 @@ define([
             this.createPolygonBehavior = new CreatePolygonBehavior(this.map, this.editLayer);
             on(this.createPolygonBehavior, 'editComplete', function() {
                 self.saveLayer.add(self.createPolygonBehavior.getResultGraphic());
+//                self.mapBehaviorModel.removeBehavior(self.createPolygonBehavior); // make polygon once and kill tool
             });
 
             this.createPolylineBehavior = new CreatePolylineBehavior(this.map, this.editLayer);
@@ -83,8 +86,8 @@ define([
 
             // tools connection
 //            this.mapBehaviorModel.addBehavior(this.createPOIBehavior);
-            this.mapBehaviorModel.addBehavior(this.createPolygonBehavior);
-//            this.mapBehaviorModel.addBehavior(this.createPolylineBehavior);
+//            this.mapBehaviorModel.addBehavior(this.createPolygonBehavior);
+            this.mapBehaviorModel.addBehavior(this.createPolylineBehavior);
 
 
 
@@ -124,3 +127,4 @@ define([
 
     });
 });
+
