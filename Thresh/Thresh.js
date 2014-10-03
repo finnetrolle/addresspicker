@@ -86,8 +86,8 @@ define([
 
             // tools connection
 //            this.mapBehaviorModel.addBehavior(this.createPOIBehavior);
-//            this.mapBehaviorModel.addBehavior(this.createPolygonBehavior);
-            this.mapBehaviorModel.addBehavior(this.createPolylineBehavior);
+            this.mapBehaviorModel.addBehavior(this.createPolygonBehavior);
+//            this.mapBehaviorModel.addBehavior(this.createPolylineBehavior);
 
 
 
@@ -102,7 +102,6 @@ define([
 //                'dbl-click'
 //            ],false);
 //            this.editLayerBehaviorModel.addBehavior(this.efal);
-
         },
 
         createEditLayer: function() {
