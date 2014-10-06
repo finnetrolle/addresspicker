@@ -56,7 +56,7 @@ define([
             },
             {
                 link: "AddressPicker/ArcGISServiceAdapter",
-                name: "IGIT"
+                name: "КГИС"
             }
         ],
 

@@ -295,7 +295,9 @@ define([
 
                             if (self.settings.showLineToGeocodingResultPoint) {
                                 var A = e.latlng;
-                                var B = result.latlng;
+                                var B = A;
+                                if (result.hasOwnProperty('latlng'))
+                                    var B = result.latlng;
                                 var poly = L.polygon([
                                     [A.lat, A.lng],
                                     [B.lat, B.lng]
