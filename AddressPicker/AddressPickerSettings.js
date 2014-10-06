@@ -10,7 +10,7 @@ define([
         appinfo: {
             major: 0,   // application version
             minor: 2,   // first were prototype
-            build: 54,  // number of commit
+            build: 55,  // number of commit
             beta: true, // beta version
             demo: true  // demonstartion version
         },
@@ -41,15 +41,16 @@ define([
             {
                 link: "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
                 name: "Satellite"
-            },
-            {
-                link: "http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
-                name: "Some other map"
-            },
-            {
-                link: "http://maps.rosreestr.ru/arcgis/rest/services/BaseMaps/BaseMap/MapServer",
-                name: "Rosreestr"
             }
+//            ,
+//            {
+//                link: "http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
+//                name: "Some other map"
+//            },
+//            {
+//                link: "http://maps.rosreestr.ru/arcgis/rest/services/BaseMaps/BaseMap/MapServer",
+//                name: "Rosreestr"
+//            }
         ],
 
         // geocoding services (adapters)
@@ -73,7 +74,7 @@ define([
             cadasterLayer:
             {
                 link: 'http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer',
-                opacity: 0.5
+                opacity: 0.6
             }
         },
 
