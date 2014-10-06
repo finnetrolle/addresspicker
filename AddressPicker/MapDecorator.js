@@ -240,6 +240,21 @@ define([
             });
         },
 
+        getVersion: function() {
+            var v = this.settings.appinfo;
+            var s = "";
+            if (v.demo)
+                s += 'Demo version ';
+            else
+                s += 'v. ';
+            s += v.major + '.';
+            s += v.minor + '.';
+            s += v.build;
+            if (v.beta)
+                s += " " + 'beta';
+            return s;
+        },
+
         // initialization (overriden)
 
         initMap: function () {
@@ -255,6 +270,8 @@ define([
                     // loading basemap
                     self.layer = L.esri.tiledMapLayer(self.settings.basemapLayers[0].link);
                     self.map.addLayer(self.layer);
+
+                    self.map.attributionControl.addAttribution(self.getVersion());
 
                     self.createAlertWindow();
                     self.createBasemapCombobox();

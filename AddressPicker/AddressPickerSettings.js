@@ -7,6 +7,14 @@ define([
 ], function(declare){
     return declare(null, {
 
+        appinfo: {
+            major: 0,   // application version
+            minor: 2,   // first were prototype
+            build: 54,  // number of commit
+            beta: true, // beta version
+            demo: true  // demonstartion version
+        },
+
         // strings for localization
         strings: {
             saveButton: 'Сохранить',
