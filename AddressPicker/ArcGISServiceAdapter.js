@@ -40,13 +40,12 @@ define([
 //            console.log(response);
 
             // Todo - define what type of response we have and what to do with
-            console.log(response);
+//            console.log(response);
 
             var results = [];
 
             if (response) {
                 if ('address' in response) {
-
                     // this is reverse geocoding
                     // dirty hack to add location into results
                     response.address.X = response.location.x;
@@ -94,14 +93,17 @@ define([
 
                 geocodedObject.setLatLng(lnglat.lat, lnglat.lng); // Todo
                 geocodedObject.setBounds(lnglat, lnglat); // Todo
+                if (address.HouseEnding) {
+                    address.House += address.HouseEnding;
+                }
                 geocodedObject.setAddress(
                     "Россия",
                     (address.Region) ? address.Region : null,
                     (address.Province) ? address.Province : null,
-                    (address.City) ? address.City : null,
+                    (address.City) ? address.City : 'Санкт-Петербург',
                     (address.StreetName) ? address.StreetName : null,
                     (address.House) ? address.House : null);
-                console.log(geocodedObject);
+//                console.log(geocodedObject);
                 return geocodedObject;
             };
 

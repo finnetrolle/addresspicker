@@ -9,18 +9,18 @@ define([
 
         // strings for localization
         strings: {
-            saveButton: 'Save',
-            cadaster: 'Show cadaster layer',
-            unfilledGeocodingResult: 'Position can be accepted, but the geocoding is not satisfied',
-            geocodingNoResults: 'Geocoding returns zero results',
-            geocodingNoPosition: 'Geocoding can not set position',
+            saveButton: 'Сохранить',
+            cadaster: 'Кадастровая карта',
+            unfilledGeocodingResult: 'Координаты могут быть сохранены, но адрес геокодирован не полностью',
+            geocodingNoResults: 'Нет результатов геокодинга',
+            geocodingNoPosition: 'Геокодинг не может установить позицию',
             tooltips: {
-                search: 'Search',
-                basemaps: 'Select basemap',
-                geocoder: 'Select geocoder',
-                cadaster: 'Show cadaster layer',
-                save: 'Save results',
-                alert: 'Alert!'
+                search: 'Поиск',
+                basemaps: 'Выбор подложки',
+                geocoder: 'Выбор геокодера',
+                cadaster: 'Показать кадастровый слой',
+                save: 'Сохранить результаты',
+                alert: 'Внимание!'
             }
         },
 
