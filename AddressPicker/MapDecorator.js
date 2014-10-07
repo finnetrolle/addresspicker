@@ -67,6 +67,7 @@ define([
             var div = document.createElement('div');
             div.className = 'igit-leaflet-wrapper-class';
             div.id = divId;
+            document.body.appendChild(div);
             return div;
         },
 
@@ -78,7 +79,7 @@ define([
             this.alertText.id = 'alertText';
             this.alertText.innerHTML = this.settings.strings.unfilledGeocodingResult;
             this.alertWindow.appendChild(this.alertText);
-            this.mapDiv.appendChild(this.alertWindow);
+//            this.mapDiv.appendChild(this.alertWindow);
 
             this.alertText.title = this.settings.strings.tooltips.alert;
             this.alertWindow.title = this.settings.strings.tooltips.alert;
@@ -93,7 +94,8 @@ define([
 
             this.fillSelectControl(this.basemaps, array);
             this.basemapsDiv.appendChild(this.basemaps);
-            this.mapDiv.appendChild(this.basemapsDiv);
+
+            //this.mapDiv.appendChild(this.basemapsDiv);
 
             var self = this;
             on(this.basemaps, 'change', function () {
@@ -115,7 +117,7 @@ define([
             this.cadasterCheckbox.type = 'checkbox';
             this.cadasterCheckbox.id = 'cadasterCheckBox';
             this.cadasterCheckboxDiv.appendChild(this.cadasterCheckbox);
-            this.mapDiv.appendChild(this.cadasterCheckboxDiv);
+//            this.mapDiv.appendChild(this.cadasterCheckboxDiv);
 
             var self = this;
             self.cadasterLayer = L.esri.dynamicMapLayer(self.settings.additionalLayers.cadasterLayer.link,{
@@ -157,7 +159,7 @@ define([
             this.saveButton.value = this.settings.strings.saveButton;
             this.saveButton.disabled = true;
             this.saveButtonDiv.appendChild(this.saveButton);
-            this.mapDiv.appendChild(this.saveButtonDiv);
+//            this.mapDiv.appendChild(this.saveButtonDiv);
 
             var self = this;
             on(this.saveButton, 'click', function(){
@@ -190,16 +192,14 @@ define([
             var self = this;
             var array = this.settings.geocodingServices;
 
-            this.geocodersDiv = document.createElement('div');
-            this.geocodersDiv.id = 'geocoders-wrapper';
-            this.geocodersDiv.className = 'igit-leaflet-wrapper-class';
+            this.geocodersDiv = this.createDiv('geocoders-wrapper');
             this.geocoders = document.createElement('select');
             this.geocoders.id = 'geocoders';
 
             this.fillSelectControl(this.geocoders, array);
 
             this.geocodersDiv.appendChild(this.geocoders);
-            this.mapDiv.appendChild(this.geocodersDiv);
+//            this.mapDiv.appendChild(this.geocodersDiv);
 
             on(this.geocoders, 'change', function() {
                 self.searchControl._service.getAdapter().initService(self.geocoders.value);
