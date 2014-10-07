@@ -343,8 +343,9 @@ define([
 
                             var marker = L.marker(e.latlng);
                             self.resultsLayerGroup.addLayer(marker);
+                            var popup = marker.bindPopup(result.text);
                             if (_DEBUG_BUG_GEOCODING) // Todo - remove after adding polys for city and region
-                                marker.bindPopup(result.text).openPopup();
+                                popup.openPopup();
                             self.geocodedObject = result;
                             if (self.geocodedObject) {
                                 self.fillInfo(self.geocodedObject);
