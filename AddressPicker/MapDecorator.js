@@ -313,6 +313,8 @@ define([
                         self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
                             self.resultsLayerGroup.clearLayers();
 
+                            var _DEBUG_BUG_GEOCODING = true; // Todo - remove after adding polys for city and region
+
                             if (self.settings.showLineToGeocodingResultPoint) {
                                 var A = e.latlng;
                                 var B = A;
@@ -321,6 +323,7 @@ define([
                                         var B = result.latlng;
                                 }
                                 else {
+                                    _DEBUG_BUG_GEOCODING = false; // Todo - remove after adding polys for city and region
                                     // this is part for null address from KGIS geocoder
                                     var geocodedObject = new GeocodedObject();
                                     geocodedObject.setText('Россия');
@@ -340,7 +343,8 @@ define([
 
                             var marker = L.marker(e.latlng);
                             self.resultsLayerGroup.addLayer(marker);
-                            marker.bindPopup(result.text).openPopup();
+                            if (_DEBUG_BUG_GEOCODING) // Todo - remove after adding polys for city and region
+                                marker.bindPopup(result.text).openPopup();
                             self.geocodedObject = result;
                             if (self.geocodedObject) {
                                 self.fillInfo(self.geocodedObject);

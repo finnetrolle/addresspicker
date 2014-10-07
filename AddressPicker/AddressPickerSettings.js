@@ -10,7 +10,7 @@ define([
         appinfo: {
             major: 0,   // application version
             minor: 2,   // first were prototype
-            build: 57,  // number of commit
+            build: 58,  // number of commit
             beta: true, // beta version
             demo: true  // demonstartion version
         },
