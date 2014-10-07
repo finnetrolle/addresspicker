@@ -73,6 +73,7 @@
     border-radius: 4px;
     background: #FFFFFF;
     position: absolute;
+    /*position: relative;*/
 }
 
 /* wrappers class-overriding styles*/

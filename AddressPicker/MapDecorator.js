@@ -67,6 +67,7 @@ define([
             var div = document.createElement('div');
             div.className = 'igit-leaflet-wrapper-class';
             div.id = divId;
+//            this.mapDiv.appendChild(div);
             document.body.appendChild(div);
             return div;
         },
@@ -98,7 +99,7 @@ define([
             //this.mapDiv.appendChild(this.basemapsDiv);
 
             var self = this;
-            on(this.basemaps, 'change', function () {
+            on(this.basemaps, 'change', function (event) {
                 if (self.layer) {
                     self.map.removeLayer(self.layer);
                 }
@@ -264,6 +265,8 @@ define([
             this.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
             var self = this;
 
+//            alert(window.location.query);
+
 
             require(['leaflets/esri-leaflet'], function(){
                 require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
@@ -313,8 +316,21 @@ define([
                             if (self.settings.showLineToGeocodingResultPoint) {
                                 var A = e.latlng;
                                 var B = A;
-                                if (result.hasOwnProperty('latlng'))
-                                    var B = result.latlng;
+                                if (result) {
+                                    if (result.hasOwnProperty('latlng'))
+                                        var B = result.latlng;
+                                }
+                                else {
+                                    // this is part for null address from KGIS geocoder
+                                    var geocodedObject = new GeocodedObject();
+                                    geocodedObject.setText('Россия');
+                                    geocodedObject.setPostalCode('');
+                                    geocodedObject.setLatLng(e.latlng.lat, e.latlng.lng); // Todo
+                                    geocodedObject.setBounds(e.latlng, e.latlng); // Todo
+                                    geocodedObject.setAddress(
+                                        "Россия", null, null, null, null, null);
+                                    result = geocodedObject;
+                                }
                                 var poly = L.polygon([
                                     [A.lat, A.lng],
                                     [B.lat, B.lng]
