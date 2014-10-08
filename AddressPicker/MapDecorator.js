@@ -265,6 +265,13 @@ define([
             this.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
             var self = this;
 
+            // Hack to solve bug #22 without adding localization
+            // Todo - add localization
+            var zoomin = document.getElementsByClassName("leaflet-control-zoom-in")[0];
+            zoomin.title = this.settings.strings.tooltips.zoomin;
+            var zoomout = document.getElementsByClassName('leaflet-control-zoom-out')[0];
+            zoomout.title = this.settings.strings.tooltips.zoomout;
+
 //            alert(window.location.query);
 
 

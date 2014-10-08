@@ -3,6 +3,7 @@
  */
 var dojoConfig = {
     async: true,
+    locale: "ru",
     packages: [
         {
             name: "esri-leaflet",

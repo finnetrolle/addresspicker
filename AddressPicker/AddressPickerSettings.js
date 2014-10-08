@@ -10,7 +10,7 @@ define([
         appinfo: {
             major: 0,   // application version
             minor: 2,   // first were prototype
-            build: 59,  // number of commit
+            build: 60,  // number of commit
             beta: true, // beta version
             demo: true  // demonstartion version
         },
@@ -28,6 +28,8 @@ define([
                 geocoder: 'Выбор геокодера',
                 cadaster: 'Показать кадастровый слой',
                 save: 'Сохранить результаты',
+                zoomin: 'Приблизить',
+                zoomout: 'Отдалить',
                 alert: 'Внимание!'
             }
         },
