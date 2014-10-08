@@ -6,6 +6,7 @@ define([
     'dojo/dom',
     'dojo/on',
     'leaflets/leaflet',
+    'esri/layers/WMSLayer',
     'AddressPicker/AbstractServiceAdapter',
     'AddressPicker/GoogleServiceAdapter',
     'AddressPicker/YandexServiceAdapter',
@@ -18,6 +19,7 @@ define([
             ,dom
             ,on
             ,leaflet
+            ,WMSLayer
             ,AbstractServiceAdapter
             ,GoogleServiceAdapter
             ,YandexServiceAdapter
@@ -103,7 +105,7 @@ define([
                 if (self.layer) {
                     self.map.removeLayer(self.layer);
                 }
-                self.layer = L.esri.tiledMapLayer(self.basemaps.value);
+                self.layer = L.esri.tiledMapLayer(self.basemaps.value, {maxZoom: self.settings.maxZoom});
                 self.map.addLayer(self.layer);
             });
 
@@ -263,6 +265,7 @@ define([
             var o = this.settings.centerPoint;
             this.mapDiv = dom.byId('map');
             this.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
+            console.log(this.map.getMaxZoom());
             var self = this;
 
             // Hack to solve bug #22 without adding localization
@@ -278,7 +281,7 @@ define([
             require(['leaflets/esri-leaflet'], function(){
                 require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
                     // loading basemap
-                    self.layer = L.esri.tiledMapLayer(self.settings.basemapLayers[0].link);
+                    self.layer = L.esri.tiledMapLayer(self.settings.basemapLayers[0].link, {maxZoom: self.settings.maxZoom});
                     self.map.addLayer(self.layer);
 
                     self.map.attributionControl.addAttribution(self.getVersion());

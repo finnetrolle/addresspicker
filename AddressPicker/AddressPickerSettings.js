@@ -10,7 +10,7 @@ define([
         appinfo: {
             major: 0,   // application version
             minor: 2,   // first were prototype
-            build: 60,  // number of commit
+            build: 61,  // number of commit
             beta: true, // beta version
             demo: true  // demonstartion version
         },
@@ -84,6 +84,7 @@ define([
         showLineToGeocodingResultPoint: true,
         minimumLetters: 3,
         maximumSuggestResults: 10,
+        maxZoom: 17,
 
         colors: {
             enabledColor: '#44FF44',
