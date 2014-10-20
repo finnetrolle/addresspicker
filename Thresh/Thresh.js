@@ -76,7 +76,7 @@ define([
             this.createPolygonBehavior = new CreatePolygonBehavior(this.map, this.editLayer);
             on(this.createPolygonBehavior, 'editComplete', function() {
                 self.saveLayer.add(self.createPolygonBehavior.getResultGraphic());
-//                self.mapBehaviorModel.removeBehavior(self.createPolygonBehavior); // make polygon once and kill tool
+                self.mapBehaviorModel.removeBehavior(self.createPolygonBehavior); // make polygon once and kill tool
             });
 
             this.createPolylineBehavior = new CreatePolylineBehavior(this.map, this.editLayer);

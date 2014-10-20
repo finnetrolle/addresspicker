@@ -91,11 +91,11 @@
             position: 'topleft',
             zoomToResult: true,
             useMapBounds: 12,
-            collapseAfterResult: true,
-            expanded: false,
+            collapseAfterResult: false,
+            expanded: true,
             maxResults: 25,
             forStorage: false,
-            allowMultipleResults: true
+            allowMultipleResults: false
         },
         initialize: function (options) {
             L.Util.setOptions(this, options);
@@ -227,6 +227,7 @@
             }
 
             this._container = L.DomUtil.create('div', "geocoder-control" + ((this.options.expanded) ? " " + "geocoder-control-expanded"  : ""));
+//            this._container = L.DomUtil.create('div', "geocoder-control" + ((true) ? " " + "geocoder-control-expanded"  : ""));
 
             this._input = L.DomUtil.create('input', "geocoder-control-input leaflet-bar", this._container);
 

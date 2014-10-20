@@ -83,7 +83,7 @@ define([
         serviceAdapter: 'AddressPicker/YandexServiceAdapter',
         showLineToGeocodingResultPoint: true,
         minimumLetters: 3,
-        maximumSuggestResults: 10,
+        maximumSuggestResults: 25,
         maxZoom: 17,
 
         colors: {

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" href="dijit/themes/claro/claro.css">
+
+    <script>
+
+        var dojoConfig = {
+            async: true,
+            parseOnLoad: true
+        };
+
+    </script>
+    <script src="dojo/dojo.js"></script>
+    <script>
+
+        require([
+                "dojo/store/Memory",
+                "dijit/form/ComboBox",
+                "dojo/dom",
+                "dojo/on",
+                "dojo/domReady!"
+        ], function(Memory, ComboBox, dom, on) {
+
+            var comboBox = new ComboBox({
+                id: "stateSelect",
+                name: "state",
+                value: "California",
+                searchAttr: "name"
+            }, "stateSelect").startup();
+
+            var button = dom.byId('ololo');
+            on(button, 'click', function(){
+                var stateStore = new Memory({
+                    data: [
+                        {name:"Alabama", id:"AL"},
+                        {name:"Alaska", id:"AK"},
+                        {name:"American Samoa", id:"AS"},
+                        {name:"Arizona", id:"AZ"},
+                        {name:"Arkansas", id:"AR"},
+                        {name:"Armed Forces Europe", id:"AE"},
+                        {name:"Armed Forces Pacific", id:"AP"},
+                        {name:"Armed Forces the Americas", id:"AA"},
+                        {name:"California", id:"CA"},
+                        {name:"Colorado", id:"CO"},
+                        {name:"Connecticut", id:"CT"},
+                        {name:"Delaware", id:"DE"}
+                    ]
+                });
+                dijit.byId('stateSelect').store = stateStore;
+            });
+        });
+
+
+
+
+    </script>
+
+</head>
+<body>
+
+    <input id="stateSelect">
+    <p>
+        <button id='ololo'>Get value</button>
+    </p>
+
+</body>
+</html>

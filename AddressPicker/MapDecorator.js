@@ -14,6 +14,8 @@ define([
     'AddressPicker/GeocodedObject',
     'AddressPicker/AddressPickerSettings',
     'AddressPicker/CadasterService',
+    'dijit/form/ComboBox',
+    'dojo/store/Memory',
     'dojo/domReady!'
 ], function(declare
             ,dom
@@ -27,6 +29,8 @@ define([
             ,GeocodedObject
             ,AddressPickerSettings
             ,CadasterService
+            ,ComboBox
+            ,Memory
     ){
 
     // This returned object becomes the defined value of this module
@@ -57,6 +61,7 @@ define([
         alertText: null,
         saveSpinner: null,
         saveSpinnerIsOn: false,
+        searchComboBox: null,
 
         // special (for map)
         layer: null,
@@ -72,6 +77,36 @@ define([
 //            this.mapDiv.appendChild(div);
             document.body.appendChild(div);
             return div;
+        },
+
+        _loadSuggestions: function(objectsArray) {
+            var storage = new Memory({data:[]});
+            for (var i = 0; i < objectsArray.length; ++i) {
+                storage.data.push({name: objectsArray[i].text});
+            }
+            this.searchComboBox.storage = storage;
+        },
+
+        createSearchComboBox: function() {
+            this.searchComboBoxInput = document.createElement('input');
+            this.searchComboBoxInput.className = 'searchComboBox';
+            this.searchComboBoxInput.id = 'searchComboBox';
+            document.body.appendChild(this.searchComboBoxInput);
+            this.searchComboBox = new ComboBox({
+                id: "stateSelect",
+                name: "state",
+                value: "California",
+                searchAttr: "name"
+            }, 'searchComboBox');
+            this.searchComboBox.startup();
+
+            var a = [];
+            for (var i = 0; i < 100; ++i) {
+                var o = new GeocodedObject();
+                o.setText('text ' + i);
+                a.push(o);
+            }
+            this._loadSuggestions(a);
         },
 
         createAlertWindow: function() {
@@ -292,6 +327,7 @@ define([
                     self.createGeocodingControl();
                     self.createSaveButtonControl();
                     self.createCadasterCheckbox();
+                    self.createSearchComboBox();
 
                     on(self.map, 'click', function (e) {
 //                        var src = e.originalEvent.srcElement;
