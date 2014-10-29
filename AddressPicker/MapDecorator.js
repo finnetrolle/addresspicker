@@ -415,15 +415,11 @@ define([
                                         }
                                     }
                                 }, this);
-
-                                console.log(result);
                             } else {
                                 self.resultsLayerGroup.clearLayers();
 
                                 alertWin.innerHTML = self.settings.strings.outOfRegions;
                                 alertWin.style.visibility = 'visible';
-
-                                console.log('За пределами ЛО');
                             }
                             /*self.geocodedObject.setCadasterNumber(result);
                             if (self.saveSpinnerIsOn) {

@@ -37,13 +37,13 @@ define([
         suggestParameter: 'SingleLine',
 
         convertResponseToResults: function(response) {
-//            console.log(response);
 
             // Todo - define what type of response we have and what to do with
             console.log(response);
 
             var results = [];
-            var exists = [];
+
+            self.exists = [];
 
             if (response) {
                 if ('address' in response) {
@@ -74,25 +74,22 @@ define([
                 {
                     // this is forward geocoding (address suggestion)
                     var resp = response.candidates;
+
                     for (var i = 0; i < resp.length; ++i) {
-                        if(resp[i].attributes.User_fld != '' && exists[resp[i].attributes.User_fld] == undefined) {
-                            resp[i].attributes.Match_addr = resp[i].attributes.User_fld + ', ' + resp[i].attributes.Match_addr;
-                            results.push(createEsriAddressObject(resp[i].attributes));
-                            exists[resp[i].attributes.User_fld] = true;
+                        var item = createEsriAddressObject(resp[i].attributes);
+                        if (item) {
+                            results.push(item);
                         }
                     }
                 }
             }
             return results;
 
-
             function createEsriAddressObject(address) {
+
                 this.obj = null;
                 var geocodedObject = new GeocodedObject();
-               // geocodedObject.setText(address.Match_addr);
-
-                var item = "Россия, " + address.Match_addr;
-                geocodedObject.setText(item);
+                // geocodedObject.setText(address.Match_addr);
 
                 geocodedObject.setPostalCode(address.Postal);
 //                geocodedObject.setLatLng(address.latlng.lat, address.latlng.lng); // Todo
@@ -102,21 +99,37 @@ define([
 
                 geocodedObject.setLatLng(lnglat.lat, lnglat.lng); // Todo
                 geocodedObject.setBounds(lnglat, lnglat); // Todo
+
                 if (address.HouseEnding) {
                     address.House += address.HouseEnding;
                 }
-                geocodedObject.setAddress(
-                    "Россия",
-                     address.User_fld
-                );
-                   /* (address.Region) ? address.Region : null,
-                    (address.Province) ? address.Province : null,
-                    (address.City) ? address.City : 'Санкт-Петербург',
-                    (address.StreetName) ? address.StreetName : null,
-                    (address.House) ? address.House : null); */
 
-//                console.log(geocodedObject);
-                return geocodedObject;
+                if(address.User_fld != '') {
+                    geocodedObject.setText("Россия, " + address.User_fld + ", " + address.Match_addr);
+
+                    geocodedObject.setAddress(
+                        "Россия",
+                        address.User_fld
+                    );
+                } else {
+                    geocodedObject.setText("Россия, " + address.Match_addr);
+
+                    geocodedObject.setAddress(
+                        "Россия",
+                        (address.Region) ? address.Region : null,
+                        (address.Province) ? address.Province : null,
+                        (address.City) ? address.City : 'Санкт-Петербург',
+                        (address.StreetName) ? address.StreetName : null,
+                        (address.House) ? address.House : null
+                    );
+                }
+
+                if(self.exists[address.User_fld + address.House] == undefined && (address.User_fld != '' || geocodedObject.geocodeLevel >= 4)) {
+                    self.exists[address.User_fld + address.House] = true;
+                    return geocodedObject;
+                }
+
+                return false;
             };
 
 

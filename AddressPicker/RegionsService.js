@@ -76,7 +76,6 @@ define([
                             }
                         }, this);
 
-                        console.log('---');
                     }
                 });
             });

@@ -157,13 +157,13 @@
                         bounds.extend(results[i].bounds);
                     }
 
-                    /*
+
                     this.fire('results', {
                         results: results,
                         bounds: bounds,
                         latlng: bounds.getCenter()
                     });
-                    */
+
 
                     this._map.fitBounds(bounds);
                 } else {
