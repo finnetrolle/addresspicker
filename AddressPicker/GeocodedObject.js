@@ -101,7 +101,8 @@ define([
         },
 
         isSuccessfullyGeocoded: function() {
-            if (this.isPartiallyGeocoded() && this.geocodeLevel == this.SUCCESSFULL_GEOCODE_LEVEL) {
+
+            if (this.isPartiallyGeocoded()) {
                 return true;
             }
             return false;

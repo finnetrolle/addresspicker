@@ -98,6 +98,7 @@ define([
                 var lnglat = new L.LatLng(point[1], point[0]);
 
                 geocodedObject.setLatLng(lnglat.lat, lnglat.lng); // Todo
+
                 geocodedObject.setBounds(lnglat, lnglat); // Todo
 
                 if (address.HouseEnding) {

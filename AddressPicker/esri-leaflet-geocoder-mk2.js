@@ -149,6 +149,15 @@
             //this.fire('loading');
 
             this._service.geocode(text, options, function(error, results, response){
+
+                var resFromStore = this.searchComboBox.store.data;
+
+                for (var i = 0; i < resFromStore.length; ++i) {
+                    if(resFromStore[i].name == text) {
+                        results[0] = resFromStore[i].results;
+                    }
+                }
+
                 if(results && results.length) {
                     var bounds = new L.LatLngBounds();
                     var i;
@@ -157,13 +166,11 @@
                         bounds.extend(results[i].bounds);
                     }
 
-
                     this.fire('results', {
                         results: results,
                         bounds: bounds,
                         latlng: bounds.getCenter()
                     });
-
 
                     this._map.fitBounds(bounds);
                 } else {
@@ -207,7 +214,7 @@
                     cb.get('store').data = [];
 
                     for (var i = 0; i < count; ++i) {
-                        cb.get('store').add({ name: results[i].text });
+                        cb.get('store').add({ name: results[i].text, results: results[i] });
 
                         /*
                         var suggestion = L.DomUtil.create('li', 'geocoder-control-suggestion', this._suggestions);
@@ -308,8 +315,8 @@
 
             L.DomEvent.addListener(this._input, "blur", function(e){
                 //this.clear();
-                var cb = dijit.byId('searchComboBox');
-                cb.get('store').data = [];
+                //var cb = dijit.byId('searchComboBox');
+                //cb.get('store').data = [];
             }, this);
 
             /*
