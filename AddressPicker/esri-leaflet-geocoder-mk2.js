@@ -41,6 +41,7 @@
 
             this.get(adapter.getQuery(), adapter.getParams(text), function(error, response){
                 if(error) {
+
                     callback.call(context, error);
                 } else {
                     var results = [];
@@ -65,8 +66,10 @@
         },
 
         reverse: function(latlng, opts, callback, context) {
+            console.log(adapter.getReverseParams(latlng));
             this.get(adapter.getReverseQuery(), adapter.getReverseParams(latlng), function(error, response){
                 if(error) {
+                    console.log(error);
                     callback.call(context, error);
                 } else {
                     var error = null;

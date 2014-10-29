@@ -40,6 +40,7 @@ define([
 //            console.log(response);
 
             // Todo - define what type of response we have and what to do with
+            console.log(response);
 
             var results = [];
             var exists = [];

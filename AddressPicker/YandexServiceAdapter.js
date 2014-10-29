@@ -19,7 +19,11 @@ define([
             suggestionQuery: "1.x/",
             url: "http://geocode-maps.yandex.ru/",
             params: {
-                format: 'json'
+                format: 'json',
+                ll: "31.3110,60.1250",
+                spn: "3.7,1.3",
+                rspn: 1,
+                results: 50
             }
         },
         forwardParameter: 'geocode',

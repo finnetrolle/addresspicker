@@ -68,7 +68,7 @@ define([
                             if (error) {
                                 callback.call(context, error);
                             } else {
-//                                console.log(response);
+                                console.log(response);
                                 var result = '';
                                 if (response.features.length > 0)
                                     result = response.features[0].attributes.PARCEL_ID;
