@@ -20,12 +20,13 @@ define([
             saveButton: 'Сохранить',
             cadaster: 'Кадастровая карта',
             unfilledGeocodingResult: 'Координаты могут быть сохранены, но адрес геокодирован не полностью',
+            outOfRegions: 'За пределами СПБ и ЛО',
             geocodingNoResults: 'Нет результатов геокодинга',
             geocodingNoPosition: 'Геокодинг не может установить позицию',
             tooltips: {
                 search: 'Поиск',
                 basemaps: 'Выбор подложки',
-                geocoder: 'Выбор геокодера',
+              //  geocoder: 'Выбор геокодера',
                 cadaster: 'Показать кадастровый слой',
                 save: 'Сохранить результаты',
                 zoomin: 'Приблизить',
@@ -80,7 +81,8 @@ define([
             }
         },
 
-        serviceAdapter: 'AddressPicker/YandexServiceAdapter',
+        //serviceAdapter: 'AddressPicker/YandexServiceAdapter',
+        serviceAdapter: 'AddressPicker/ArcGISServiceAdapter',
         showLineToGeocodingResultPoint: true,
         minimumLetters: 3,
         maximumSuggestResults: 25,

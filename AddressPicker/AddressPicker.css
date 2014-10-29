@@ -140,8 +140,8 @@
     width: 300px;
 }
 html, body {
-    width: 90%;
-    height: 90%;
+    /*width: 90%;*/
+    height: 99%;
     /*padding: 10px;*/
 }
 #map {
@@ -152,4 +152,26 @@ label {
     display: inline-block;
     width: 100px;
     text-align: right;
+}
+
+#widget_searchComboBox {
+    background-color: #fff;
+    width: 80%;
+    top: 20px;
+    left: 70px;
+    position: fixed;;
+    padding: 2px;
+    border: 1px solid #999999;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    -khtml-border-radius:3px;
+    border-radius: 3px;
+}
+
+#cadaster-wrapper {
+    top: 60px;
+}
+
+#basemaps-wrapper {
+    top: 20px;
 }

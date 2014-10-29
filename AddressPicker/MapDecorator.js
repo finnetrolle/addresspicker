@@ -14,6 +14,7 @@ define([
     'AddressPicker/GeocodedObject',
     'AddressPicker/AddressPickerSettings',
     'AddressPicker/CadasterService',
+    'AddressPicker/RegionsService',
     'dijit/form/ComboBox',
     'dojo/store/Memory',
     'dojo/domReady!'
@@ -29,6 +30,7 @@ define([
             ,GeocodedObject
             ,AddressPickerSettings
             ,CadasterService
+            ,RegionsService
             ,ComboBox
             ,Memory
     ){
@@ -38,6 +40,7 @@ define([
 
         // inside services
         searchControl: null,
+        regionsCheck: null,
         resultsLayerGroup: null,
 
         // settings
@@ -87,6 +90,7 @@ define([
             this.searchComboBox.storage = storage;
         },
 
+/*
         createSearchComboBox: function() {
             this.searchComboBoxInput = document.createElement('input');
             this.searchComboBoxInput.className = 'searchComboBox';
@@ -108,6 +112,7 @@ define([
             }
             this._loadSuggestions(a);
         },
+*/
 
         createAlertWindow: function() {
             this.alertWindow = this.createDiv('alertWindow');
@@ -181,7 +186,6 @@ define([
                     self.map.addLayer(self.cadasterLayer);
                 } else {
                     self.map.removeLayer(self.cadasterLayer);
-
                 }
             });
 
@@ -226,7 +230,7 @@ define([
         },
 
         createGeocodingControl: function() {
-            this.initGeocodingService();
+        //    this.initGeocodingService();
             var self = this;
             var array = this.settings.geocodingServices;
 
@@ -240,7 +244,7 @@ define([
 //            this.mapDiv.appendChild(this.geocodersDiv);
 
             on(this.geocoders, 'change', function() {
-                self.searchControl._service.getAdapter().initService(self.geocoders.value);
+               // self.searchControl._service.getAdapter().initService(self.geocoders.value);
                 self.searchControl._service.initialize();
                 self.resultsLayerGroup.clearLayers();
                 self.geocodedObject = null;
@@ -257,6 +261,7 @@ define([
             this.searchControl.initService(new IGITGeocoding());
             this.resultsLayerGroup = new L.LayerGroup().addTo(this.map);
             var self = this;
+
             on(this.searchControl, 'results', function(data) {
                 self.alertWindow.style.visibility = 'hidden';
                 self.geocodedObject = data.results[0];
@@ -300,7 +305,7 @@ define([
             var o = this.settings.centerPoint;
             this.mapDiv = dom.byId('map');
             this.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
-            console.log(this.map.getMaxZoom());
+//            console.log(this.map.getMaxZoom());
             var self = this;
 
             // Hack to solve bug #22 without adding localization
@@ -324,10 +329,11 @@ define([
                     self.createAlertWindow();
                     self.createBasemapCombobox();
 //                    self.initGeocodingServiceCombobox();
-                    self.createGeocodingControl();
+                    self.initGeocodingService();
+//                    self.createGeocodingControl(); //#выкл
                     self.createSaveButtonControl();
                     self.createCadasterCheckbox();
-                    self.createSearchComboBox();
+//                    self.createSearchComboBox();  //#выкл
 
                     on(self.map, 'click', function (e) {
 //                        var src = e.originalEvent.srcElement;
@@ -356,7 +362,80 @@ define([
                         if (src == self.alertText) return;
 
                         dom.byId("alertWindow").style.visibility = 'hidden';
-                        self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
+
+                        var alertWin = dom.byId("alertWindow");
+
+                        self.regionsService.service.checkRegion(e.latlng, {}, function (error, result, response) {
+                            if(result != '') {
+
+                                self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
+                                alertWin.innerHTML = self.settings.strings.unfilledGeocodingResult;
+
+                                    self.resultsLayerGroup.clearLayers();
+
+                                    var _DEBUG_BUG_GEOCODING = true; // Todo - remove after adding polys for city and region
+
+                                    if (self.settings.showLineToGeocodingResultPoint) {
+                                        var A = e.latlng;
+                                        var B = A;
+                                        if (result) {
+                                            if (result.hasOwnProperty('latlng'))
+                                                var B = result.latlng;
+                                        }
+                                        else {
+                                            _DEBUG_BUG_GEOCODING = false; // Todo - remove after adding polys for city and region
+                                            // this is part for null address from KGIS geocoder
+                                            var geocodedObject = new GeocodedObject();
+                                            geocodedObject.setText('Россия');
+                                            geocodedObject.setPostalCode('');
+                                            geocodedObject.setLatLng(e.latlng.lat, e.latlng.lng); // Todo
+                                            geocodedObject.setBounds(e.latlng, e.latlng); // Todo
+                                            geocodedObject.setAddress(
+                                                "Россия", null, null, null, null, null);
+                                            result = geocodedObject;
+                                        }
+                                        var poly = L.polygon([
+                                            [A.lat, A.lng],
+                                            [B.lat, B.lng]
+                                        ]);
+                                        self.resultsLayerGroup.addLayer(poly);
+                                    }
+
+                                    var marker = L.marker(e.latlng);
+                                    self.resultsLayerGroup.addLayer(marker);
+                                    var popup = marker.bindPopup(result.text);
+                                    if (_DEBUG_BUG_GEOCODING) // Todo - remove after adding polys for city and region
+                                        popup.openPopup();
+                                    self.geocodedObject = result;
+                                    if (self.geocodedObject) {
+                                        self.fillInfo(self.geocodedObject);
+                                        if (!self.geocodedObject.isSuccessfullyGeocoded()) {
+                                            dom.byId("alertWindow").style.visibility = 'visible';
+                                            self.setSaveButtonEnabled(true);
+                                        }
+                                    }
+                                }, this);
+
+                                console.log(result);
+                            } else {
+                                self.resultsLayerGroup.clearLayers();
+
+                                alertWin.innerHTML = self.settings.strings.outOfRegions;
+                                alertWin.style.visibility = 'visible';
+
+                                console.log('За пределами ЛО');
+                            }
+                            /*self.geocodedObject.setCadasterNumber(result);
+                            if (self.saveSpinnerIsOn) {
+                                self.saveButtonDiv.removeChild(self.saveSpinner);
+                                self.saveSpinnerIsOn = false;
+                                self.saveButton.disabled = false;
+                            }*/
+                            //alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
+                        }, this);
+
+                   /*     self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
+
                             self.resultsLayerGroup.clearLayers();
 
                             var _DEBUG_BUG_GEOCODING = true; // Todo - remove after adding polys for city and region
@@ -400,11 +479,14 @@ define([
                                     self.setSaveButtonEnabled(true);
                                 }
                             }
-                        }, this);
+                        }, this); */
                     });
 
                     self.cadasterService = new CadasterService();
                     self.cadasterService.initialize();
+
+                    self.regionsService = new RegionsService();
+                    self.regionsService.initialize();
                 })
             })
         },

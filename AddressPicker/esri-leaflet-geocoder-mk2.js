@@ -87,16 +87,16 @@
 
     L.esri.Controls.Geosearch = L.Control.extend({
         includes: L.Mixin.Events,
-        options: {
-            position: 'topleft',
-            zoomToResult: true,
-            useMapBounds: 12,
-            collapseAfterResult: false,
-            expanded: true,
-            maxResults: 25,
-            forStorage: false,
-            allowMultipleResults: false
-        },
+        /*options: {
+         position: 'topleft',
+         zoomToResult: true,
+         useMapBounds: 12,
+         collapseAfterResult: false,
+         expanded: true,
+         maxResults: 25,
+         forStorage: false,
+         allowMultipleResults: false
+         }, */
         initialize: function (options) {
             L.Util.setOptions(this, options);
 //            this.initService(new IGITGeocoding(options));
@@ -120,6 +120,7 @@
         },
 
         _geocode: function(text, key){
+            console.log('---> ' + text);
             var options = {};
 
             if(key){
@@ -142,7 +143,7 @@
 
             L.DomUtil.addClass(this._input, "geocoder-control-loading");
 
-            this.fire('loading');
+            //this.fire('loading');
 
             this._service.geocode(text, options, function(error, results, response){
                 if(results && results.length) {
@@ -153,17 +154,15 @@
                         bounds.extend(results[i].bounds);
                     }
 
-//                    console.log(bounds);
-
+                    /*
                     this.fire('results', {
                         results: results,
                         bounds: bounds,
                         latlng: bounds.getCenter()
                     });
+                    */
 
-                    if(this.options.zoomToResult){
-                        this._map.fitBounds(bounds);
-                    }
+                    this._map.fitBounds(bounds);
                 } else {
                     this.fire('results', {
                         results: [],
@@ -177,11 +176,12 @@
 
                 this.fire('load');
 
-                this.clear();
+                //this.clear();
 
                 this._input.blur();
             }, this);
         },
+
         _suggest: function(text){
             L.DomUtil.addClass(this._input, "geocoder-control-loading");
 
@@ -189,27 +189,36 @@
 
             this._service.suggest(text, options, function(error, response){
                 if(this._input.value){
-                    this._suggestions.innerHTML = "";
-                    this._suggestions.style.display = "none";
+                    //this._suggestions.innerHTML = "";
+                    //this._suggestions.style.display = "none";
 
                     var results = adapter.convertResults(response);
-                    this._service.previousSuggestResults = results;
-                    this._suggestions.style.display = "block";
+                    //this._service.previousSuggestResults = results;
+                    //this._suggestions.style.display = "block";
 
                     var count = results.length;
-                    if (results.length > settings.maximumSuggestResults) {
-                        count = settings.maximumSuggestResults;
-                    }
+                    //if (results.length > settings.maximumSuggestResults) {
+                    //    count = settings.maximumSuggestResults;
+                    //}
+                    var cb = dijit.byId('searchComboBox');
+                    cb.get('store').data = [];
 
                     for (var i = 0; i < count; ++i) {
+                        cb.get('store').add({ name: results[i].text });
+
+                        /*
                         var suggestion = L.DomUtil.create('li', 'geocoder-control-suggestion', this._suggestions);
                         suggestion.innerHTML = results[i].text;
+                        */
                     }
 
-                    L.DomUtil.removeClass(this._input, "geocoder-control-loading");
+                    cb.loadDropDown();
+                  //  L.DomUtil.removeClass(this._input, "geocoder-control-loading");
                 }
             }, this);
         },
+
+        /*
         clear: function(blur){
             this._suggestions.innerHTML = "";
             this._suggestions.style.display = "none";
@@ -219,15 +228,51 @@
                 L.DomUtil.removeClass(this._container, "geocoder-control-expanded");
             }
         },
+        */
+
         onAdd: function (map) {
             this._map = map;
 
+            /*
             if (map.attributionControl) {
-//                map.attributionControl.addAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
+                map.attributionControl.addAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
             }
 
             this._container = L.DomUtil.create('div', "geocoder-control" + ((this.options.expanded) ? " " + "geocoder-control-expanded"  : ""));
-//            this._container = L.DomUtil.create('div', "geocoder-control" + ((true) ? " " + "geocoder-control-expanded"  : ""));
+            this._container = L.DomUtil.create('div', "geocoder-control" + ((true) ? " " + "geocoder-control-expanded"  : ""));
+            */
+
+            this._container = L.DomUtil.create('div', "geocoder-control" + ((this.options.expanded) ? " " + "geocoder-control-expanded"  : ""));
+
+            this.searchComboBoxInput = document.createElement('input');
+            this.searchComboBoxInput.id = 'searchComboBox';
+            document.body.appendChild(this.searchComboBoxInput);
+
+            this.searchComboBox = new dijit.form.ComboBox({
+                id: "searchComboBox",
+                name: "state",
+                value: "",
+                searchAttr: "name",
+                // highlightMatch: "All",
+                // queryExpr: "*${0}*",
+                queryExpr: "*",
+                autoComplete: false,
+                hasDownArrow: true,
+                highlightMatch: "all"
+            }, 'searchComboBox');
+            this.searchComboBox.startup();
+
+            this._input = document.getElementById('searchComboBox');
+
+            L.DomEvent.addListener(this._input, "change", function(e){
+                if(this.searchComboBox.dropDown.selected != null) {
+                    this._geocode(this.searchComboBox.dropDown.selected.innerText);
+                }
+            }, this);
+
+            /*
+            this.searchComboBox.value = 's';
+            this.searchComboBox.start();
 
             this._input = L.DomUtil.create('input', "geocoder-control-input leaflet-bar", this._container);
 
@@ -235,25 +280,36 @@
 
             this._input.title = settings.strings.tooltips.search;
             this._container.title = settings.strings.tooltips.search;
+
             L.DomEvent.addListener(this._input, "focus", function(e){
                 L.DomUtil.addClass(this._container, "geocoder-control-expanded");
             }, this);
 
-            L.DomEvent.addListener(this._container, "click", function(e){
+            L.DomEvent.addListener(this._input, "change", function(e){
+                if(this.searchComboBox.dropDown.selected != null) {
+                    this._geocode(this.searchComboBox.dropDown.selected.innerText);
+                }
+            }, this);
+
+           L.DomEvent.addListener(this._container, "click", function(e){
                 L.DomUtil.addClass(this._container, "geocoder-control-expanded");
                 this._input.focus();
             }, this);
 
-            L.DomEvent.addListener(this._suggestions, "mousedown", function(e){
+            L.DomEvent.addListener(this._input, "mousedown", function(e){
                 var suggestionItem = e.target || e.srcElement;
                 this._geocode(suggestionItem.innerHTML, suggestionItem["data-magic-key"]);
                 this.clear();
             }, this);
+            */
 
             L.DomEvent.addListener(this._input, "blur", function(e){
-                this.clear();
+                //this.clear();
+                var cb = dijit.byId('searchComboBox');
+                cb.get('store').data = [];
             }, this);
 
+            /*
             L.DomEvent.addListener(this._input, "keydown", function(e){
                 L.DomUtil.addClass(this._container, "geocoder-control-expanded");
 
@@ -295,8 +351,10 @@
                         break;
                 }
             }, this);
+            */
 
             L.DomEvent.addListener(this._input, "keyup", function(e){
+
                 var key = e.which || e.keyCode;
                 var text = (e.target || e.srcElement).value;
 
@@ -306,22 +364,29 @@
                 }
 
                 // if this is the escape key it will clear the input so clear suggestions
+                /*
                 if(key === 27){
                     this._suggestions.innerHTML = "";
                     this._suggestions.style.display = "none";
                     return;
                 }
+                */
 
                 // if this is NOT the up/down arrows or enter make a suggestion
                 if(key !== 13 && key !== 38 && key !== 40){
                     this._suggest(text);
                 }
+
+                if(key === 13) {
+                    this._geocode(this._input.value);
+                }
             }, this);
 
-            L.DomEvent.disableClickPropagation(this._container);
+            //    L.DomEvent.disableClickPropagation(this._container);
 
             return this._container;
         },
+
         onRemove: function (map) {
 //            map.attributionControl.removeAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
         }

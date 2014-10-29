@@ -40,9 +40,9 @@ define([
 //            console.log(response);
 
             // Todo - define what type of response we have and what to do with
-            console.log(response);
 
             var results = [];
+            var exists = [];
 
             if (response) {
                 if ('address' in response) {
@@ -51,10 +51,10 @@ define([
                     response.address.X = response.location.x;
                     response.address.Y = response.location.y;
                     response.address.Match_addr =
-                            response.address.Region + ', ' +
-                            response.address.Province + ', ' +
-                            response.address.City + ', ' +
-                            response.address.Address;
+                        response.address.Region + ', ' +
+                        response.address.Province + ', ' +
+                     //   response.address.City + ', ' +
+                        response.address.Address;
                     var slist = response.address.Address.split(' ');
                     if (slist.length > 0) {
                         response.address.StreetName = '';
@@ -74,7 +74,11 @@ define([
                     // this is forward geocoding (address suggestion)
                     var resp = response.candidates;
                     for (var i = 0; i < resp.length; ++i) {
-                        results.push(createEsriAddressObject(resp[i].attributes));
+                        if(resp[i].attributes.User_fld != '' && exists[resp[i].attributes.User_fld] == undefined) {
+                            resp[i].attributes.Match_addr = resp[i].attributes.User_fld + ', ' + resp[i].attributes.Match_addr;
+                            results.push(createEsriAddressObject(resp[i].attributes));
+                            exists[resp[i].attributes.User_fld] = true;
+                        }
                     }
                 }
             }
@@ -84,7 +88,11 @@ define([
             function createEsriAddressObject(address) {
                 this.obj = null;
                 var geocodedObject = new GeocodedObject();
-                geocodedObject.setText(address.Match_addr);
+               // geocodedObject.setText(address.Match_addr);
+
+                var item = "Россия, " + address.Match_addr;
+                geocodedObject.setText(item);
+
                 geocodedObject.setPostalCode(address.Postal);
 //                geocodedObject.setLatLng(address.latlng.lat, address.latlng.lng); // Todo
 
@@ -98,11 +106,14 @@ define([
                 }
                 geocodedObject.setAddress(
                     "Россия",
-                    (address.Region) ? address.Region : null,
+                     address.User_fld
+                );
+                   /* (address.Region) ? address.Region : null,
                     (address.Province) ? address.Province : null,
                     (address.City) ? address.City : 'Санкт-Петербург',
                     (address.StreetName) ? address.StreetName : null,
-                    (address.House) ? address.House : null);
+                    (address.House) ? address.House : null); */
+
 //                console.log(geocodedObject);
                 return geocodedObject;
             };
@@ -119,6 +130,3 @@ define([
 
     })
 })
-
-
-
