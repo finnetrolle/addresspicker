@@ -266,6 +266,7 @@ define([
                 self.alertWindow.style.visibility = 'hidden';
                 self.geocodedObject = data.results[0];
                 self.resultsLayerGroup.clearLayers();
+
                 if (self.geocodedObject) {
                     self.fillInfo(self.geocodedObject);
                     if (self.geocodedObject.isSuccessfullyGeocoded()) {
@@ -489,7 +490,8 @@ define([
 
 
         fillInfo: function(o) {
-            this.setSaveButtonEnabled(o.isSuccessfullyGeocoded());
+            //this.setSaveButtonEnabled(o.isSuccessfullyGeocoded());
+            this.setSaveButtonEnabled(o.isSuccessfullyToSave());
         },
 
         setSaveButtonEnabled: function(value) {

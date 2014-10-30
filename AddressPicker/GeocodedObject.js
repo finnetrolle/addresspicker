@@ -91,9 +91,9 @@ define([
             return false;
         },
 
-        isPartiallyGeocoded: function() {
+        isPartiallyGeocoded: function(lvl) {
             if (this.isValid()) {
-                if (this.geocodeLevel > 0) {
+                if (this.geocodeLevel > lvl) {
                     return true;
                 }
             }
@@ -101,8 +101,14 @@ define([
         },
 
         isSuccessfullyGeocoded: function() {
+            if (this.isPartiallyGeocoded(0)) {
+                return true;
+            }
+            return false;
+        },
 
-            if (this.isPartiallyGeocoded()) {
+        isSuccessfullyToSave: function() {
+            if (this.isPartiallyGeocoded(5)) {
                 return true;
             }
             return false;

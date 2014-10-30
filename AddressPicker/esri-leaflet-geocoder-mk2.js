@@ -154,6 +154,11 @@
 
                 for (var i = 0; i < resFromStore.length; ++i) {
                     if(resFromStore[i].name == text) {
+
+                        if(results == undefined) {
+                            var results = [];
+                        }
+
                         results[0] = resFromStore[i].results;
                     }
                 }
@@ -189,6 +194,7 @@
                 //this.clear();
 
                 this._input.blur();
+
             }, this);
         },
 
@@ -270,14 +276,24 @@
                 hasDownArrow: true,
                 highlightMatch: "all"
             }, 'searchComboBox');
+
             this.searchComboBox.startup();
+            this.searchComboBox.loadDropDown();
+            this.searchComboBox.openDropDown();
+            this.searchComboBox.closeDropDown();
 
             this._input = document.getElementById('searchComboBox');
 
             L.DomEvent.addListener(this._input, "change", function(e){
                 if(this.searchComboBox.dropDown.selected != null) {
-                    this._geocode(this.searchComboBox.dropDown.selected.innerText);
+                    this._geocode(this.searchComboBox.dropDown.selected.textContent);
                 }
+            }, this);
+
+            this._dropdown = document.getElementById('widget_searchComboBox_dropdown');
+
+            L.DomEvent.addListener(this._dropdown, "click", function(e){
+                this._geocode(this.searchComboBox.dropDown.selected.textContent);
             }, this);
 
             /*
