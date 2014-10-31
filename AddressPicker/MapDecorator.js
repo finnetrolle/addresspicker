@@ -275,6 +275,10 @@ define([
                         self.resultsLayerGroup.addLayer(marker);
                         popup.openPopup();
 
+                        if(!self.geocodedObject.isSuccessfullyToSave()) {
+                            self.alertWindow.style.visibility = 'visible';
+                        }
+
                     } else {
                         alert(self.settings.strings.geocodingNoPosition);
                     }
@@ -397,6 +401,8 @@ define([
                                         geocodedObject.setAddress(
                                             "Россия", null, null, null, null, null);
                                         result = geocodedObject;
+
+                                        dom.byId("alertWindow").style.visibility = 'visible';
                                     }
                                     var poly = L.polygon([
                                         [A.lat, A.lng],
@@ -412,7 +418,6 @@ define([
 
                                     //if (_DEBUG_BUG_GEOCODING) // Todo - remove after adding polys for city and region
                                         popup.openPopup();
-
 
                                     self.geocodedObject = result;
                                     if (self.geocodedObject) {
@@ -495,10 +500,9 @@ define([
             })
         },
 
-
         fillInfo: function(o) {
             //this.setSaveButtonEnabled(o.isSuccessfullyGeocoded());
-            this.setSaveButtonEnabled(o.isSuccessfullyToSave());
+            this.setSaveButtonEnabled(o.isValid());
         },
 
         setSaveButtonEnabled: function(value) {
