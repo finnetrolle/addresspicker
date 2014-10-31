@@ -105,7 +105,7 @@ define([
                     address.House += address.HouseEnding;
                 }
 
-                if(address.User_fld != '') {
+                if(address.User_fld != '' && address.User_fld != undefined) {
                     geocodedObject.setText("Россия, " + address.User_fld + ", " + address.Match_addr);
 
                     geocodedObject.setAddress(

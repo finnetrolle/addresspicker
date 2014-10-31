@@ -367,46 +367,53 @@ define([
                         var alertWin = dom.byId("alertWindow");
 
                         self.regionsService.service.checkRegion(e.latlng, {}, function (error, result, response) {
+
                             if(result != '') {
+                                var region = result;
 
                                 self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
                                 alertWin.innerHTML = self.settings.strings.unfilledGeocodingResult;
 
-                                    self.resultsLayerGroup.clearLayers();
+                                self.resultsLayerGroup.clearLayers();
 
-                                    var _DEBUG_BUG_GEOCODING = true; // Todo - remove after adding polys for city and region
+                                var _DEBUG_BUG_GEOCODING = true; // Todo - remove after adding polys for city and region
 
-                                    if (self.settings.showLineToGeocodingResultPoint) {
-                                        var A = e.latlng;
-                                        var B = A;
-                                        if (result) {
-                                            if (result.hasOwnProperty('latlng'))
-                                                var B = result.latlng;
-                                        }
-                                        else {
-                                            _DEBUG_BUG_GEOCODING = false; // Todo - remove after adding polys for city and region
-                                            // this is part for null address from KGIS geocoder
-                                            var geocodedObject = new GeocodedObject();
-                                            geocodedObject.setText('Россия');
-                                            geocodedObject.setPostalCode('');
-                                            geocodedObject.setLatLng(e.latlng.lat, e.latlng.lng); // Todo
-                                            geocodedObject.setBounds(e.latlng, e.latlng); // Todo
-                                            geocodedObject.setAddress(
-                                                "Россия", null, null, null, null, null);
-                                            result = geocodedObject;
-                                        }
-                                        var poly = L.polygon([
-                                            [A.lat, A.lng],
-                                            [B.lat, B.lng]
-                                        ]);
-                                        self.resultsLayerGroup.addLayer(poly);
+                                if (self.settings.showLineToGeocodingResultPoint) {
+                                    var A = e.latlng;
+                                    var B = A;
+                                    if (result) {
+                                        if (result.hasOwnProperty('latlng'))
+                                            var B = result.latlng;
                                     }
+                                    else
+                                    {
+                                        _DEBUG_BUG_GEOCODING = false; // Todo - remove after adding polys for city and region
+                                        // this is part for null address from KGIS geocoder
+                                        var geocodedObject = new GeocodedObject();
+                                        geocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province);
+                                        geocodedObject.setPostalCode('');
+                                        geocodedObject.setLatLng(e.latlng.lat, e.latlng.lng); // Todo
+                                        geocodedObject.setBounds(e.latlng, e.latlng); // Todo
+                                        geocodedObject.setAddress(
+                                            "Россия", null, null, null, null, null);
+                                        result = geocodedObject;
+                                    }
+                                    var poly = L.polygon([
+                                        [A.lat, A.lng],
+                                        [B.lat, B.lng]
+                                    ]);
+                                    self.resultsLayerGroup.addLayer(poly);
+                                    }
+
 
                                     var marker = L.marker(e.latlng);
                                     self.resultsLayerGroup.addLayer(marker);
                                     var popup = marker.bindPopup(result.text);
-                                    if (_DEBUG_BUG_GEOCODING) // Todo - remove after adding polys for city and region
+
+                                    //if (_DEBUG_BUG_GEOCODING) // Todo - remove after adding polys for city and region
                                         popup.openPopup();
+
+
                                     self.geocodedObject = result;
                                     if (self.geocodedObject) {
                                         self.fillInfo(self.geocodedObject);

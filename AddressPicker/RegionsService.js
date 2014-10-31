@@ -43,7 +43,7 @@ define([
                             inSR: '',
                             spatialRel: 'esriSpatialRelWithin',
                             relationParam: '',
-                            outFields: 'Region',
+                            outFields: 'Region, Province',
                             returnGeometry: false,
                             maxAllowableOffset: '',
                             geometryPrecision: '',
@@ -71,7 +71,7 @@ define([
 //                                console.log(response);
                                 var result = '';
                                 if (response.features.length > 0)
-                                    result = response.features[0].attributes.Region;
+                                    result = response.features[0].attributes;
                                 callback.call(context, error, result, response);
                             }
                         }, this);
