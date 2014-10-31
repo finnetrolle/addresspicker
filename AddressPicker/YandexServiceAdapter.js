@@ -94,4 +94,4 @@ define([
             return geocodedObject;
         }
     })
-})
+});

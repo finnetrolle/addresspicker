@@ -83,5 +83,5 @@ define([
             this.service = new RegionsService();
         }
     });
-})
+});
 

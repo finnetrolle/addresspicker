@@ -57,8 +57,7 @@ define([
                     (address.route) ? address.route.toString() : null,
                     (address.street_number) ? address.street_number.toString() : null);
                 return geocodedObject;
-            };
-
+             }
             function parseResult(result) {
                 var addressComponents = result.address_components;
                 var address = {};
@@ -89,8 +88,8 @@ define([
                             return this.long;
                         }
                     };
-                };
-            };
+                }
+            }
         },
 
         adaptLatLng: function(latlng) {
@@ -98,7 +97,7 @@ define([
         }
 
     })
-})
+});
 
 
 

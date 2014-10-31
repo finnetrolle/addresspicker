@@ -2,7 +2,7 @@
  * Created by syachin on 13.09.2014.
  */
 define([
-    'dojo/_base/declare',
+    'dojo/_base/declare'
 ], function(declare){
 
     return declare(null, {
@@ -22,4 +22,4 @@ define([
             this.convertResponseToResults = convertResponseToResults;
         }
     })
-})
+});

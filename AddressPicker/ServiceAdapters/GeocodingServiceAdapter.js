@@ -5,7 +5,7 @@ define([
     '../../dojo/_base/declare',
     'leaflets/leaflet',
     'dojo/domReady!'
-], function(declare, leaflet) {
+], function(declare) {
 
     var concreteServiceAdapter = null;
 

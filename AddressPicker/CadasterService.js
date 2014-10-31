@@ -82,5 +82,5 @@ define([
             this.service = new CadService();
         }
     });
-})
+});
 

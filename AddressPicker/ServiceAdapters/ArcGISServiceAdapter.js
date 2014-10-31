@@ -5,7 +5,7 @@ define([
     'dojo/_base/declare',
     'leaflets/leaflet',
     'AddressPicker/GeocodedObject',
-    'esri/geometry/webMercatorUtils',
+    'esri/geometry/webMercatorUtils'
 ], function(declare, leaflet, GeocodedObject, WebMercatorUtils){
 
     return declare(null, {
@@ -93,9 +93,7 @@ define([
                     (address.House) ? address.House : null);
                 console.log(geocodedObject);
                 return geocodedObject;
-            };
-
-
+            }
         },
 
         adaptLatLng: function(latlng) {
@@ -106,7 +104,7 @@ define([
         }
 
     })
-})
+});
 
 
 

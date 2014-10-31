@@ -3,9 +3,8 @@
  */
 define([
     'dojo/_base/declare',
-    'leaflets/leaflet',
     'dojo/domReady!'
-], function(declare, leaflet){
+], function(declare){
 
     // This returned object becomes the defined value of this module
     return declare(null, {
@@ -26,6 +25,7 @@ define([
 
         geocodeLevel: 0,
         SUCCESSFULL_GEOCODE_LEVEL: 6,
+        SUCCESSFULL_TO_SAVE_GEOCODE_LEVEL: 5,
 
         setBounds: function(northeast, southwest) {
             this.bounds = new L.LatLngBounds();
@@ -86,9 +86,7 @@ define([
         },
 
         isValid: function() {
-            if (this.latlng !== null)
-                return true;
-            return false;
+            return this.latlng !== null;
         },
 
         isPartiallyGeocoded: function(lvl) {
@@ -101,17 +99,12 @@ define([
         },
 
         isSuccessfullyGeocoded: function() {
-            if (this.isPartiallyGeocoded(0)) {
-                return true;
-            }
-            return false;
+            return !!this.isPartiallyGeocoded(0);
+
         },
 
         isSuccessfullyToSave: function() {
-            if (this.isPartiallyGeocoded(5)) {
-                return true;
-            }
-            return false;
+            return !!this.isPartiallyGeocoded(this.SUCCESSFULL_TO_SAVE_GEOCODE_LEVEL);
         },
 
         getResult: function() {
@@ -150,4 +143,4 @@ define([
             return s;
         }
     });
-})
+});

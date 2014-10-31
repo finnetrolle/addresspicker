@@ -131,9 +131,7 @@ define([
                 }
 
                 return false;
-            };
-
-
+            }
         },
 
         adaptLatLng: function(latlng) {
@@ -144,4 +142,4 @@ define([
         }
 
     })
-})
+});
