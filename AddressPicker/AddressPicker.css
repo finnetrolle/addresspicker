@@ -1,4 +1,11 @@
-
+body, html {
+    overflow: hidden;
+    /*width: 90%;*/
+    height: 100%;
+    /*padding: 10px;*/
+    padding: 0;
+    margin: 0;
+}
 
 /* wrappers class style */
 .igit-leaflet-wrapper-class {
@@ -55,7 +62,7 @@
 
 #savebutton-wrapper {
     position: absolute;
-    bottom: 20px;
+    bottom: 25px;
     right: 10px;
     z-index: 10;
     background-color: #FF4444;
@@ -63,23 +70,21 @@
 
 #alertWindow {
     position: absolute;
-    bottom: 50px;
+    bottom: 55px;
     right: 10px;
     padding: 4px;
     z-index: 10;
+    height: 18px;
     background-color: #FF4444;
 }
 .infoInput {
     width: 300px;
 }
-html, body {
-    /*width: 90%;*/
-    height: 99%;
-    /*padding: 10px;*/
-}
+
 #map {
     width: 100%;
     height: 100%;
+    position: absolute;
 }
 label {
     display: inline-block;
@@ -107,4 +112,10 @@ label {
 
 #basemaps-wrapper {
     top: 20px;
+}
+
+.dijitComboBox div input.dijitArrowButtonInner {
+    text-indent: 0;
+    width: 17px;
+    color: #66707e;
 }
