@@ -10,7 +10,7 @@ define([
         appinfo: {
             major: 0,   // application version
             minor: 3,   // first were prototype
-            build: 3,  // number of commit
+            build: 4,  // number of commit
             beta: true, // beta version
             demo: true  // demonstartion version
         },
@@ -20,7 +20,7 @@ define([
             saveButton: 'Сохранить',
             cadaster: 'Кадастровая карта',
             unfilledGeocodingResult: 'Координаты могут быть сохранены, но адрес геокодирован не полностью',
-            outOfRegions: 'За пределами СПБ и ЛО',
+            outOfRegions: 'Адрес за пределами территории Санкт-Петербурга и Ленинградской области не может быть сохранен. Выберите адрес в указанных пределах',
             geocodingNoResults: 'Нет результатов геокодинга',
             geocodingNoPosition: 'Геокодинг не может установить позицию',
             tooltips: {
@@ -31,7 +31,7 @@ define([
                 save: 'Сохранить результаты',
                 zoomin: 'Приблизить',
                 zoomout: 'Отдалить',
-                alert: 'Внимание!'
+                alert: ''
             }
         },
 
