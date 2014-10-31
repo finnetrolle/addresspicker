@@ -391,7 +391,7 @@ define([
                                     }
                                     else
                                     {
-//                                        _DEBUG_BUG_GEOCODING = false; // Todo - remove after adding polys for city and region
+                                        _DEBUG_BUG_GEOCODING = false; // Todo - remove after adding polys for city and region
                                         // this is part for null address from KGIS geocoder
                                         var geocodedObject = new GeocodedObject();
                                         geocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province);
