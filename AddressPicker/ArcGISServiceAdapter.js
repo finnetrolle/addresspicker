@@ -105,7 +105,15 @@ define([
                     address.House += address.HouseEnding;
                 }
 
+                // if User_fld is exists and not empty
                 if(address.User_fld != '' && address.User_fld != undefined) {
+                    // we can add region and province fields from user field
+                    // cause user_field is always filled with region and province for streets result
+                    var spiltstr = address.User_fld.split(', ');
+                    address.Region = spiltstr[0];
+                    address.Province = spiltstr[1];
+                    address.StreetName = address.Match_addr;
+
                     geocodedObject.setText("Россия, " + address.User_fld + ", " + address.Match_addr);
 
                     geocodedObject.setAddress(
@@ -125,8 +133,8 @@ define([
                     );
                 }
 
-                if(self.exists[address.User_fld + address.House] == undefined && (address.User_fld != '' || geocodedObject.geocodeLevel >= 4)) {
-                    self.exists[address.User_fld + address.House] = true;
+                if(self.exists[address.User_fld + address.StreetName + address.House] == undefined && (address.User_fld != '' || geocodedObject.geocodeLevel >= 4)) {
+                    self.exists[address.User_fld + address.StreetName + address.House] = true;
                     return geocodedObject;
                 }
 
