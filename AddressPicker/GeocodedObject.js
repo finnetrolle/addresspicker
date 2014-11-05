@@ -22,10 +22,31 @@ define([
         street_number: null,// level 6 - GOOGLE field
         address: null,      // level 5 or 6 - ARCGIS field
         cadasterNumber: null,
+        dataType: null, // тип данных
+        geometryType: null, // тип геометрии
+        houseCorp: null,
+        liter: null,
+        res: null,
 
         geocodeLevel: 0,
         SUCCESSFULL_GEOCODE_LEVEL: 6,
         SUCCESSFULL_TO_SAVE_GEOCODE_LEVEL: 5,
+
+        setLiter: function(liter) {
+            this.liter = liter;
+        },
+
+        setHouseCorpus: function(corpus) {
+            this.houseCorp = corpus;
+        },
+
+        setRes: function(res) {
+            this.res = res;
+        },
+
+        setGeometryType: function(geoType) {
+            this.geometryType = geoType;
+        },
 
         setBounds: function(northeast, southwest) {
             this.bounds = new L.LatLngBounds();
@@ -141,6 +162,27 @@ define([
                 s += '    ' + String(key) + ': ' + String(result.elements[key] + '\n');
             }
             return s;
+        },
+
+        getHtmlForSideWindow: function() {
+            var html =
+                "<p>[" + new Date().toLocaleTimeString() + "]</p>" +
+                "<p>Тип данных: " + (this.dataType || "<нет данных>") + "</p>" +
+                "<p>Данные: " + (this.text || "<нет данных>") + "</p>" +
+                "<p>Тип геометрии: " + (this.geometryType || "<нет данных>") + "</p>" +
+                "<p>Индекс: " + (this.postal || "<нет данных>") + "</p>" +
+                "<p>Страна: " + (this.country || "<нет данных>") + "</p>" +
+                "<p>Регион: " + (this.region || "<нет данных>") + "</p>" +
+                "<p>Административный район: " + (this.subregion || "<нет данных>") + "</p>" +
+                "<p>Муниципалитет: " + (this.city || "<нет данных>") + "</p>" +
+                "<p>Топоним: " + (this.route || "<нет данных>") + "</p>" +
+                "<p>Номер дома: " + (this.street_number || "<нет данных>") + "</p>" +
+                "<p>Корпус дома: " + (this.houseCorp || "<нет данных>") + "</p>" +
+                "<p>Литер дома: " + (this.liter || "<нет данных>") + "</p>" +
+                "<p>Кадастровый номер: " + (this.cadasterNumber || "<нет данных>") + "</p>" +
+                "<p>РЭС: " + (this.res || "<нет данных>") + "</p>" +
+                "</br>";
+            return html;
         }
     });
 });
