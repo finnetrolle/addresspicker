@@ -124,3 +124,7 @@ label {
     text-align: left !important;
     height: auto !important;
 }
+
+.leaflet-right .leaflet-control {
+    display: none;
+}
