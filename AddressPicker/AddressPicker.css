@@ -125,6 +125,7 @@ label {
     height: auto !important;
 }
 
+
 .leaflet-right .leaflet-control {
-    display: none;
+    margin-top: 1px;
 }
