@@ -115,7 +115,12 @@ label {
 }
 
 .dijitComboBox div input.dijitArrowButtonInner {
-    text-indent: 0;
     width: 17px;
     color: #66707e;
+}
+
+.dijitValidationTextBoxError input.dijitValidationInner, .dijitSelect input, .dijitTextBox input.dijitArrowButtonInner {
+    text-indent: 0 !important;
+    text-align: left !important;
+    height: auto !important;
 }
