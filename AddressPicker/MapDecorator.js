@@ -429,6 +429,7 @@ define([
                                     }
                                 }, this);
                             } else {
+                                self.saveButton.disabled = true;
                                 self.resultsLayerGroup.clearLayers();
 
                                 alertWin.innerHTML = self.settings.strings.outOfRegions;
