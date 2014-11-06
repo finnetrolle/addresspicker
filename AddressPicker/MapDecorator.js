@@ -304,6 +304,9 @@ define([
         },
 
         // initialization (overriden)
+        resizeMap: function() {
+            this.map.resize();
+        },
 
         initMap: function (longitude, latitude, zoom) {
             this.settings = new AddressPickerSettings();
