@@ -62,7 +62,9 @@ define([
         },
 
         setCadasterNumber: function(cadasterNumber) {
-            this.cadasterNumber = cadasterNumber;
+            if(cadasterNumber != undefined) {
+                this.cadasterNumber = cadasterNumber;
+            }
         },
 
         setLatLng: function(latitude, longitude) {

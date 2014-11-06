@@ -13,9 +13,10 @@ define([
     'AddressPicker/ArcGISServiceAdapter',
     'AddressPicker/GeocodedObject',
     'AddressPicker/AddressPickerSettings',
-    'AddressPicker/CadasterService',
-    'AddressPicker/RegionsService',
-    'AddressPicker/RESService',
+//    'AddressPicker/CadasterService',
+//    'AddressPicker/RegionsService',
+//    'AddressPicker/RESService',
+    'AddressPicker/Service',
     'dijit/form/ComboBox',
     'dojo/store/Memory',
     'dojo/domReady!'
@@ -30,9 +31,10 @@ define([
             ,ArcGISServiceAdapter
             ,GeocodedObject
             ,AddressPickerSettings
-            ,CadasterService
-            ,RegionsService
-            ,RESService
+//            ,CadasterService
+//            ,RegionsService
+//            ,RESService
+            ,Service
             ,ComboBox
             ,Memory
     ){
@@ -211,15 +213,16 @@ define([
                     self.saveButtonDiv.appendChild(self.saveSpinner);
                     self.saveSpinnerIsOn = true;
                     self.saveButton.disabled = true;
-                    self.cadasterService.service.getCadasterNumber(self.geocodedObject.latlng, {}, function (error, result, response) {
-                        self.geocodedObject.setCadasterNumber(result);
+                    self.cadasterService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
+                        self.geocodedObject.setCadasterNumber(result.PARCEL_ID);
                         if (self.saveSpinnerIsOn) {
                             self.saveButtonDiv.removeChild(self.saveSpinner);
                             self.saveSpinnerIsOn = false;
                             self.saveButton.disabled = false;
                         }
 
-                        self.resService.service.getRESname(self.geocodedObject.latlng, {}, function (error, result, response) {
+                       /* self.resService.service.getRESname(self.geocodedObject.latlng, {}, function (error, result, response) { */
+                        self.resService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
                             self.geocodedObject.setRes(result.Name);
                             alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
                         }, this);
@@ -397,7 +400,7 @@ define([
 
                         var alertWin = dom.byId("alertWindow");
 
-                        self.regionsService.service.checkRegion(e.latlng, {}, function (error, result, response) {
+                        self.regionsService.service.getResult(e.latlng, {}, function (error, result, response) {
 
                             if(result != '') {
                                 var region = result;
@@ -519,14 +522,20 @@ define([
                         }, this); */
                     });
 
-                    self.cadasterService = new CadasterService();
-                    self.cadasterService.initialize();
+                    self.cadasterService = new Service();
+                    self.cadasterService.initialize({url: "http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer/0/"});
 
-                    self.regionsService = new RegionsService();
-                    self.regionsService.initialize();
+                    self.regionsService = new Service();
+                    self.regionsService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/"});
 
-                    self.resService = new RESService();
-                    self.resService.initialize();
+                    self.resService = new Service();
+                    self.resService.initialize(
+                        {
+                            url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/CORE/Company/MapServer/0/",
+                            where: "CompanyCategoryId=2",
+                            outFields: "Name"
+                        }
+                    );
                 })
             })
         },
