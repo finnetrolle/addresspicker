@@ -120,7 +120,7 @@ define([
             this.alertWindow.style.visibility = 'hidden';
             this.alertText = document.createElement('p');
             this.alertText.id = 'alertText';
-            this.alertText.innerHTML = this.settings.strings.unfilledGeocodingResult;
+            this.alertWindow.innerHTML = this.settings.strings.unfilledGeocodingResult;
             this.alertWindow.appendChild(this.alertText);
 //            this.mapDiv.appendChild(this.alertWindow);
 
