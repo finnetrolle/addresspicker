@@ -15,6 +15,7 @@ define([
     'AddressPicker/AddressPickerSettings',
     'AddressPicker/CadasterService',
     'AddressPicker/RegionsService',
+    'AddressPicker/RESService',
     'dijit/form/ComboBox',
     'dojo/store/Memory',
     'dojo/domReady!'
@@ -31,6 +32,7 @@ define([
             ,AddressPickerSettings
             ,CadasterService
             ,RegionsService
+            ,RESService
             ,ComboBox
             ,Memory
     ){
@@ -216,7 +218,12 @@ define([
                             self.saveSpinnerIsOn = false;
                             self.saveButton.disabled = false;
                         }
-                        alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
+
+                        self.resService.service.getRESname(self.geocodedObject.latlng, {}, function (error, result, response) {
+                            self.geocodedObject.setRes(result.Name);
+                            alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
+                        }, this);
+
                     }, this);
                 }
             });
@@ -517,6 +524,9 @@ define([
 
                     self.regionsService = new RegionsService();
                     self.regionsService.initialize();
+
+                    self.resService = new RESService();
+                    self.resService.initialize();
                 })
             })
         },

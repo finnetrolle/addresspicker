@@ -129,3 +129,7 @@ label {
 .leaflet-right .leaflet-control {
     margin-top: 1px;
 }
+
+.dijitValidationContainer .dijitValidationInner {
+    display: none;
+}

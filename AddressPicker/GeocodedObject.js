@@ -9,6 +9,7 @@ define([
     // This returned object becomes the defined value of this module
     return declare(null, {
         text: null,
+        res: null,
         bounds: null,
         latlng: null,
         name: null,
@@ -74,6 +75,10 @@ define([
 
         setText: function(text) {
             this.text = text;
+        },
+
+        setRes: function(res) {
+            this.res = res;
         },
 
         setAddress: function(country, region, subregion, city, route, street_number) {
@@ -144,10 +149,10 @@ define([
                     index: this.postal,
                     locality: this.city,
                     toponim: this.route,
-                    housenumber: this.street_number
+                    housenumber: this.street_number,
 //                    housebld: '',
 //                    houseliter: '',
-//                    RES: null // Todo - insert RES ??? WTF is res?
+                    RES: this.res // Todo - insert RES ??? WTF is res?
                 }
             };
         },
