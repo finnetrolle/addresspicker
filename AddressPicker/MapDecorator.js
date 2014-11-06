@@ -305,9 +305,20 @@ define([
 
         // initialization (overriden)
 
-        initMap: function () {
+        initMap: function (longitude, latitude, zoom) {
             this.settings = new AddressPickerSettings();
             var o = this.settings.centerPoint;
+            // this block used to set initial center point and zoom (astrosoft asked for this)
+            if ((longitude != undefined) && (latitude != undefined)) {
+                o.longitude = longitude;
+                o.latitude = latitude;
+                if (zoom != undefined) {
+                    if ((zoom >= 1) && (zoom <= this.settings.maxZoom)) {
+                        o.zoom = zoom;
+                    }
+                }
+            }
+
             this.mapDiv = dom.byId('map');
             this.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
 //            console.log(this.map.getMaxZoom());
