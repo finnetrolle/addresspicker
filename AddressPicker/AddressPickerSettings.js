@@ -12,7 +12,9 @@ define([
             minor: 3,   // first were prototype
             build: 14,  // number of commit
             beta: true, // beta version
-            demo: true  // demonstartion version
+            demo: true, // demonstartion version
+            developer: 'ООО ИГИТ',
+            developerWebsite: 'http://www.atr-sz.ru/rus/igit/'
         },
 
         // strings for localization

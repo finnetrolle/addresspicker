@@ -330,6 +330,12 @@ define([
                     self.map.addLayer(self.layer);
 
                     self.map.attributionControl.addAttribution(self.getVersion());
+                    self.map.attributionControl.addAttribution(
+                            "<a href=" +
+                            self.settings.appinfo.developerWebsite +
+                            ">" +
+                            self.settings.appinfo.developer +
+                            "</a>");
 
                     self.createAlertWindow();
                     self.createBasemapCombobox();
