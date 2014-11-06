@@ -405,7 +405,7 @@ define([
                                         geocodedObject.setLatLng(e.latlng.lat, e.latlng.lng); // Todo
                                         geocodedObject.setBounds(e.latlng, e.latlng); // Todo
                                         geocodedObject.setAddress(
-                                            "Россия", null, null, null, null, null);
+                                            "Россия", region.Region, region.Province, null, null, null);
                                         result = geocodedObject;
 
                                         dom.byId("alertWindow").style.visibility = 'visible';
