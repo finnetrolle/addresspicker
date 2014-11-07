@@ -86,7 +86,6 @@ define([
             return results;
 
             function createEsriAddressObject(address) {
-
                 this.obj = null;
                 var geocodedObject = new GeocodedObject();
                 // geocodedObject.setText(address.Match_addr);

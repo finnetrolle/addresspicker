@@ -135,40 +135,93 @@ define([
             return !!this.isPartiallyGeocoded(this.SUCCESSFULL_TO_SAVE_GEOCODE_LEVEL);
         },
 
+        createInfo:  function() {
+            var info = '';
+
+            if(this.route != null && this.route.length > 0) {
+                info += this.route;
+            }
+
+            if(this.street_number != null && this.street_number.length > 0) {
+                info += ' ' + this.street_number;
+            }
+
+            if(this.subregion != null && this.subregion.length > 0) {
+                info += ', ' + this.subregion;
+            }
+
+            if(this.region != null && this.region.length > 0) {
+                info += ', ' + this.region;
+            }
+
+            info += ', Россия';
+
+            if(this.postal != null && this.postal.length > 0) {
+                info += ', ' + this.postal;
+            }
+
+            return info;
+        },
+
         getResult: function() {
             return {
                 type: '_object',
-                info: null, // Todo - insert info ???
+                info: this.createInfo(),
                 geometry: {
                     x: this.latlng.lng,
                     y: this.latlng.lat
                 },
                 elements: {
                     cadasternumber: this.cadasterNumber,
-                    country: this.country,
-                    district1: this.region,
-                    district2: this.subregion,
-                    index: this.postal,
-                    locality: this.city,
+                    country: {fullName: this.country, shortName: 'RU' },
+                    district1: {fullName: this.region, shortName: '' },
+                    district2: {fullName: this.subregion, shortName: '' },
+                    index: {fullName: this.postal, shortName: '' },
+                    locality: {fullName: this.city, shortName: '' },
                     toponim: this.route,
-                    housenumber: this.street_number,
-//                    housebld: '',
-//                    houseliter: '',
-                    RES: this.res // Todo - insert RES ??? WTF is res?
+                    housenumber: {fullName: this.street_number, shortName: '' },
+                    housebld: '',
+                    houseliter: '',
+                    RES: this.res
                 }
             };
         },
 
         resultToString: function(result) {
-            var s = "Result object:\n";
-//            s += "type: " + result.type + '\n';
-//            s += "info: " + result.info + '\n';
-            s += "geometry: " + result.geometry.x + ',' + result.geometry.y + '\n';
-            s += "elements: \n";
-            for (var key in result.elements) {
-                s += '    ' + String(key) + ': ' + String(result.elements[key] + '\n');
+
+            var info = '';
+
+            if(this.route != null && this.route.length > 0) {
+                info += this.route;
             }
-            return s;
+
+            if(this.street_number != null && this.street_number.length > 0) {
+                info += ' ' + this.street_number;
+            }
+
+            if(this.subregion != null && this.subregion.length > 0) {
+                info += ', <br>' + this.subregion;
+            }
+
+            if(this.region != null && this.region.length > 0) {
+                info += ', <br>' + this.region;
+            }
+
+            info += ', <br>Россия';
+
+            if(this.postal != null && this.postal.length > 0) {
+                info += ', <br>' + this.postal;
+            }
+
+            if(this.cadasterNumber != null && this.cadasterNumber.length > 0) {
+                info += ', <br> Кад. номер: ' + this.cadasterNumber;
+            }
+
+            if(this.res != null && this.res.length > 0) {
+                info += ', <br>' + this.res;
+            }
+
+            return info;
         },
 
         getHtmlForSideWindow: function() {

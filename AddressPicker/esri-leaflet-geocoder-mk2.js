@@ -44,6 +44,7 @@
                     callback.call(context, error);
                 } else {
                     var results = [];
+
                     var preResults = adapter.convertResults(response);
                     if (this.filterResult) {
                         for (var i = preResults.length -1; i >= 0; i--) {
@@ -88,26 +89,9 @@
 
     L.esri.Controls.Geosearch = L.Control.extend({
         includes: L.Mixin.Events,
-        /*options: {
-         position: 'topleft',
-         zoomToResult: true,
-         useMapBounds: 12,
-         collapseAfterResult: false,
-         expanded: true,
-         maxResults: 25,
-         forStorage: false,
-         allowMultipleResults: false
-         }, */
+
         initialize: function (options) {
             L.Util.setOptions(this, options);
-//            this.initService(new IGITGeocoding(options));
-//            this._service = new IGITGeocoding(options);
-//            this._service.on('authenticationrequired requeststart requestend requesterror requestsuccess', function (e) {
-//                e = L.extend({
-//                    target: this
-//                }, e);
-//                this.fire(e.type, e);
-//            }, this);
         },
 
         initService: function (service) {
@@ -203,58 +187,23 @@
 
             this._service.suggest(text, options, function(error, response){
                 if(this._input.value){
-                    //this._suggestions.innerHTML = "";
-                    //this._suggestions.style.display = "none";
-
                     var results = adapter.convertResults(response);
-                    //this._service.previousSuggestResults = results;
-                    //this._suggestions.style.display = "block";
-
                     var count = results.length;
-                    //if (results.length > settings.maximumSuggestResults) {
-                    //    count = settings.maximumSuggestResults;
-                    //}
+
                     var cb = dijit.byId('searchComboBox');
                     cb.get('store').data = [];
 
                     for (var i = 0; i < count; ++i) {
                         cb.get('store').add({ name: results[i].text, results: results[i] });
-
-                        /*
-                        var suggestion = L.DomUtil.create('li', 'geocoder-control-suggestion', this._suggestions);
-                        suggestion.innerHTML = results[i].text;
-                        */
                     }
 
                     cb.loadDropDown();
-                  //  L.DomUtil.removeClass(this._input, "geocoder-control-loading");
                 }
             }, this);
         },
 
-        /*
-        clear: function(blur){
-            this._suggestions.innerHTML = "";
-            this._suggestions.style.display = "none";
-            this._input.value = "";
-
-            if(this.options.collapseAfterResult){
-                L.DomUtil.removeClass(this._container, "geocoder-control-expanded");
-            }
-        },
-        */
-
         onAdd: function (map) {
             this._map = map;
-
-            /*
-            if (map.attributionControl) {
-                map.attributionControl.addAttribution('Geocoding by ' + adapter.getGeocoderServiceName());
-            }
-
-            this._container = L.DomUtil.create('div', "geocoder-control" + ((this.options.expanded) ? " " + "geocoder-control-expanded"  : ""));
-            this._container = L.DomUtil.create('div', "geocoder-control" + ((true) ? " " + "geocoder-control-expanded"  : ""));
-            */
 
             this._container = L.DomUtil.create('div', "geocoder-control" + ((this.options.expanded) ? " " + "geocoder-control-expanded"  : ""));
 
@@ -294,88 +243,12 @@
                 this._geocode(this.searchComboBox.dropDown.selected.textContent);
             }, this);
 
-            /*
-            this.searchComboBox.value = 's';
-            this.searchComboBox.start();
-
-            this._input = L.DomUtil.create('input', "geocoder-control-input leaflet-bar", this._container);
-
-            this._suggestions = L.DomUtil.create('ul', "geocoder-control-suggestions leaflet-bar", this._container);
-
-            this._input.title = settings.strings.tooltips.search;
-            this._container.title = settings.strings.tooltips.search;
-
-            L.DomEvent.addListener(this._input, "focus", function(e){
-                L.DomUtil.addClass(this._container, "geocoder-control-expanded");
-            }, this);
-
-            L.DomEvent.addListener(this._input, "change", function(e){
-                if(this.searchComboBox.dropDown.selected != null) {
-                    this._geocode(this.searchComboBox.dropDown.selected.innerText);
-                }
-            }, this);
-
-           L.DomEvent.addListener(this._container, "click", function(e){
-                L.DomUtil.addClass(this._container, "geocoder-control-expanded");
-                this._input.focus();
-            }, this);
-
-            L.DomEvent.addListener(this._input, "mousedown", function(e){
-                var suggestionItem = e.target || e.srcElement;
-                this._geocode(suggestionItem.innerHTML, suggestionItem["data-magic-key"]);
-                this.clear();
-            }, this);
-            */
-
             L.DomEvent.addListener(this._input, "blur", function(e){
                 //this.clear();
                 //var cb = dijit.byId('searchComboBox');
                 //cb.get('store').data = [];
             }, this);
 
-            /*
-            L.DomEvent.addListener(this._input, "keydown", function(e){
-                L.DomUtil.addClass(this._container, "geocoder-control-expanded");
-
-                var selected = this._suggestions.querySelectorAll('.' + "geocoder-control-selected")[0];
-                switch(e.keyCode){
-                    case 13:
-                        if(selected){
-                            this._geocode(selected.innerHTML, selected["data-magic-key"]);
-                            this.clear();
-                        } else if(this.options.allowMultipleResults){
-                            this._geocode(this._input.value);
-                            this.clear();
-                        } else {
-                            L.DomUtil.addClass(this._suggestions.childNodes[0], "geocoder-control-selected");
-                        }
-                        L.DomEvent.preventDefault(e);
-                        break;
-                    case 38:
-                        if(selected){
-                            L.DomUtil.removeClass(selected, "geocoder-control-selected");
-                        }
-                        if(selected && selected.previousSibling) {
-                            L.DomUtil.addClass(selected.previousSibling, "geocoder-control-selected");
-                        } else {
-                            L.DomUtil.addClass(this._suggestions.childNodes[this._suggestions.childNodes.length-1], "geocoder-control-selected");
-                        }
-                        L.DomEvent.preventDefault(e);
-                        break;
-                    case 40:
-                        if(selected){
-                            L.DomUtil.removeClass(selected, "geocoder-control-selected");
-                        }
-                        if(selected && selected.nextSibling) {
-                            L.DomUtil.addClass(selected.nextSibling, "geocoder-control-selected");
-                        } else {
-                            L.DomUtil.addClass(this._suggestions.childNodes[0], "geocoder-control-selected");
-                        }
-                        L.DomEvent.preventDefault(e);
-                        break;
-                }
-            }, this);
-            */
 
             L.DomEvent.addListener(this._input, "keyup", function(e){
 
@@ -386,15 +259,6 @@
                 if(text.length < settings.minimumLetters) {
                     return;
                 }
-
-                // if this is the escape key it will clear the input so clear suggestions
-                /*
-                if(key === 27){
-                    this._suggestions.innerHTML = "";
-                    this._suggestions.style.display = "none";
-                    return;
-                }
-                */
 
                 // if this is NOT the up/down arrows or enter make a suggestion
                 if(key !== 13 && key !== 38 && key !== 40){

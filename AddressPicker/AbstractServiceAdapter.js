@@ -43,20 +43,14 @@ define([
         },
 
         getParams: function(value) {
-//            var a = {};
-//            for (var key in this.defaults.params) {
-//                a[key] = this.defaults.params[key];
-//            }
+
             var a = this.cloneParams();
             a[this.forwardParameter] = value;
             return a;
         },
 
         getReverseParams: function(latlng) {
-//            var a = {};
-//            for (var key in this.defaults.params) {
-//                a[key] = this.defaults.params[key];
-//            }
+
             var a = this.cloneParams();
             var point = concreteServiceAdapter.adaptLatLng(latlng);
             a[this.reverseParameter] = point.lat + "," + point.lng;

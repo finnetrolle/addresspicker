@@ -13,9 +13,6 @@ define([
     'AddressPicker/ArcGISServiceAdapter',
     'AddressPicker/GeocodedObject',
     'AddressPicker/AddressPickerSettings',
-//    'AddressPicker/CadasterService',
-//    'AddressPicker/RegionsService',
-//    'AddressPicker/RESService',
     'AddressPicker/Service',
     'dijit/form/ComboBox',
     'dojo/store/Memory',
@@ -31,9 +28,6 @@ define([
             ,ArcGISServiceAdapter
             ,GeocodedObject
             ,AddressPickerSettings
-//            ,CadasterService
-//            ,RegionsService
-//            ,RESService
             ,Service
             ,ComboBox
             ,Memory
@@ -75,6 +69,8 @@ define([
         cadasterLayer: null,
         geocodedObject: null,
 
+        lastSavedObj: null,
+
         // methods for creating controls
 
         createDiv: function(divId) {
@@ -93,30 +89,6 @@ define([
             }
             this.searchComboBox.storage = storage;
         },
-
-/*
-        createSearchComboBox: function() {
-            this.searchComboBoxInput = document.createElement('input');
-            this.searchComboBoxInput.className = 'searchComboBox';
-            this.searchComboBoxInput.id = 'searchComboBox';
-            document.body.appendChild(this.searchComboBoxInput);
-            this.searchComboBox = new ComboBox({
-                id: "stateSelect",
-                name: "state",
-                value: "California",
-                searchAttr: "name"
-            }, 'searchComboBox');
-            this.searchComboBox.startup();
-
-            var a = [];
-            for (var i = 0; i < 100; ++i) {
-                var o = new GeocodedObject();
-                o.setText('text ' + i);
-                a.push(o);
-            }
-            this._loadSuggestions(a);
-        },
-*/
 
         createAlertWindow: function() {
             this.alertWindow = this.createDiv('alertWindow');
@@ -221,14 +193,17 @@ define([
                             self.saveButton.disabled = false;
                         }
 
-                       /* self.resService.service.getRESname(self.geocodedObject.latlng, {}, function (error, result, response) { */
                         self.resService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
                             self.geocodedObject.setRes(result.Name);
-                            alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
+                            self.lastSavedObj = self.geocodedObject.getResult();
+
+                            dom.byId("info_panel").innerHTML = self.geocodedObject.resultToString(self.geocodedObject.getResult());
+
                         }, this);
 
                     }, this);
                 }
+
             });
 
             this.saveButton.title = this.settings.strings.tooltips.save;
@@ -318,6 +293,10 @@ define([
             this.map.resize();
         },
 
+        find: function(params, callback) {
+            return callback(this.lastSavedObj);
+        },
+
         initMap: function (longitude, latitude, zoom) {
             this.settings = new AddressPickerSettings();
             var o = this.settings.centerPoint;
@@ -371,20 +350,9 @@ define([
 //                    self.createSearchComboBox();  //#выкл
 
                     on(self.map, 'click', function (e) {
-//                        var src = e.originalEvent.srcElement;
+
                         var src = e.originalEvent.target;
-//                        switch (src) {
-//                            case  self.basemaps: return;
-//                            case  self.geocoders: return;
-//                            case  self.cadasterCheckbox: return;
-//                            case  self.saveButton: return;
-//                            case  self.saveButtonDiv: return;
-//                            case  self.cadasterCheckboxDiv: return;
-//                            case  self.geocodersDiv: return;
-//                            case  self.basemapsDiv: return;
-//                            case  self.alertWindow: return;
-//                            case  self.alertText: return;
-//                        }
+
                         if (src == self.basemaps) return;
                         if (src == self.geocoders) return;
                         if (src == self.cadasterCheckbox) return;
@@ -465,61 +433,9 @@ define([
                                 alertWin.innerHTML = self.settings.strings.outOfRegions;
                                 alertWin.style.visibility = 'visible';
                             }
-                            /*self.geocodedObject.setCadasterNumber(result);
-                            if (self.saveSpinnerIsOn) {
-                                self.saveButtonDiv.removeChild(self.saveSpinner);
-                                self.saveSpinnerIsOn = false;
-                                self.saveButton.disabled = false;
-                            }*/
-                            //alert(self.geocodedObject.resultToString(self.geocodedObject.getResult()));
+
                         }, this);
 
-                   /*     self.searchControl._service.reverse(e.latlng, {}, function(error, result, response){
-
-                            self.resultsLayerGroup.clearLayers();
-
-                            var _DEBUG_BUG_GEOCODING = true; // Todo - remove after adding polys for city and region
-
-                            if (self.settings.showLineToGeocodingResultPoint) {
-                                var A = e.latlng;
-                                var B = A;
-                                if (result) {
-                                    if (result.hasOwnProperty('latlng'))
-                                        var B = result.latlng;
-                                }
-                                else {
-                                    _DEBUG_BUG_GEOCODING = false; // Todo - remove after adding polys for city and region
-                                    // this is part for null address from KGIS geocoder
-                                    var geocodedObject = new GeocodedObject();
-                                    geocodedObject.setText('Россия');
-                                    geocodedObject.setPostalCode('');
-                                    geocodedObject.setLatLng(e.latlng.lat, e.latlng.lng); // Todo
-                                    geocodedObject.setBounds(e.latlng, e.latlng); // Todo
-                                    geocodedObject.setAddress(
-                                        "Россия", null, null, null, null, null);
-                                    result = geocodedObject;
-                                }
-                                var poly = L.polygon([
-                                    [A.lat, A.lng],
-                                    [B.lat, B.lng]
-                                ]);
-                                self.resultsLayerGroup.addLayer(poly);
-                            }
-
-                            var marker = L.marker(e.latlng);
-                            self.resultsLayerGroup.addLayer(marker);
-                            var popup = marker.bindPopup(result.text);
-                            if (_DEBUG_BUG_GEOCODING) // Todo - remove after adding polys for city and region
-                                popup.openPopup();
-                            self.geocodedObject = result;
-                            if (self.geocodedObject) {
-                                self.fillInfo(self.geocodedObject);
-                                if (!self.geocodedObject.isSuccessfullyGeocoded()) {
-                                    dom.byId("alertWindow").style.visibility = 'visible';
-                                    self.setSaveButtonEnabled(true);
-                                }
-                            }
-                        }, this); */
                     });
 
                     self.cadasterService = new Service();
@@ -541,7 +457,6 @@ define([
         },
 
         fillInfo: function(o) {
-            //this.setSaveButtonEnabled(o.isSuccessfullyGeocoded());
             this.setSaveButtonEnabled(o.isValid());
         },
 
@@ -556,35 +471,6 @@ define([
         },
 
 
-
-//        initGeocodingServiceCombobox: function() {
-//            this.searchControl = new L.esri.Controls.Geosearch().addTo(this.map);
-//            this.searchControl.initService(new IGITGeocoding());
-//            this.resultsLayerGroup = new L.LayerGroup().addTo(this.map);
-//            var self = this;
-//            this.searchControl.on('results', function(data) {
-//                dom.byId('alertWindow').style.visibility = 'hidden';
-//                self.geocodedObject = data.results[0];
-//                self.resultsLayerGroup.clearLayers();
-//                if (self.geocodedObject) {
-//                    self.fillInfo(self.geocodedObject);
-//                    if (self.geocodedObject.isSuccessfullyGeocoded()) {
-//                        var marker = L.marker(data.results[0].latlng);
-//                        var popup = marker.bindPopup(self.geocodedObject.text);
-//                        self.resultsLayerGroup.addLayer(marker);
-//                        popup.openPopup();
-//
-//                    }
-//                }
-//            });
-//            this.geocoders = this.createLinkAndNameCombobox('geocoders-wrapper', 'geocoders', 'map',
-//                this.settings.geocodingServices);
-//            on(this.geocoders, 'change', function() {
-//                self.searchControl._service.getAdapter().initService(self.geocoders.value);
-//                self.searchControl._service.initialize();
-//            });
-//        },
-
         fillSelectControl: function(control, array) {
             for (var i = 0; i < array.length; ++i) {
                 var eOption = document.createElement('option');
@@ -594,26 +480,6 @@ define([
             }
             return control;
         }
-
-//        createLinkAndNameCombobox: function(divId, selectId, mapId, array) {
-//            var eDiv = document.createElement('div');
-//                eDiv.id = divId;
-//                eDiv.className = 'igit-leaflet-wrapper-class';
-//            var eSelect = document.createElement('select');
-//                eSelect.id = selectId;
-//            for (var i = 0; i < array.length; ++i) {
-//                var eOption = document.createElement('option');
-//                    eOption.value = array[i].link;
-//                    eOption.innerHTML = array[i].name;
-//                eSelect.appendChild(eOption);
-//            }
-//            eDiv.appendChild(eSelect);
-//            var map = dom.byId(mapId);
-//            if (map) {
-//                map.appendChild(eDiv);
-//            }
-//            return eSelect;
-//        }
 
     });
 });
