@@ -78,7 +78,9 @@ define([
             div.className = 'igit-leaflet-wrapper-class';
             div.id = divId;
 //            this.mapDiv.appendChild(div);
-            document.body.appendChild(div);
+//            document.body.appendChild(div);
+            var mapWrapperNode = document.getElementById('map_wrapper');
+            mapWrapperNode.appendChild(div);
             return div;
         },
 
@@ -319,6 +321,8 @@ define([
             // Hack to solve bug #22 without adding localization
             // Todo - add localization
 //            var zoomin = document.getElementsByClassName("leaflet-control-zoom-in")[0];
+            var zoomin = document.querySelectorAll('.leaflet-control-zoom-in')[0];
+            var zoomin = document.querySelectorAll('.leaflet-control-zoom-in')[0];
             var zoomin = document.querySelectorAll('.leaflet-control-zoom-in')[0];
             zoomin.title = this.settings.strings.tooltips.zoomin;
 //            var zoomout = document.getElementsByClassName('leaflet-control-zoom-out')[0];

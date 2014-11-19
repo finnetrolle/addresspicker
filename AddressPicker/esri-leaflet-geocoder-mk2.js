@@ -209,7 +209,9 @@
 
             this.searchComboBoxInput = document.createElement('input');
             this.searchComboBoxInput.id = 'searchComboBox';
-            document.body.appendChild(this.searchComboBoxInput);
+            var mapWrapperNode = document.getElementById('map_wrapper');
+
+            mapWrapperNode.appendChild(this.searchComboBoxInput);
 
             this.searchComboBox = new dijit.form.ComboBox({
                 id: "searchComboBox",
