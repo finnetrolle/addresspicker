@@ -188,7 +188,8 @@ define([
                     self.saveSpinnerIsOn = true;
                     self.saveButton.disabled = true;
                     self.cadasterService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
-                        self.geocodedObject.setCadasterNumber(result.PARCEL_ID);
+                        if (result.PARCEL_ID != null)
+                            self.geocodedObject.setCadasterNumber(result.PARCEL_ID);
                         if (self.saveSpinnerIsOn) {
                             self.saveButtonDiv.removeChild(self.saveSpinner);
                             self.saveSpinnerIsOn = false;
