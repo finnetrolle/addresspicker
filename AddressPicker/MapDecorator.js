@@ -199,7 +199,9 @@ define([
                             self.geocodedObject.setRes(result.Name);
                             self.lastSavedObj = self.geocodedObject.getResult();
 
-                            dom.byId("info_panel").innerHTML = self.geocodedObject.resultToString(self.geocodedObject.getResult());
+                            var ip = dom.byId("info_panel");
+                            if (ip != null)
+                                ip.innerHTML = self.geocodedObject.resultToString(self.geocodedObject.getResult());
 
                         }, this);
 
