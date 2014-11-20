@@ -73,7 +73,7 @@ body, html {
 
 #savebutton-wrapper {
     position: absolute;
-    bottom: 25px;
+    bottom: 45px;
     right: 10px;
     z-index: 10;
     background-color: #FF4444;
@@ -117,12 +117,8 @@ label {
 }
 
 #alertWindow, #saveButton {
-    position: fixed;
+    position: absolute;
     right: 10px;
-}
-
-#saveButton {
-    bottom: 25px;
 }
 
 .leaflet-control-attribution {
