@@ -12,9 +12,6 @@
     <script src="AddressPicker/AddressPickerDojoConfig.js"></script>
     <script src="dojo/dojo.js"></script>
 
-
-
-
     <table style="width: 100%; height: 100%;">
         <tr>
             <td style="width: 400px">
@@ -29,11 +26,7 @@
         </tr>
     </table>
 
-
-    <!--<div id="map"></div>-->
     <!--<div id="info_panel"></div>-->
-
-    <a href="#" id="testFind" style="position: fixed; top: 100px; right: 320px; z-index: 99">Test find</a>
 
     <script type="text/javascript">
         require([
@@ -54,16 +47,6 @@
                  latitude: 59.935885
                  zoom: 10
                  * */
-
-            on(document.getElementById('testFind'), 'click', function (e) {
-
-                mapDecorator.find('null', function(address){
-                    console.log(address);
-                });
-
-            });
-
-
         });
     </script>
 
