@@ -363,18 +363,18 @@ define([
 
                     on(self.map, 'click', function (e) {
 
-                        var src = e.originalEvent.target;
-
-                        if (src == self.basemaps) return;
-                        if (src == self.geocoders) return;
-                        if (src == self.cadasterCheckbox) return;
-                        if (src == self.saveButton) return;
-                        if (src == self.saveButtonDiv) return;
-                        if (src == self.cadasterCheckboxDiv) return;
-                        if (src == self.geocodersDiv) return;
-                        if (src == self.basemapsDiv) return;
-                        if (src == self.alertWindow) return;
-                        if (src == self.alertText) return;
+//                        var src = e.originalEvent.target;
+//
+//                        if (src == self.basemaps) return;
+//                        if (src == self.geocoders) return;
+//                        if (src == self.cadasterCheckbox) return;
+//                        if (src == self.saveButton) return;
+//                        if (src == self.saveButtonDiv) return;
+//                        if (src == self.cadasterCheckboxDiv) return;
+//                        if (src == self.geocodersDiv) return;
+//                        if (src == self.basemapsDiv) return;
+//                        if (src == self.alertWindow) return;
+//                        if (src == self.alertText) return;
 
                         dom.byId("alertWindow").style.visibility = 'hidden';
 
