@@ -184,14 +184,14 @@ define([
             var self = this;
             on(this.saveButton, 'click', function(){
                 if (self.geocodedObject) {
-                    self.saveButtonDiv.appendChild(self.saveSpinner);
+//                    self.saveButtonDiv.appendChild(self.saveSpinner);
                     self.saveSpinnerIsOn = true;
                     self.saveButton.disabled = true;
                     self.cadasterService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
                         if (result.PARCEL_ID != null)
                             self.geocodedObject.setCadasterNumber(result.PARCEL_ID);
                         if (self.saveSpinnerIsOn) {
-                            self.saveButtonDiv.removeChild(self.saveSpinner);
+//                            self.saveButtonDiv.removeChild(self.saveSpinner);
                             self.saveSpinnerIsOn = false;
                             self.saveButton.disabled = false;
                         }
@@ -214,8 +214,11 @@ define([
             this.saveButton.title = this.settings.strings.tooltips.save;
             this.saveButtonDiv.title = this.settings.strings.tooltips.save;
 
-            this.saveSpinner = document.createElement('img');
-            this.saveSpinner.src = 'leaflets/img/loading.gif';
+//            this.saveSpinner = document.createElement('img');
+//            this.saveButtonDiv.appendChild(this.saveSpinner);
+//            this.saveSpinner.src = 'leaflets/img/loading.gif';
+//            this.saveSpinner.disabled = true;
+
 //            this.saveButtonDiv.appendChild(this.saveSpinner);
         },
 
