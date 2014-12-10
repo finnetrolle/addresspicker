@@ -16,6 +16,7 @@ define([
     'AddressPicker/Service',
     'dijit/form/ComboBox',
     'dojo/store/Memory',
+    'dojo/Evented',
     'dojo/domReady!'
 ], function(declare
             ,dom
@@ -31,10 +32,11 @@ define([
             ,Service
             ,ComboBox
             ,Memory
+            ,Evented
     ){
 
     // This returned object becomes the defined value of this module
-    return declare(null, {
+    return declare([Evented], {
 
         // inside services
         searchControl: null,
@@ -57,6 +59,7 @@ define([
         basemaps: null,
         geocoders: null,
         saveButton: null,
+        saveCoordinatesButton: null,
         cadasterCheckbox: null,
         alertWindow: null,
         alertText: null,
@@ -171,45 +174,129 @@ define([
             this.cadasterCheckboxDiv.title = this.settings.strings.tooltips.cadaster;
         },
 
+        initServicesQuery: function() {
+            this.cadasterServiceProcessed = false;
+            this.resServiceProcessed = false;
+            var self = this;
+            on(this, 'cadasterResponse', function() {
+                console.log(new Date().getTime() + " " + "cadaster service responsed");
+                self.cadasterServiceProcessed = true;
+                if (self.resServiceProcessed == true)
+                    self.emit("queryComplete", {});
+            });
+            on(this, 'resResponse', function() {
+                console.log(new Date().getTime() + " " + "res service responsed");
+                self.resServiceProcessed = true;
+                if (self.cadasterServiceProcessed == true)
+                    self.emit("queryComplete", {});
+            });
+            on(this, 'queryComplete', function() {
+                self.lastSavedObj = self.geocodedObject.getResult();
+                console.log(new Date().getTime() + " " + "query complete");
+                var ip = dom.byId("info_panel");
+                if (ip != null)
+                    ip.innerHTML = self.geocodedObject.resultToString(self.geocodedObject.getResult());
+                self.emit("objectSelected", {});
+            });
+        },
+
+        queryServices: function() {
+            this.cadasterServiceProcessed = false;
+            this.resServiceProcessed = false;
+            this.queryCadasterNumber();
+            this.queryRes();
+        },
+
+        queryCadasterNumber: function() {
+            this.cadasterServiceProcessed = false;
+            this.resServiceProcessed = false;
+            var self = this;
+            if (this.geocodedObject) {
+                console.log(new Date().getTime() + " " + "querying cadaster service");
+                this.cadasterService.service.getResult(this.geocodedObject.latlng, {}, function (error, result, response) {
+                    if (result.PARCEL_ID != null) {
+                        self.geocodedObject.setCadasterNumber(result.PARCEL_ID);
+                    }
+                    self.emit("cadasterResponse", {});
+                });
+            }
+        },
+
+        queryRes: function() {
+            this.cadasterServiceProcessed = false;
+            this.resServiceProcessed = false;
+            var self = this;
+            if (this.geocodedObject) {
+                console.log(new Date().getTime() + " " + "querying res service");
+                this.resService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
+                    if (result.Name != null)
+                        self.geocodedObject.setRes(result.Name);
+                });
+                self.emit("resResponse", {});
+            }
+        },
+
         createSaveButtonControl: function() {
             this.saveButtonDiv = this.createDiv('savebutton-wrapper');
+
             this.saveButton = document.createElement('input');
             this.saveButton.type = 'button';
             this.saveButton.id = 'saveButton';
             this.saveButton.value = this.settings.strings.saveButton;
             this.saveButton.disabled = true;
-            this.saveButtonDiv.appendChild(this.saveButton);
-//            this.mapDiv.appendChild(this.saveButtonDiv);
+//            this.saveButtonDiv.appendChild(this.saveButton);
+
+            this.saveCoordinatesButton = document.createElement('input');
+            this.saveCoordinatesButton.type = 'button';
+            this.saveCoordinatesButton.id = 'saveCoordinatesButton';
+            this.saveCoordinatesButton.value = this.settings.strings.saveCoordinatesButton;
+            this.saveCoordinatesButton.disabled = true;
+//            this.saveButtonDiv.appendChild(this.saveCoordinatesButton);
 
             var self = this;
-            on(this.saveButton, 'click', function(){
-                if (self.geocodedObject) {
-//                    self.saveButtonDiv.appendChild(self.saveSpinner);
-                    self.saveSpinnerIsOn = true;
-                    self.saveButton.disabled = true;
-                    self.cadasterService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
-                        if (result.PARCEL_ID != null)
-                            self.geocodedObject.setCadasterNumber(result.PARCEL_ID);
-                        if (self.saveSpinnerIsOn) {
-//                            self.saveButtonDiv.removeChild(self.saveSpinner);
-                            self.saveSpinnerIsOn = false;
-                            self.saveButton.disabled = false;
-                        }
 
-                        self.resService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
-                            self.geocodedObject.setRes(result.Name);
-                            self.lastSavedObj = self.geocodedObject.getResult();
-
-                            var ip = dom.byId("info_panel");
-                            if (ip != null)
-                                ip.innerHTML = self.geocodedObject.resultToString(self.geocodedObject.getResult());
-
-                        }, this);
-
-                    }, this);
-                }
-
+            on(self, 'cadasterResponse', function() {
+                self.setSaveButtonEnabled(true);
             });
+
+            on(this.saveCoordinatesButton, 'click', function() {
+                self.queryCadasterNumber();
+                self.queryRes();
+            });
+
+            on(this.saveButton, 'click', function() {
+                self.queryCadasterNumber();
+                self.queryRes();
+            });
+
+//            on(this.saveButton, 'click', function(){
+//                if (self.geocodedObject) {
+////                    self.saveButtonDiv.appendChild(self.saveSpinner);
+//                    self.saveSpinnerIsOn = true;
+//                    self.saveButton.disabled = true;
+//                    self.cadasterService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
+//                        if (result.PARCEL_ID != null)
+//                            self.geocodedObject.setCadasterNumber(result.PARCEL_ID);
+//                        if (self.saveSpinnerIsOn) {
+////                            self.saveButtonDiv.removeChild(self.saveSpinner);
+//                            self.saveSpinnerIsOn = false;
+//                            self.saveButton.disabled = false;
+//                        }
+//
+//                        self.resService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
+//                            self.geocodedObject.setRes(result.Name);
+//                            self.lastSavedObj = self.geocodedObject.getResult();
+//
+//                            var ip = dom.byId("info_panel");
+//                            if (ip != null)
+//                                ip.innerHTML = self.geocodedObject.resultToString(self.geocodedObject.getResult());
+//
+//                        }, this);
+//
+//                    }, this);
+//                }
+//
+//            });
 
             this.saveButton.title = this.settings.strings.tooltips.save;
             this.saveButtonDiv.title = this.settings.strings.tooltips.save;
@@ -267,6 +354,7 @@ define([
                         var popup = marker.bindPopup(self.geocodedObject.text);
                         self.resultsLayerGroup.addLayer(marker);
                         popup.openPopup();
+                        self.queryServices();
 
                         if(!self.geocodedObject.isSuccessfullyToSave()) {
                             self.alertWindow.style.visibility = 'visible';
@@ -359,22 +447,10 @@ define([
 //                    self.createGeocodingControl(); //#выкл
                     self.createSaveButtonControl();
                     self.createCadasterCheckbox();
+                    self.initServicesQuery();
 //                    self.createSearchComboBox();  //#выкл
 
                     on(self.map, 'click', function (e) {
-
-//                        var src = e.originalEvent.target;
-//
-//                        if (src == self.basemaps) return;
-//                        if (src == self.geocoders) return;
-//                        if (src == self.cadasterCheckbox) return;
-//                        if (src == self.saveButton) return;
-//                        if (src == self.saveButtonDiv) return;
-//                        if (src == self.cadasterCheckboxDiv) return;
-//                        if (src == self.geocodersDiv) return;
-//                        if (src == self.basemapsDiv) return;
-//                        if (src == self.alertWindow) return;
-//                        if (src == self.alertText) return;
 
                         dom.byId("alertWindow").style.visibility = 'hidden';
 
@@ -428,18 +504,25 @@ define([
 
                                     //if (_DEBUG_BUG_GEOCODING) // Todo - remove after adding polys for city and region
                                         popup.openPopup();
+                                    //self.emit("objectSelected",{});
+
 
                                     self.geocodedObject = result;
+                                    self.queryServices();
                                     if (self.geocodedObject) {
                                         self.fillInfo(self.geocodedObject);
                                         if (!self.geocodedObject.isSuccessfullyGeocoded()) {
                                             dom.byId("alertWindow").style.visibility = 'visible';
                                             self.setSaveButtonEnabled(true);
+
                                         }
                                     }
+
+
                                 }, this);
                             } else {
-                                self.saveButton.disabled = true;
+                                self.setSaveButtonEnabled(false);
+//                                self.saveButton.disabled = true;
                                 self.resultsLayerGroup.clearLayers();
 
                                 alertWin.innerHTML = self.settings.strings.outOfRegions;

@@ -10,7 +10,7 @@ define([
         appinfo: {
             major: 0,   // application version
             minor: 3,   // first were prototype
-            build: 30,  // number of commit
+            build: 31,  // number of commit
             beta: true, // beta version
             demo: true, // demonstartion version
             developer: 'ООО ИГИТ',
@@ -20,6 +20,7 @@ define([
         // strings for localization
         strings: {
             saveButton: 'Сохранить',
+            saveCoordinatesButton: 'Сохранить координаты',
             cadaster: 'Кадастровая карта',
             unfilledGeocodingResult: 'Координаты могут быть сохранены, но адрес геокодирован не полностью',
             outOfRegions: 'Адрес за пределами территории Санкт-Петербурга и Ленинградской области не может быть сохранен. Выберите адрес в указанных пределах',

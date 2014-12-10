@@ -17,6 +17,7 @@ define([
             // empty in abstract class
         },
 
+
         _save: function() {
             // empty in abstract class
         },
