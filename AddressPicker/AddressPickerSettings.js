@@ -10,15 +10,22 @@ define([
         appinfo: {
             major: 0,   // application version
             minor: 3,   // first were prototype
-            build: 31,  // number of commit
+            build: 32,  // number of commit
             beta: true, // beta version
             demo: true, // demonstartion version
             developer: 'ООО ИГИТ',
             developerWebsite: 'http://www.atr-sz.ru/rus/igit/'
         },
 
+        // field names
+        field: {
+            cadasterFieldName: 'PARCEL_ID',
+            resFieldName: 'NAME'
+        },
+
         // strings for localization
         strings: {
+
             saveButton: 'Сохранить',
             saveCoordinatesButton: 'Сохранить координаты',
             cadaster: 'Кадастровая карта',

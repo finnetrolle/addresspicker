@@ -174,63 +174,62 @@ define([
             this.cadasterCheckboxDiv.title = this.settings.strings.tooltips.cadaster;
         },
 
-        initServicesQuery: function() {
-            this.cadasterServiceProcessed = false;
-            this.resServiceProcessed = false;
-            var self = this;
-            on(this, 'cadasterResponse', function() {
-                console.log(new Date().getTime() + " " + "cadaster service responsed");
-                self.cadasterServiceProcessed = true;
-                if (self.resServiceProcessed == true)
-                    self.emit("queryComplete", {});
-            });
-            on(this, 'resResponse', function() {
-                console.log(new Date().getTime() + " " + "res service responsed");
-                self.resServiceProcessed = true;
-                if (self.cadasterServiceProcessed == true)
-                    self.emit("queryComplete", {});
-            });
-            on(this, 'queryComplete', function() {
-                self.lastSavedObj = self.geocodedObject.getResult();
-                console.log(new Date().getTime() + " " + "query complete");
-                var ip = dom.byId("info_panel");
-                if (ip != null)
-                    ip.innerHTML = self.geocodedObject.resultToString(self.geocodedObject.getResult());
-                self.emit("objectSelected", {});
-            });
+//        initServicesQuery: function() {
+//            this.cadasterServiceProcessed = false;
+//            this.resServiceProcessed = false;
+//            var self = this;
+//            on(this, 'cadasterResponse', function() {
+//                console.log(new Date().getTime() + " " + "cadaster service responsed");
+//                self.cadasterServiceProcessed = true;
+//                if (self.resServiceProcessed == true)
+//                    self.emit("queryComplete", {});
+//            });
+//            on(this, 'resResponse', function() {
+//                console.log(new Date().getTime() + " " + "res service responsed");
+//                self.resServiceProcessed = true;
+//                if (self.cadasterServiceProcessed == true)
+//                    self.emit("queryComplete", {});
+//            });
+//            on(this, 'queryComplete', function() {
+//                self.lastSavedObj = self.geocodedObject.getResult();
+//                console.log(new Date().getTime() + " " + "query complete");
+//                var ip = dom.byId("info_panel");
+//                if (ip != null)
+//                    ip.innerHTML = self.geocodedObject.resultToString(self.geocodedObject.getResult());
+////                self.emit("objectSelected", {});
+//            });
+//        },
+
+//        queryServices: function() {
+//            this.queryCadasterNumber();
+//            this.queryRes();
+//        },
+
+        getResultObject: function() {
+            return this.geocodedObject;
         },
 
-        queryServices: function() {
-            this.cadasterServiceProcessed = false;
-            this.resServiceProcessed = false;
-            this.queryCadasterNumber();
-            this.queryRes();
-        },
-
-        queryCadasterNumber: function() {
-            this.cadasterServiceProcessed = false;
-            this.resServiceProcessed = false;
+        queryCadasterService: function() {
             var self = this;
             if (this.geocodedObject) {
                 console.log(new Date().getTime() + " " + "querying cadaster service");
                 this.cadasterService.service.getResult(this.geocodedObject.latlng, {}, function (error, result, response) {
-                    if (result.PARCEL_ID != null) {
-                        self.geocodedObject.setCadasterNumber(result.PARCEL_ID);
+                    if ((result) && (result.hasOwnProperty(self.settings.field.cadasterFieldName))) {
+                        self.geocodedObject.setCadasterNumber(result[self.settings.field.cadasterFieldName]);
                     }
                     self.emit("cadasterResponse", {});
                 });
             }
         },
 
-        queryRes: function() {
-            this.cadasterServiceProcessed = false;
-            this.resServiceProcessed = false;
+        queryResService: function() {
             var self = this;
             if (this.geocodedObject) {
                 console.log(new Date().getTime() + " " + "querying res service");
                 this.resService.service.getResult(self.geocodedObject.latlng, {}, function (error, result, response) {
-                    if (result.Name != null)
-                        self.geocodedObject.setRes(result.Name);
+                    if ((result) && (result.hasOwnProperty(self.settings.field.resFieldName))) {
+                        self.geocodedObject.setRes(result[self.settings.field.resFieldName]);
+                    }
                 });
                 self.emit("resResponse", {});
             }
@@ -354,7 +353,10 @@ define([
                         var popup = marker.bindPopup(self.geocodedObject.text);
                         self.resultsLayerGroup.addLayer(marker);
                         popup.openPopup();
-                        self.queryServices();
+//                        self.queryServices();
+
+                        self.emit('objectSelected');
+
 
                         if(!self.geocodedObject.isSuccessfullyToSave()) {
                             self.alertWindow.style.visibility = 'visible';
@@ -394,7 +396,9 @@ define([
         },
 
         initMap: function (longitude, latitude, zoom) {
+
             this.settings = new AddressPickerSettings();
+//            console.log(this.settings.field.cadasterFieldName);
             var o = this.settings.centerPoint;
             // this block used to set initial center point and zoom (astrosoft asked for this)
             if ((longitude != undefined) && (latitude != undefined)) {
@@ -447,7 +451,7 @@ define([
 //                    self.createGeocodingControl(); //#выкл
                     self.createSaveButtonControl();
                     self.createCadasterCheckbox();
-                    self.initServicesQuery();
+//                    self.initServicesQuery();
 //                    self.createSearchComboBox();  //#выкл
 
                     on(self.map, 'click', function (e) {
@@ -508,7 +512,8 @@ define([
 
 
                                     self.geocodedObject = result;
-                                    self.queryServices();
+//                                    self.queryServices();
+                                    self.emit('objectSelected');
                                     if (self.geocodedObject) {
                                         self.fillInfo(self.geocodedObject);
                                         if (!self.geocodedObject.isSuccessfullyGeocoded()) {
