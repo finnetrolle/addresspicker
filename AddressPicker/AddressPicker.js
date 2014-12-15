@@ -6,7 +6,6 @@ require([
 ], function (MapDecorator) {
     var mapDecorator = new MapDecorator();
     mapDecorator.initMap(); // init default values
-    //ff
 
 //    mapDecorator.initMap(30.00, 61.00); // init with position and default zoom
 //    mapDecorator.initMap(30.00, 61.00, 12); // init with position and zoom
