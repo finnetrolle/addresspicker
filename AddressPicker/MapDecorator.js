@@ -137,12 +137,11 @@ define([
 
         fillSelectControl(basemaps, array);
 
-        var self = this;
         on(basemaps, 'change', function () {
             if (settings.layer) {
                 settings.map.removeLayer(settings.layer);
             }
-            settings.layer = L.esri.tiledMapLayer(basemaps.value, {maxZoom: self.settings.defaults.maxZoom});
+            settings.layer = L.esri.tiledMapLayer(basemaps.value, {maxZoom: settings.defaults.maxZoom});
             settings.map.addLayer(settings.layer);
         });
     };
@@ -152,7 +151,6 @@ define([
 
         var cadasterCheckbox = createElement('input', {id: 'cadasterCheckBox', type: 'checkbox', title: settings.defaults.strings.tooltips.cadaster}, cadasterCheckboxDiv);
 
-        var self = this;
         var cadasterLayer = L.esri.dynamicMapLayer(settings.defaults.additionalLayers.cadasterLayer.link,{
             opacity: settings.defaults.additionalLayers.cadasterLayer.opacity
         });
@@ -166,25 +164,24 @@ define([
          * */
         on(cadasterLayer, 'load', function() {
             if (!cadasterCheckbox.checked) {
-                self.map.addLayer(cadasterLayer);
-                self.map.removeLayer(cadasterLayer);
+                settings.map.addLayer(cadasterLayer);
+                settings.map.removeLayer(cadasterLayer);
             }
         });
 
         on(cadasterCheckbox, 'change', function() {
             if (cadasterCheckbox.checked) {
-                self.map.addLayer(cadasterLayer);
-            } else {//
-                self.map.removeLayer(cadasterLayer);
+                settings.map.addLayer(cadasterLayer);
+            } else {
+                settings.map.removeLayer(cadasterLayer);
             }
         });
     };
 
-    function initGeocodingService() {
+    function initGeocodingService(self) {
         settings.searchControl = new L.esri.Controls.Geosearch().addTo(settings.map);
         settings.searchControl.initService(new IGITGeocoding());
         settings.resultsLayerGroup = new L.LayerGroup().addTo(settings.map);
-        var self = this;
 
         on(settings.searchControl, 'results', function(data) {
             setAlertWinState('', false);
@@ -199,7 +196,6 @@ define([
                     popup.openPopup();
 
                     self.emit('objectSelected');
-
 
                     if(!settings.geocodedObject.isSuccessfullyToSave()) {
                         setAlertWinState('', true);
@@ -303,7 +299,7 @@ define([
 
                     createAlertWindow();
                     createBasemapCombobox();
-                    initGeocodingService();
+                    initGeocodingService(self);
                     createCadasterCheckbox();
 
                     var regionsService = new Service();
@@ -314,7 +310,7 @@ define([
                         regionsService.service.getResult(e.latlng, {}, function (error, result) {
                             getResultAfterClickOnMapCallBack(result, self, e);
                         }, this);
-                    });
+                    });//
                 })
             })
         }
