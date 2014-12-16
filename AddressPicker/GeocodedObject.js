@@ -27,7 +27,6 @@ define([
         geometryType: null, // тип геометрии
         houseCorp: null,
         liter: null,
-        res: null,
 
         geocodeLevel: 0,
         SUCCESSFULL_GEOCODE_LEVEL: 6,
