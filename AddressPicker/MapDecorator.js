@@ -310,7 +310,7 @@ define([
                         regionsService.service.getResult(e.latlng, {}, function (error, result) {
                             getResultAfterClickOnMapCallBack(result, self, e);
                         }, this);
-                    });//
+                    });
                 })
             })
         }
