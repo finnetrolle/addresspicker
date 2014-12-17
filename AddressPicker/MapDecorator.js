@@ -115,10 +115,10 @@ define([
     };
 
     function createAlertWindow() {
-        var alertWindow = createElement('div',{id: 'alertWindow', 'class': 'igit-leaflet-wrapper-class',
+        var alertWindow = createElement('div',{id: 'alertWindow', 'class': 'alert-window igit-leaflet-wrapper-class',
             title: settings.defaults.strings.tooltips.alert, style: 'visibility:hidden;'});
 
-        createElement('p', {id: 'alertText', innerHTML: settings.defaults.strings.unfilledGeocodingResult,
+        createElement('p', {id: 'alertText', 'class': 'alert-text', innerHTML: settings.defaults.strings.unfilledGeocodingResult,
             title: settings.defaults.strings.tooltips.alert}, alertWindow);
     };
 
@@ -132,8 +132,8 @@ define([
     function createBasemapCombobox() {
         var array = settings.defaults.basemapLayers;
 
-        var basemapsDiv = createElement('div', {id: 'basemaps-wrapper', title: settings.defaults.strings.tooltips.basemaps});
-        var basemaps = createElement('select', {id: 'basemaps', title: settings.defaults.strings.tooltips.basemaps}, basemapsDiv);
+        var basemapsDiv = createElement('div', {id: 'basemaps-wrapper', 'class':'base-maps-wrapper', title: settings.defaults.strings.tooltips.basemaps});
+        var basemaps = createElement('select', {id: 'basemaps', 'class': 'base-maps', title: settings.defaults.strings.tooltips.basemaps}, basemapsDiv);
 
         fillSelectControl(basemaps, array);
 
@@ -147,9 +147,9 @@ define([
     };
 
     function createCadasterCheckbox() {
-        var cadasterCheckboxDiv = createElement('div', {id: 'cadaster-wrapper', innerHTML: settings.defaults.strings.cadaster, title: settings.defaults.strings.tooltips.cadaster});
+        var cadasterCheckboxDiv = createElement('div', {id: 'cadaster-wrapper','class': 'cadaster-wrapper', innerHTML: settings.defaults.strings.cadaster, title: settings.defaults.strings.tooltips.cadaster});
 
-        var cadasterCheckbox = createElement('input', {id: 'cadasterCheckBox', type: 'checkbox', title: settings.defaults.strings.tooltips.cadaster}, cadasterCheckboxDiv);
+        var cadasterCheckbox = createElement('input', {id: 'cadasterCheckBox', 'class': 'cadaster-checkbox', type: 'checkbox', title: settings.defaults.strings.tooltips.cadaster}, cadasterCheckboxDiv);
 
         var cadasterLayer = L.esri.dynamicMapLayer(settings.defaults.additionalLayers.cadasterLayer.link,{
             opacity: settings.defaults.additionalLayers.cadasterLayer.opacity
@@ -161,7 +161,7 @@ define([
          To dodge this shit we catch event "onload" for this layer
          And if checkbox is off - remove this layer from map with
          hacking refreshing - add layer (removed by checkbox event) and remove it once again
-         * */
+          */
         on(cadasterLayer, 'load', function() {
             if (!cadasterCheckbox.checked) {
                 settings.map.addLayer(cadasterLayer);
@@ -299,8 +299,8 @@ define([
 
                     createAlertWindow();
                     createBasemapCombobox();
-                    initGeocodingService(self);
                     createCadasterCheckbox();
+                    initGeocodingService(self);
 
                     var regionsService = new Service();
                     regionsService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/"});

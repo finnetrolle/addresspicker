@@ -235,14 +235,14 @@
 
             L.DomEvent.addListener(this._input, "change", function(e){
                 if(this.searchComboBox.dropDown.selected != null) {
-                    this._geocode(this.searchComboBox.dropDown.selected.textContent);
+                    this._geocode(this.searchComboBox.dropDown.selected.innerText);
                 }
             }, this);
 
             this._dropdown = document.getElementById('widget_searchComboBox_dropdown');
 
             L.DomEvent.addListener(this._dropdown, "click", function(e){
-                this._geocode(this.searchComboBox.dropDown.selected.textContent);
+                this._geocode(this.searchComboBox.dropDown.selected.innerText);
             }, this);
 
             L.DomEvent.addListener(this._input, "blur", function(e){
