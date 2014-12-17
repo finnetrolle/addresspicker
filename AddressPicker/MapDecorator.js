@@ -115,7 +115,7 @@ define([
     };
 
     function createAlertWindow() {
-        var alertWindow = createElement('div',{id: 'alertWindow', class: 'igit-leaflet-wrapper-class',
+        var alertWindow = createElement('div',{id: 'alertWindow', 'class': 'igit-leaflet-wrapper-class',
             title: settings.defaults.strings.tooltips.alert, style: 'visibility:hidden;'});
 
         createElement('p', {id: 'alertText', innerHTML: settings.defaults.strings.unfilledGeocodingResult,
