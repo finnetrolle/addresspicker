@@ -1,4 +1,4 @@
-/*styles for different browser sizes*/
+/*styles for different browser sizes excepted IE8*/
 @media only screen and (min-width: 1531px) {
     .dijit.dijitTextBox.dijitInline {
         width: 80%;
