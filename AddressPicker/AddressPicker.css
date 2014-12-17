@@ -1,5 +1,82 @@
+/*styles for different browser sizes*/
 
+@media only screen and (min-width: 1531px) {
+    .map-wrapper .base-maps-wrapper {
+        top: 9px;
+    }
 
+    .map-wrapper .cadaster-wrapper {
+        top: 50px;
+    }
+
+    .map-wrapper .cadaster-wrapper,
+    .map-wrapper .base-maps-wrapper {
+        right: 5%;
+        left: auto;
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .map-wrapper .base-maps-wrapper {
+        top: 9px;
+    }
+
+    .map-wrapper .cadaster-wrapper {
+        top: 50px;
+    }
+
+    .map-wrapper .cadaster-wrapper,
+    .map-wrapper .base-maps-wrapper {
+        right: 5%;
+        left: auto;
+    }
+
+    .dijit.dijitTextBox.dijitInline {
+        width: 75%;
+    }
+}
+
+@media only screen and (max-width: 1145px) {
+    .map-wrapper .base-maps-wrapper {
+        top: 9px;
+    }
+
+    .map-wrapper .cadaster-wrapper {
+        top: 50px;
+    }
+
+    .map-wrapper .cadaster-wrapper,
+    .map-wrapper .base-maps-wrapper {
+        right: 5%;
+        left: initial;
+    }
+
+    .dijit.dijitTextBox.dijitInline.dijitComboBox {
+        width: 65%;
+    }
+}
+
+@media only screen and (max-width: 765px) {
+    .map-wrapper .base-maps-wrapper {
+        right: initial;
+        top: 37px;
+        left: 45px;
+    }
+
+    .map-wrapper .cadaster-wrapper {
+        right: initial;
+        top: 40px;
+        left: 235px;
+    }
+}
+
+@media only screen and (max-width: 537px) {
+    .map-wrapper .dijit.dijitTextBox.dijitInline.dijitComboBox {
+        width: 350px;
+    }
+}
+
+/*styles for elements*/
 body, html {
     overflow: hidden;
     height: 100%;
@@ -11,11 +88,7 @@ body, html {
 .dijit.dijitTextBox,
 .igit-leaflet-wrapper-class{
     position: absolute;
-}
-
-.base-maps-wrapper,
-.dijit.dijitTextBox{
-    top: 3%;
+    z-index: 10;
 }
 
 .base-map,
@@ -24,21 +97,30 @@ body, html {
     height: 100%;
 }
 
+.base-maps-wrapper {
+    top: 37px;
+    left: 45px;
+}
+
+.cadaster-wrapper {
+    top: 40px;
+    left: 235px;
+    white-space: nowrap;
+}
+
 .base-maps-wrapper,
 .cadaster-wrapper{
     width: 180px;
     text-align: center;
     height: 25px;
-    right: 5%;
+}
+
+.dijit.dijitTextBox{
+    top: 9px;
 }
 
 .base-maps{
     height: 27px;
-}
-
-.cadaster-wrapper {
-    top: 50px;
-    white-space: nowrap;
 }
 
 .dijitInputInner,
@@ -62,7 +144,7 @@ body, html {
 .dijit.dijitTextBox{
     left: 45px;
     background-color: #fff;
-    width: 65%;
+    width: 80%;
     border: 1px solid #999999;
     -moz-border-radius:3px;
     -webkit-border-radius:3px;
