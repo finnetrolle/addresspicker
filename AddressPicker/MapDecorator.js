@@ -161,7 +161,7 @@ define([
          To dodge this shit we catch event "onload" for this layer
          And if checkbox is off - remove this layer from map with
          hacking refreshing - add layer (removed by checkbox event) and remove it once again
-         * */
+          */
         on(cadasterLayer, 'load', function() {
             if (!cadasterCheckbox.checked) {
                 settings.map.addLayer(cadasterLayer);

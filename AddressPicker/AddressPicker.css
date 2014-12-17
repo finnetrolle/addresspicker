@@ -73,9 +73,9 @@ body, html {
 .dijitValidationTextBoxError input.dijitValidationInner,
 .dijitSelect input,
 .dijitTextBox input.dijitArrowButtonInner {
-    text-indent: 0 !important;
-    text-align: left !important;
-    height: auto !important;
+    text-indent: 0 !important;          /*just for dojo css*/
+    text-align: left !important;        /*just for dojo css*/
+    height: auto !important;            /*just for dojo css*/
 }
 
 .leaflet-right .leaflet-control {
