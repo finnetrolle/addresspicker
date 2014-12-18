@@ -20,7 +20,7 @@ define([
         // field names
         field: {
             cadasterFieldName: 'PARCEL_ID',
-            resFieldName: 'NAME'
+            resFieldName: 'Name'
         },
 
         // strings for localization

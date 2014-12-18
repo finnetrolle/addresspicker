@@ -49,8 +49,7 @@ define([
         resService: null,
         geocodedObject: null,
         geocodersDiv: null,
-        geocoders: null,
-        currentPointCoordinates: {}
+        geocoders: null
     };
 
     function searchControlServiceReverseCallBack(error, result, self, region, e){
@@ -286,13 +285,31 @@ define([
             }
         },
 
-        initMap: function (longitude, latitude, zoom) {
-            var self = this;
-            settings.map = self.setExtent(longitude ? longitude : settings.defaults.centerPoint.longitude,
-                            latitude ? latitude : settings.defaults.centerPoint.latitude,
-                            zoom ? zoom : settings.defaults.centerPoint.zoom);
+        setExtent: function(longitude, latitude, zoom) {
+            if (settings.map && longitude && latitude) {
+                if (zoom) {
+                    zoom = zoom > settings.defaults.maxZoom ? settings.defaults.maxZoom : zoom;
+                    zoom = zoom < settings.defaults.minZoom ? settings.defaults.minZoom : zoom;
+                }
+                settings.map.setView([latitude, longitude], zoom);
+            }
+        },
 
-            self.getCenterPoint();
+        initMap: function (longitude, latitude, zoom) {
+
+            // var 1 simple
+            settings.map = leaflet.map('map');
+            var o = settings.defaults.centerPoint;
+            if (longitude && latitude) {
+                o.longitude = longitude;
+                o.latitude = latitude;
+                if (zoom) {
+                    o.zoom = zoom;
+                }
+            }
+            settings.map.setExtent(o.latitude, o.longitude, o.zoom);
+
+            var self = this;
 
             require(['leaflets/esri-leaflet'], function(){
                 require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
