@@ -257,21 +257,30 @@ define([
             }
         },
 
+        setExtent: function(longitude, latitude, zoom) {
+            if (settings.map && longitude && latitude) {
+                if (zoom) {
+                    zoom = zoom > settings.defaults.maxZoom ? settings.defaults.maxZoom : zoom;
+                    zoom = zoom < settings.defaults.minZoom ? settings.defaults.minZoom : zoom;
+                }
+                settings.map.setView([latitude, longitude], zoom);
+            }
+        },
+
         initMap: function (longitude, latitude, zoom) {
 
+            // var 1 simple
+            settings.map = leaflet.map('map');
             var o = settings.defaults.centerPoint;
-            // this block used to set initial center point and zoom (astrosoft asked for this)
-            if ((longitude != undefined) && (latitude != undefined)) {
+            if (longitude && latitude) {
                 o.longitude = longitude;
                 o.latitude = latitude;
-                if (zoom != undefined) {
-                    if ((zoom >= 1) && (zoom <= settings.defaults.maxZoom)) {
-                        o.zoom = zoom;
-                    }
+                if (zoom) {
+                    o.zoom = zoom;
                 }
             }
+            settings.map.setExtent(o.latitude, o.longitude, o.zoom);
 
-            settings.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
             var self = this;
 
             require(['leaflets/esri-leaflet'], function(){
