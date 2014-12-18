@@ -40,6 +40,7 @@ define([
 
     //private region
     var defaults = new AddressPickerSettings();
+    var regionsService;
     var searchControl;
     var resultsLayerGroup;
     var map;
@@ -48,14 +49,14 @@ define([
     var resService;
     var geocodedObject;
 
-    function searchControlServiceReverseCallBack(error, result, self, region, e){
+    function searchControlServiceReverseCallBack(error, result, self, region, latLng){
         setAlertWinState(defaults.strings.unfilledGeocodingResult, error && !result);
 
         resultsLayerGroup.clearLayers();
 
         if (defaults.showLineToGeocodingResultPoint) {
             var A, B;
-            A = B = e.latlng;
+            A = B = latLng;
             if (result && result.latlng) {
                 B = result.latlng;
             } else {
@@ -63,8 +64,8 @@ define([
                 var geocodedObject = new GeocodedObject();
                 geocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province);
                 geocodedObject.setPostalCode('');
-                geocodedObject.setLatLng(e.latlng.lat, e.latlng.lng); // Todo
-                geocodedObject.setBounds(e.latlng, e.latlng); // Todo
+                geocodedObject.setLatLng(latLng.lat, latLng.lng); // Todo
+                geocodedObject.setBounds(latLng, latLng); // Todo
                 geocodedObject.setAddress("Россия", region.Region, region.Province, null, null, null);
                 result = geocodedObject;
             }
@@ -75,7 +76,7 @@ define([
             resultsLayerGroup.addLayer(poly);
         }
 
-        var marker = L.marker(e.latlng);
+        var marker = L.marker(latLng);
         resultsLayerGroup.addLayer(marker);
         var popup = marker.bindPopup(result.text);
 
@@ -88,11 +89,11 @@ define([
         }
     };
 
-    function getResultAfterClickOnMapCallBack(result, self, e){
+    function getResultAfterClickOnMapCallBack(result, self, latLng){
         if(result != '') {
             var region = result;
-            searchControl._service.reverse(e.latlng, {}, function(error, result){
-                searchControlServiceReverseCallBack(error, result, self, region,  e);
+            searchControl._service.reverse(latLng, {}, function(error, result){
+                searchControlServiceReverseCallBack(error, result, self, region,  latLng);
             }, this);
         } else {
             resultsLayerGroup.clearLayers();
@@ -221,6 +222,21 @@ define([
         return s;
     };
 
+    function initRegionService(){
+        regionsService= new Service();
+        regionsService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/"});
+    };
+
+    function getResultByCoordinates(latLng, self){
+        setAlertWinState('', false);
+        if(!regionService){
+            initRegionService();
+        }
+        regionsService.service.getResult(latLng, {}, function (error, result) {
+            getResultAfterClickOnMapCallBack(result, self, latLng);
+        }, this);
+    };
+
     // This returned object becomes the defined value of this module
     return declare([Evented], {
         // methods for creating controls
@@ -283,6 +299,20 @@ define([
             }
         },
 
+        highlightObjectByAddress: function(string_address){
+
+        },
+
+        highlightObjectByPosition: function(latitude, longitude){
+            debugger;
+            var self = this;
+            var latLng = {
+                lng: longitude,
+                lat: latitude
+            }
+            getResultByCoordinates(latLng, self);
+        },
+
         initMap: function (longitude, latitude, zoom) {
             var self = this;
             // var 1 simple
@@ -325,15 +355,7 @@ define([
                     createCadasterCheckbox();
                     initGeocodingService(self);
 
-                    var regionsService = new Service();
-                    regionsService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/"});
-
-                    on(map, 'click', function (e) {
-                        setAlertWinState('', false);
-                        regionsService.service.getResult(e.latlng, {}, function (error, result) {
-                            getResultAfterClickOnMapCallBack(result, self, e);
-                        }, this);
-                    });
+                    on(map, 'click', function (e) {getResultByCoordinates(e.latlng, self);});
                 })
             })
         }
