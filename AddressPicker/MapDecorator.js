@@ -40,7 +40,7 @@ define([
 
     //private region
     var defaults = new AddressPickerSettings();
-    var regionsService;
+    var regionService;
     var searchControl;
     var resultsLayerGroup;
     var map;
@@ -223,8 +223,8 @@ define([
     };
 
     function initRegionService(){
-        regionsService= new Service();
-        regionsService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/"});
+        regionService= new Service();
+        regionService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/"});
     };
 
     function getResultByCoordinates(latLng, self){
@@ -232,7 +232,7 @@ define([
         if(!regionService){
             initRegionService();
         }
-        regionsService.service.getResult(latLng, {}, function (error, result) {
+        regionService.service.getResult(latLng, {}, function (error, result) {
             getResultAfterClickOnMapCallBack(result, self, latLng);
         }, this);
     };
@@ -300,11 +300,10 @@ define([
         },
 
         highlightObjectByAddress: function(string_address){
-
+            searchControl._geocode(string_address);
         },
 
         highlightObjectByPosition: function(latitude, longitude){
-            debugger;
             var self = this;
             var latLng = {
                 lng: longitude,
