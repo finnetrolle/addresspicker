@@ -3,8 +3,10 @@
  */
 define([
     'dojo/_base/declare',
+    'AddressPicker/HouseParser',
+    'AddressPicker/HouseMegaParser',
     'dojo/domReady!'
-], function(declare){
+], function(declare, HouseParser, HouseMegaParser){
 
     // This returned object becomes the defined value of this module
     return declare(null, {
@@ -27,10 +29,31 @@ define([
         geometryType: null, // тип геометрии
         houseCorp: null,
         liter: null,
+        parsedHouse: null,
+
+        parser: null,
 
         geocodeLevel: 0,
         SUCCESSFULL_GEOCODE_LEVEL: 6,
         SUCCESSFULL_TO_SAVE_GEOCODE_LEVEL: 5,
+
+        constructor: function() {
+            this.parser = new HouseMegaParser();
+        },
+
+        parseHouseString: function() {
+            if (!this.street_number) {return;}
+            this.parsedHouse = this.parser.parse(this.street_number);
+//          testers
+//            console.log(HouseParser("38 A / 12 к 23 Б"));
+//
+            console.log("3 A - 74 Y / 12 к 23 Б");
+            console.log(HouseMegaParser().parse("3 A - 74 Y / 12 к 23 Б"));
+//            console.log(HouseMegaParser().parse("12к34с56 А / 7 к 8 с 90 Б"));
+//            console.log(HouseMegaParser().parse("1А"));
+//            console.log(HouseMegaParser().parse("1 А"));
+//            console.log(HouseMegaParser().parse("17-18 Б"));
+        },
 
         setLiter: function(liter) {
             this.liter = liter;
@@ -102,6 +125,7 @@ define([
                                 this.address = route;
                                 if (street_number) {
                                     this.street_number = street_number;
+                                    this.parseHouseString();
                                     this.geocodeLevel = 6;
                                     this.address += ", " + street_number;
                                 }

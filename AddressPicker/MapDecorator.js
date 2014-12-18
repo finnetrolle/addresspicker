@@ -61,7 +61,7 @@ define([
                 B = result.latlng;
             } else {
                 // this is part for null address from KGIS geocoder
-                var geocodedObject = new GeocodedObject();
+                geocodedObject = new GeocodedObject();
                 geocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province);
                 geocodedObject.setPostalCode('');
                 geocodedObject.setLatLng(latLng.lat, latLng.lng); // Todo
@@ -267,7 +267,7 @@ define([
         queryCadasterService: function() {
             var self = this;
             if (geocodedObject) {
-                console.log(new Date().getTime() + " " + "querying cadaster service");
+//                console.log(new Date().getTime() + " " + "querying cadaster service");
                 cadasterService.service.getResult(geocodedObject.latlng, {}, function (error, result) {
                     if ((result) && (result.hasOwnProperty(defaults.field.cadasterFieldName))) {
                         geocodedObject.setCadasterNumber(result[defaults.field.cadasterFieldName]);
@@ -279,7 +279,7 @@ define([
 
         queryResService: function() {
             if (geocodedObject) {
-                console.log(new Date().getTime() + " " + "querying res service");
+//                console.log(new Date().getTime() + " " + "querying res service");
                 resService.service.getResult(geocodedObject.latlng, {}, function (error, result) {
                     if ((result) && (result.hasOwnProperty(defaults.field.resFieldName))) {
                         geocodedObject.setRes(result[defaults.field.resFieldName]);
