@@ -1,18 +1,7 @@
-/*styles for different browser sizes*/
-
+/*styles for different browser sizes excepted IE8*/
 @media only screen and (min-width: 1531px) {
-    .map-wrapper .base-maps-wrapper {
-        top: 9px;
-    }
-
-    .map-wrapper .cadaster-wrapper {
-        top: 50px;
-    }
-
-    .map-wrapper .cadaster-wrapper,
-    .map-wrapper .base-maps-wrapper {
-        right: 5%;
-        left: auto;
+    .dijit.dijitTextBox.dijitInline {
+        width: 80%;
     }
 }
 
@@ -27,7 +16,7 @@
 
     .map-wrapper .cadaster-wrapper,
     .map-wrapper .base-maps-wrapper {
-        right: 5%;
+        right: 10px;
         left: auto;
     }
 
@@ -47,7 +36,7 @@
 
     .map-wrapper .cadaster-wrapper,
     .map-wrapper .base-maps-wrapper {
-        right: 5%;
+        right: 10px;
         left: initial;
     }
 
@@ -56,7 +45,7 @@
     }
 }
 
-@media only screen and (max-width: 765px) {
+@media only screen and (max-width: 735px) {
     .map-wrapper .base-maps-wrapper {
         right: initial;
         top: 37px;
@@ -98,14 +87,17 @@ body, html {
 }
 
 .base-maps-wrapper {
-    top: 37px;
-    left: 45px;
+    top: 9px;
 }
 
 .cadaster-wrapper {
-    top: 40px;
-    left: 235px;
-    white-space: nowrap;
+    top: 50px;
+}
+
+.cadaster-wrapper,
+.base-maps-wrapper {
+    right: 10px;
+    left: auto;
 }
 
 .base-maps-wrapper,
@@ -144,7 +136,7 @@ body, html {
 .dijit.dijitTextBox{
     left: 45px;
     background-color: #fff;
-    width: 80%;
+    width: 65%;                 /*this width for IE8 because IE8 can not work with @media*/
     border: 1px solid #999999;
     -moz-border-radius:3px;
     -webkit-border-radius:3px;
