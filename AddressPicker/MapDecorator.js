@@ -39,25 +39,21 @@ define([
         Evented){
 
     //private region
-    var settings = {
-        defaults: new AddressPickerSettings(),
-        searchControl: null,
-        resultsLayerGroup: null,
-        map: null,
-        layer: null,
-        cadasterService: null,
-        resService: null,
-        geocodedObject: null,
-        geocodersDiv: null,
-        geocoders: null
-    };
+    var defaults = new AddressPickerSettings();
+    var searchControl;
+    var resultsLayerGroup;
+    var map;
+    var layer;
+    var cadasterService;
+    var resService;
+    var geocodedObject;
 
     function searchControlServiceReverseCallBack(error, result, self, region, e){
-        setAlertWinState(settings.defaults.strings.unfilledGeocodingResult, error && !result);
+        setAlertWinState(defaults.strings.unfilledGeocodingResult, error && !result);
 
-        settings.resultsLayerGroup.clearLayers();
+        resultsLayerGroup.clearLayers();
 
-        if (settings.defaults.showLineToGeocodingResultPoint) {
+        if (defaults.showLineToGeocodingResultPoint) {
             var A, B;
             A = B = e.latlng;
             if (result && result.latlng) {
@@ -76,18 +72,18 @@ define([
                 [A.lat, A.lng],
                 [B.lat, B.lng]
             ]);
-            settings.resultsLayerGroup.addLayer(poly);
+            resultsLayerGroup.addLayer(poly);
         }
 
         var marker = L.marker(e.latlng);
-        settings.resultsLayerGroup.addLayer(marker);
+        resultsLayerGroup.addLayer(marker);
         var popup = marker.bindPopup(result.text);
 
         popup.openPopup();
 
-        settings.geocodedObject = result;
+        geocodedObject = result;
         self.emit('objectSelected');
-        if (settings.geocodedObject && !settings.geocodedObject.isSuccessfullyGeocoded()) {
+        if (geocodedObject && !geocodedObject.isSuccessfullyGeocoded()) {
             setAlertWinState('', true);
         }
     };
@@ -95,12 +91,12 @@ define([
     function getResultAfterClickOnMapCallBack(result, self, e){
         if(result != '') {
             var region = result;
-            settings.searchControl._service.reverse(e.latlng, {}, function(error, result){
+            searchControl._service.reverse(e.latlng, {}, function(error, result){
                 searchControlServiceReverseCallBack(error, result, self, region,  e);
             }, this);
         } else {
-            settings.resultsLayerGroup.clearLayers();
-            setAlertWinState(settings.defaults.strings.outOfRegions, true);
+            resultsLayerGroup.clearLayers();
+            setAlertWinState(defaults.strings.outOfRegions, true);
         }
     };
 
@@ -116,10 +112,10 @@ define([
 
     function createAlertWindow() {
         var alertWindow = createElement('div',{id: 'alertWindow', 'class': 'alert-window igit-leaflet-wrapper-class',
-            title: settings.defaults.strings.tooltips.alert, style: 'visibility:hidden;'});
+            title: defaults.strings.tooltips.alert, style: 'visibility:hidden;'});
 
-        createElement('p', {id: 'alertText', 'class': 'alert-text', innerHTML: settings.defaults.strings.unfilledGeocodingResult,
-            title: settings.defaults.strings.tooltips.alert}, alertWindow);
+        createElement('p', {id: 'alertText', 'class': 'alert-text', innerHTML: defaults.strings.unfilledGeocodingResult,
+            title: defaults.strings.tooltips.alert}, alertWindow);
     };
 
     function fillSelectControl(control, array) {
@@ -130,29 +126,29 @@ define([
     };
 
     function createBasemapCombobox() {
-        var array = settings.defaults.basemapLayers;
+        var array = defaults.basemapLayers;
 
-        var basemapsDiv = createElement('div', {id: 'basemaps-wrapper', 'class':'base-maps-wrapper', title: settings.defaults.strings.tooltips.basemaps});
-        var basemaps = createElement('select', {id: 'basemaps', 'class': 'base-maps', title: settings.defaults.strings.tooltips.basemaps}, basemapsDiv);
+        var basemapsDiv = createElement('div', {id: 'basemaps-wrapper', 'class':'base-maps-wrapper', title: defaults.strings.tooltips.basemaps});
+        var basemaps = createElement('select', {id: 'basemaps', 'class': 'base-maps', title: defaults.strings.tooltips.basemaps}, basemapsDiv);
 
         fillSelectControl(basemaps, array);
 
         on(basemaps, 'change', function () {
-            if (settings.layer) {
-                settings.map.removeLayer(settings.layer);
+            if (layer) {
+                map.removeLayer(layer);
             }
-            settings.layer = L.esri.tiledMapLayer(basemaps.value, {maxZoom: settings.defaults.maxZoom});
-            settings.map.addLayer(settings.layer);
+            layer = L.esri.tiledMapLayer(basemaps.value, {maxZoom: defaults.maxZoom});
+            map.addLayer(layer);
         });
     };
 
     function createCadasterCheckbox() {
-        var cadasterCheckboxDiv = createElement('div', {id: 'cadaster-wrapper','class': 'cadaster-wrapper', innerHTML: settings.defaults.strings.cadaster, title: settings.defaults.strings.tooltips.cadaster});
+        var cadasterCheckboxDiv = createElement('div', {id: 'cadaster-wrapper','class': 'cadaster-wrapper', innerHTML: defaults.strings.cadaster, title: defaults.strings.tooltips.cadaster});
 
-        var cadasterCheckbox = createElement('input', {id: 'cadasterCheckBox', 'class': 'cadaster-checkbox', type: 'checkbox', title: settings.defaults.strings.tooltips.cadaster}, cadasterCheckboxDiv);
+        var cadasterCheckbox = createElement('input', {id: 'cadasterCheckBox', 'class': 'cadaster-checkbox', type: 'checkbox', title: defaults.strings.tooltips.cadaster}, cadasterCheckboxDiv);
 
-        var cadasterLayer = L.esri.dynamicMapLayer(settings.defaults.additionalLayers.cadasterLayer.link,{
-            opacity: settings.defaults.additionalLayers.cadasterLayer.opacity
+        var cadasterLayer = L.esri.dynamicMapLayer(defaults.additionalLayers.cadasterLayer.link,{
+            opacity: defaults.additionalLayers.cadasterLayer.opacity
         });
 
         /* This block of code required to dodge error #12
@@ -164,54 +160,54 @@ define([
           */
         on(cadasterLayer, 'load', function() {
             if (!cadasterCheckbox.checked) {
-                settings.map.addLayer(cadasterLayer);
-                settings.map.removeLayer(cadasterLayer);
+                map.addLayer(cadasterLayer);
+                map.removeLayer(cadasterLayer);
             }
         });
 
         on(cadasterCheckbox, 'change', function() {
             if (cadasterCheckbox.checked) {
-                settings.map.addLayer(cadasterLayer);
+                map.addLayer(cadasterLayer);
             } else {
-                settings.map.removeLayer(cadasterLayer);
+                map.removeLayer(cadasterLayer);
             }
         });
     };
 
     function initGeocodingService(self) {
-        settings.searchControl = new L.esri.Controls.Geosearch().addTo(settings.map);
-        settings.searchControl.initService(new IGITGeocoding());
-        settings.resultsLayerGroup = new L.LayerGroup().addTo(settings.map);
+        searchControl = new L.esri.Controls.Geosearch().addTo(map);
+        searchControl.initService(new IGITGeocoding());
+        resultsLayerGroup = new L.LayerGroup().addTo(map);
 
-        on(settings.searchControl, 'results', function(data) {
+        on(searchControl, 'results', function(data) {
             setAlertWinState('', false);
-            settings.geocodedObject = data.results[0];
-            settings.resultsLayerGroup.clearLayers();
+            geocodedObject = data.results[0];
+            resultsLayerGroup.clearLayers();
 
-            if (settings.geocodedObject) {
-                if (settings.geocodedObject.isSuccessfullyGeocoded()) {
+            if (geocodedObject) {
+                if (geocodedObject.isSuccessfullyGeocoded()) {
                     var marker = L.marker(data.results[0].latlng);
-                    var popup = marker.bindPopup(settings.geocodedObject.text);
-                    settings.resultsLayerGroup.addLayer(marker);
+                    var popup = marker.bindPopup(geocodedObject.text);
+                    resultsLayerGroup.addLayer(marker);
                     popup.openPopup();
 
                     self.emit('objectSelected');
 
-                    if(!settings.geocodedObject.isSuccessfullyToSave()) {
+                    if(!geocodedObject.isSuccessfullyToSave()) {
                         setAlertWinState('', true);
                     }
 
                 } else {
-                    alert(settings.defaults.strings.geocodingNoPosition);
+                    alert(defaults.strings.geocodingNoPosition);
                 }
             } else {
-                alert(settings.defaults.strings.geocodingNoResults);
+                alert(defaults.strings.geocodingNoResults);
             }
         });
     };
 
     function getVersion() {
-        var v = settings.defaults.appinfo;
+        var v = defaults.appinfo;
         var s = "";
         if (v.demo)
             s += 'Demo version ';
@@ -225,48 +221,40 @@ define([
         return s;
     };
 
-    function setCurrentPointCoordinates(longitude, latitude, zoom){
-        settings.currentPointCoordinates.longitude = longitude;
-        settings.currentPointCoordinates.latitude = latitude;
-        settings.currentPointCoordinates.zoom = zoom;
-    };
-
     // This returned object becomes the defined value of this module
     return declare([Evented], {
         // methods for creating controls
         getMaximalZoom: function(){
-            return settings.defaults.centerPoint.maxZoom;
+            return defaults.centerPoint.maxZoom;
         },
 
         getMinimalZoom: function(){
-            return settings.defaults.centerPoint.minZoom;
+            return defaults.centerPoint.minZoom;
         },
 
-        getCenterPoint: function(){
-            return settings.currentPointCoordinates ? settings.currentPointCoordinates : settings.defaults.centerPoint;
+        getCenter: function(){
+            if(map) {
+                return map.getCenter();
+            }
         },
 
-        setExtent: function(longitude, latitude, zoom){
-            if(longitude && latitude){
-                if(zoom) {
-                    zoom = zoom > 17 ? 17 : (zoom < 1 ? 1 : zoom);
-                }
-                setCurrentPointCoordinates(longitude, latitude, zoom);
-                return (settings.map ? settings.map : leaflet.map('map')).setView([latitude, longitude], zoom);
+        getZoom: function(){
+            if(map) {
+                return map.getZoom();
             }
         },
 
         getResultObject: function() {
-            return settings.geocodedObject;
+            return geocodedObject;
         },
 
         queryCadasterService: function() {
             var self = this;
-            if (settings.geocodedObject) {
+            if (geocodedObject) {
                 console.log(new Date().getTime() + " " + "querying cadaster service");
-                settings.cadasterService.service.getResult(settings.geocodedObject.latlng, {}, function (error, result) {
-                    if ((result) && (result.hasOwnProperty(settings.defaults.field.cadasterFieldName))) {
-                        settings.geocodedObject.setCadasterNumber(result[settings.defaults.field.cadasterFieldName]);
+                cadasterService.service.getResult(geocodedObject.latlng, {}, function (error, result) {
+                    if ((result) && (result.hasOwnProperty(defaults.field.cadasterFieldName))) {
+                        geocodedObject.setCadasterNumber(result[defaults.field.cadasterFieldName]);
                     }
                     self.emit("cadasterResponse", {});
                 });
@@ -274,11 +262,11 @@ define([
         },
 
         queryResService: function() {
-            if (settings.geocodedObject) {
+            if (geocodedObject) {
                 console.log(new Date().getTime() + " " + "querying res service");
-                settings.resService.service.getResult(settings.geocodedObject.latlng, {}, function (error, result) {
-                    if ((result) && (result.hasOwnProperty(settings.defaults.field.resFieldName))) {
-                        settings.geocodedObject.setRes(result[settings.defaults.field.resFieldName]);
+                resService.service.getResult(geocodedObject.latlng, {}, function (error, result) {
+                    if ((result) && (result.hasOwnProperty(defaults.field.resFieldName))) {
+                        geocodedObject.setRes(result[defaults.field.resFieldName]);
                     }
                 });
                 this.emit("resResponse", {});
@@ -286,20 +274,20 @@ define([
         },
 
         setExtent: function(longitude, latitude, zoom) {
-            if (settings.map && longitude && latitude) {
+            if (map && longitude && latitude) {
                 if (zoom) {
-                    zoom = zoom > settings.defaults.maxZoom ? settings.defaults.maxZoom : zoom;
-                    zoom = zoom < settings.defaults.minZoom ? settings.defaults.minZoom : zoom;
+                    zoom = zoom > defaults.maxZoom ? defaults.maxZoom : zoom;
+                    zoom = zoom < defaults.minZoom ? defaults.minZoom : zoom;
                 }
-                settings.map.setView([latitude, longitude], zoom);
+                map.setView([latitude, longitude], zoom);
             }
         },
 
         initMap: function (longitude, latitude, zoom) {
-
+            var self = this;
             // var 1 simple
-            settings.map = leaflet.map('map');
-            var o = settings.defaults.centerPoint;
+            map = leaflet.map('map');
+            var o = defaults.centerPoint;
             if (longitude && latitude) {
                 o.longitude = longitude;
                 o.latitude = latitude;
@@ -307,20 +295,18 @@ define([
                     o.zoom = zoom;
                 }
             }
-            settings.map.setExtent(o.latitude, o.longitude, o.zoom);
-
-            var self = this;
+            self.setExtent(o.longitude, o.latitude, o.zoom);
 
             require(['leaflets/esri-leaflet'], function(){
                 require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){
                     // loading basemap
-                    settings.layer = L.esri.tiledMapLayer(settings.defaults.basemapLayers[0].link, {maxZoom: settings.defaults.maxZoom});
-                    settings.map.addLayer(settings.layer);
-                    settings.map.attributionControl.addAttribution(["<a href=" + settings.defaults.appinfo.developerWebsite + ">" + settings.defaults.appinfo.developer + "</a>", getVersion()]);
-                    settings.cadasterService = new Service();
-                    settings.cadasterService.initialize({url: "http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer/0/"});
-                    settings.resService = new Service();
-                    settings.resService.initialize(
+                    layer = L.esri.tiledMapLayer(defaults.basemapLayers[0].link, {maxZoom: defaults.maxZoom});
+                    map.addLayer(layer);
+                    map.attributionControl.addAttribution(["<a href=" + defaults.appinfo.developerWebsite + ">" + defaults.appinfo.developer + "</a>", getVersion()]);
+                    cadasterService = new Service();
+                    cadasterService.initialize({url: "http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer/0/"});
+                    resService = new Service();
+                    resService.initialize(
                         {
                             url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/CORE/Company/MapServer/0/",
                             where: "CompanyCategoryId=2",
@@ -330,9 +316,9 @@ define([
                     // Hack to solve bug #22 without adding localization
                     // Todo - add localization
                     var zoomin = query('.leaflet-control-zoom-in')[0];
-                    zoomin.title = settings.defaults.strings.tooltips.zoomin;
+                    zoomin.title = defaults.strings.tooltips.zoomin;
                     var zoomout = query('.leaflet-control-zoom-out')[0];
-                    zoomout.title = settings.defaults.strings.tooltips.zoomout;
+                    zoomout.title = defaults.strings.tooltips.zoomout;
 
                     createAlertWindow();
                     createBasemapCombobox();
@@ -342,7 +328,7 @@ define([
                     var regionsService = new Service();
                     regionsService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/"});
 
-                    on(settings.map, 'click', function (e) {
+                    on(map, 'click', function (e) {
                         setAlertWinState('', false);
                         regionsService.service.getResult(e.latlng, {}, function (error, result) {
                             getResultAfterClickOnMapCallBack(result, self, e);
