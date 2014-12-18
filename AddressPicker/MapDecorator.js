@@ -49,7 +49,8 @@ define([
         resService: null,
         geocodedObject: null,
         geocodersDiv: null,
-        geocoders: null
+        geocoders: null,
+        currentPointCoordinates: {}
     };
 
     function searchControlServiceReverseCallBack(error, result, self, region, e){
@@ -225,9 +226,37 @@ define([
         return s;
     };
 
+    function setCurrentPointCoordinates(longitude, latitude, zoom){
+        settings.currentPointCoordinates.longitude = longitude;
+        settings.currentPointCoordinates.latitude = latitude;
+        settings.currentPointCoordinates.zoom = zoom;
+    };
+
     // This returned object becomes the defined value of this module
     return declare([Evented], {
         // methods for creating controls
+        getMaximalZoom: function(){
+            return settings.defaults.centerPoint.maxZoom;
+        },
+
+        getMinimalZoom: function(){
+            return settings.defaults.centerPoint.minZoom;
+        },
+
+        getCenterPoint: function(){
+            return settings.currentPointCoordinates ? settings.currentPointCoordinates : settings.defaults.centerPoint;
+        },
+
+        setExtent: function(longitude, latitude, zoom){
+            if(longitude && latitude){
+                if(zoom) {
+                    zoom = zoom > 17 ? 17 : (zoom < 1 ? 1 : zoom);
+                }
+                setCurrentPointCoordinates(longitude, latitude, zoom);
+                return (settings.map ? settings.map : leaflet.map('map')).setView([latitude, longitude], zoom);
+            }
+        },
+
         getResultObject: function() {
             return settings.geocodedObject;
         },
@@ -258,21 +287,12 @@ define([
         },
 
         initMap: function (longitude, latitude, zoom) {
-
-            var o = settings.defaults.centerPoint;
-            // this block used to set initial center point and zoom (astrosoft asked for this)
-            if ((longitude != undefined) && (latitude != undefined)) {
-                o.longitude = longitude;
-                o.latitude = latitude;
-                if (zoom != undefined) {
-                    if ((zoom >= 1) && (zoom <= settings.defaults.maxZoom)) {
-                        o.zoom = zoom;
-                    }
-                }
-            }
-
-            settings.map = leaflet.map('map').setView([o.latitude, o.longitude], o.zoom);
             var self = this;
+            settings.map = self.setExtent(longitude ? longitude : settings.defaults.centerPoint.longitude,
+                            latitude ? latitude : settings.defaults.centerPoint.latitude,
+                            zoom ? zoom : settings.defaults.centerPoint.zoom);
+
+            self.getCenterPoint();
 
             require(['leaflets/esri-leaflet'], function(){
                 require(['AddressPicker/esri-leaflet-geocoder-mk2'], function(){

@@ -97,6 +97,7 @@ define([
         minimumLetters: 3,
         maximumSuggestResults: 25,
         maxZoom: 17,
+        minZoom: 1,
 
         colors: {
             enabledColor: '#44FF44',
