@@ -172,6 +172,7 @@ fractions: [{
 ```
 #!javascript
 var s = "12 - 20 / 11к5А";
+{
 number: "12", // номер
 fractions: [{
    number: "20"
@@ -190,6 +191,7 @@ fractions: [{
 ```
 #!javascript
 var s = "Ломоносова 2";
+{
 number: "2" // номер
 }
 
