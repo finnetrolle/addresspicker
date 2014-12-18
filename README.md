@@ -54,88 +54,85 @@ mapDecorator.initMap(30.00, 61.00, 12); // init with position and zoom
 ```
 #!javascript
 
-initMap(longitude, latitude, zoom)
+initMap(longitude, latitude, zoom) // инициирует карту
 ```
-инициирует карту
+
+```
+#!javascript
+
+queryCadasterService() // отправляет запрос в кадастровый сервис для заполнения кадастрового номера
+```
+
 
 
 ```
 #!javascript
 
-queryCadasterService()
+queryResService() // отправляет запрос в сервис границ РЭС для определения принадлежности к РЭС
 ```
-отправляет запрос в кадастровый сервис для заполнения кадастрового номера
 
-
-```
-#!javascript
-
-queryResService()
-```
-отправляет запрос в сервис границ РЭС для определения принадлежности к РЭС
 
 
 ```
 #!javascript
 
-getResultObject()
+getResultObject() // возвращает текущий подсвеченный объект с адресной и координатной информацией
 ```
-возвращает текущий подсвеченный объект с адресной и координатной информацией
 
-
-```
-#!javascript
-
-setExtent(longitude, latitude, zoom)
-```
-устанавливает экстент карты с помощью задания точки центра экрана и масштаба
 
 
 ```
 #!javascript
 
-getZoom()
+setExtent(longitude, latitude, zoom) // устанавливает экстент карты с помощью задания точки центра экрана и масштаба
 ```
 
-возвращает масштаб 
-
-
-```
-#!javascript
-
-getCenter()
-```
-
-возвращает координаты центра экрана
 
 
 ```
 #!javascript
 
-getMaximalZoom()
+getZoom() // возвращает масштаб 
 ```
-вернуть максимальный возможный масштаб
 
 
-```
-#!javascript
-
-getMinimalZoom()
-```
-вернуть минимальный возможный масштаб
 
 
 ```
 #!javascript
 
-highlightObjectByAddress(string_address)
+getCenter() // возвращает координаты центра экрана
 ```
-подсветить маркером объект по адресу (в случае успеха метод вызовет событие objectSelected)
+
+
 
 
 ```
 #!javascript
 
-highlightObjectByPosition(latitude, longitude)
+getMaximalZoom() // вернуть максимальный возможный масштаб
 ```
-подсветить маркером объект по координатам (в случае успеха метод вызовет событие objectSelected)
+
+
+
+```
+#!javascript
+
+getMinimalZoom() // вернуть минимальный возможный масштаб
+```
+
+
+
+```
+#!javascript
+
+highlightObjectByAddress(string_address) // подсветить маркером объект по адресу (в случае успеха метод вызовет событие objectSelected)
+```
+
+
+
+```
+#!javascript
+
+highlightObjectByPosition(latitude, longitude) // подсветить маркером объект по координатам (в случае успеха метод вызовет событие objectSelected)
+```
