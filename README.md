@@ -196,3 +196,6 @@ number: "2" // номер
 }
 
 ```
+
+## Патчноуты ##
+[https://bitbucket.org/finnetrolle/addresspicker/wiki/Patch%20notes](https://bitbucket.org/finnetrolle/addresspicker/wiki/Patch%20notes)
