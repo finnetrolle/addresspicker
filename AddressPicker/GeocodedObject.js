@@ -47,8 +47,8 @@ define([
 //          testers
 //            console.log(HouseParser("38 A / 12 к 23 Б"));
 //
-            console.log("3 A - 74 Y / 12 к 23 Б");
-            console.log(HouseMegaParser().parse("3 A - 74 Y / 12 к 23 Б"));
+//            console.log("3 A - 74 Y / 12 к 23 Б");
+//            console.log(HouseMegaParser().parse("3 A - 74 Y / 12 к 23 Б"));
 //            console.log(HouseMegaParser().parse("12к34с56 А / 7 к 8 с 90 Б"));
 //            console.log(HouseMegaParser().parse("1А"));
 //            console.log(HouseMegaParser().parse("1 А"));

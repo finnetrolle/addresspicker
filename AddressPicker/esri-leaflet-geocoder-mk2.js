@@ -105,7 +105,7 @@
         },
 
         _geocode: function(text, key){
-            console.log('---> ' + text);
+//            console.log('---> ' + text);
             var options = {};
 
             if(key){
