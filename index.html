@@ -13,9 +13,24 @@
 <body>
     <script src="AddressPicker/AddressPickerDojoConfig.js"></script>
     <script src="dojo/dojo.js"></script>
-    <div id="map_wrapper" class="map-wrapper">
-        <div id="map" class="base-map map-container"></div>
-    </div>
+
+    <table style="height: 100%; width: 100%" >
+        <tbody>
+            <tr>
+                <td style="height: 100%; vertical-align: top">
+                    <div id="map_wrapper" class="map-wrapper">
+                        <div id="map" class="base-map map-container"></div>
+                    </div>
+                </td>
+                <td style="width: 400px; vertical-align: top">
+                    &nbsp;
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+
     <script type="text/javascript">
         require([
             'AddressPicker/MapDecorator', 'dojo/on'
