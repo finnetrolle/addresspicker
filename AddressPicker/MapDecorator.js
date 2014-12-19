@@ -189,6 +189,7 @@ define([
             resultsLayerGroup.clearLayers();
 
             if (geocodedObject) {
+//                console.log(geocodedObject);
                 if (geocodedObject.isSuccessfullyGeocoded()) {
                     var marker = L.marker(data.results[0].latlng);
                     var popup = marker.bindPopup(geocodedObject.text);
@@ -361,7 +362,7 @@ define([
 
                     on(map, 'click', function (e) {getResultByCoordinates(e.latlng, self);});
 
-                    console.log('map loaded successfully');
+//                    console.log('map loaded successfully');
                     self.emit('mapLoaded', {});
 
                 })

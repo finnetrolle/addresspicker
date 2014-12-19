@@ -107,6 +107,12 @@ define([
 
         setAddress: function(country, region, subregion, city, route, street_number) {
             this.geocodeLevel = 0;
+//            this.country = null;
+//            this.region = null;
+//            this.subregion = null;
+//            this.city = null;
+//            this.route = null;
+//            this.street_number = null;
             if (country) {
                 this.country = country;
                 this.geocodeLevel = 1;
@@ -134,6 +140,22 @@ define([
                     }
                 }
             }
+            // last chance
+            if (this.geocodeLevel <= 2) {
+                var splitter = this.text.split(', ');
+                this.country = (this.country) ? this.country : splitter[0];
+                this.region = (this.region) ? this.region : splitter[1];
+                this.subregion = (this.subregion) ? this.subregion : splitter[2];
+                this.route = (this.route) ? this.route : splitter[3];
+            }
+
+//            if (!this.country) this.country = country;
+//            if (!this.region) this.region = region;
+//            if (!this.subregion) this.subregion = subregion;
+//            if (!this.city) this.city = city;
+//            if (!this.route) this.route = route;
+//            if (!this.street_number) this.street_number = street_number;
+
         },
 
         isValid: function() {

@@ -42,7 +42,8 @@
             mapDecorator.initMap(); // init default values
 
             on(mapDecorator, "mapLoaded", function() {
-                mapDecorator.highlightObjectByPosition(59.929975385524465,30.29464209883308);
+//                mapDecorator.highlightObjectByPosition(59.929975385524465,30.29464209883308);
+                mapDecorator.highlightObjectByAddress("Россия, Санкт-Петербург, Василеостровский район, 24-я линия В.О.");
             });
 
             // event handler for object select
@@ -57,14 +58,14 @@
 
             // event handler for cadaster service response
             on(mapDecorator, "cadasterResponse", function() {
-                console.log(">> Cadaster Service responsed:");
-                console.log(mapDecorator.getResultObject());
+//                console.log(">> Cadaster Service responsed:");
+//                console.log(mapDecorator.getResultObject());
             });
 
             // event handler for RES service response
             on(mapDecorator, "resResponse", function() {
-                console.log(">> RES Service responsed :");
-                console.log(mapDecorator.getResultObject());
+//                console.log(">> RES Service responsed :");
+//                console.log(mapDecorator.getResultObject());
             });
             /*
              default values
