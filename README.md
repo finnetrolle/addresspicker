@@ -9,4 +9,4 @@
 [Поддержка парсинга номера дома](https://bitbucket.org/finnetrolle/addresspicker/wiki/%D0%9F%D0%B0%D1%80%D1%81%D0%B5%D1%80%20%D0%BD%D0%BE%D0%BC%D0%B5%D1%80%D0%B0%20%D0%B4%D0%BE%D0%BC%D0%B0) 
 
 ## Патчноуты ##
-[0,4,0 Eventa](https://bitbucket.org/finnetrolle/addresspicker/wiki/Patch%20notes)
+[0.4.0](https://bitbucket.org/finnetrolle/addresspicker/wiki/0.4.0%20Eventa)
