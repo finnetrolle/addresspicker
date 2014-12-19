@@ -108,8 +108,8 @@ define([
     };
 
     function createElement(tagType, attributes, container) {
-//        return domConstruct.create(tagType, attributes, container || dom.byId('map_wrapper'));
-        return domConstruct.create(tagType, attributes, container || dom.byId('map'));
+        return domConstruct.create(tagType, attributes, container || dom.byId('map_wrapper'));
+//        return domConstruct.create(tagType, attributes, container || dom.byId('map'));
     };
 
     function createAlertWindow() {
