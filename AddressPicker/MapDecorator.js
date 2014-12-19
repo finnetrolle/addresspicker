@@ -279,6 +279,7 @@ define([
         },
 
         queryResService: function() {
+            var self = this;
             if (geocodedObject) {
 //                console.log(new Date().getTime() + " " + "querying res service");
                 resService.service.getResult(geocodedObject.latlng, {}, function (error, result) {
