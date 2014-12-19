@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.16.0.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="http://code.jquery.com/qunit/qunit-1.16.0.js"></script>
+<script src="dojo/dojo.js"></script>
+    <script type="text/javascript">
+            require([
+                'AddressPicker/HouseMegaParser'
+            ], function (HouseMegaParser) {
+                var parser = new HouseMegaParser();
+
+                QUnit.test("3 A - 74 Y / 12 к 23 Б", function (assert) {
+                    assert.ok(parser.parse("3 A - 74 Y / 12 к 23 Б") == {
+                        number: "3",
+                        letter: "A",
+                        fractions: [
+                            {
+                                number: "74",
+                                letter: "Y"
+                            },
+                            {
+                                number: "12",
+                                housing: "23",
+                                letter: "Б"
+                            }
+                        ]
+                    }, "passed");
+                });
+
+
+
+                //            console.log("3 A - 74 Y / 12 к 23 Б");
+//            console.log(HouseMegaParser().parse("3 A - 74 Y / 12 к 23 Б"));
+//            console.log(HouseMegaParser().parse("12к34с56 А / 7 к 8 с 90 Б"));
+//            console.log(HouseMegaParser().parse("1А"));
+//            console.log(HouseMegaParser().parse("1 А"));
+//            console.log(HouseMegaParser().parse("17-18 Б"));
+            });
+</script>
+
+</body>
+</html>
