@@ -285,8 +285,9 @@ define([
                     if ((result) && (result.hasOwnProperty(defaults.field.resFieldName))) {
                         geocodedObject.setRes(result[defaults.field.resFieldName]);
                     }
+                    this.emit("resResponse", {});
                 });
-                this.emit("resResponse", {});
+
             }
         },
 
