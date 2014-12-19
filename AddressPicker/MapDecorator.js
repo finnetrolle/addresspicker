@@ -103,8 +103,10 @@ define([
 
     function setAlertWinState(message, isVisible){
         var alertWindow =   dom.byId("alertWindow");
-        alertWindow.innerHTML = message != '' ? message : alertWindow.innerHTML;
-        alertWindow.style.visibility = isVisible ? 'visible': 'hidden';
+        if (alertWindow) {
+            alertWindow.innerHTML = message != '' ? message : alertWindow.innerHTML;
+            alertWindow.style.visibility = isVisible ? 'visible' : 'hidden';
+        }
     };
 
     function createElement(tagType, attributes, container) {
@@ -358,6 +360,10 @@ define([
                     initGeocodingService(self);
 
                     on(map, 'click', function (e) {getResultByCoordinates(e.latlng, self);});
+
+                    console.log('map loaded successfully');
+                    self.emit('mapLoaded', {});
+
                 })
             })
         }

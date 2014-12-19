@@ -41,6 +41,10 @@
             var mapDecorator = new MapDecorator();
             mapDecorator.initMap(); // init default values
 
+            on(mapDecorator, "mapLoaded", function() {
+                mapDecorator.highlightObjectByPosition(59.929975385524465,30.29464209883308);
+            });
+
             // event handler for object select
             on(mapDecorator, "objectSelected", function(){
                 console.log(">> Object selected:");
@@ -48,6 +52,7 @@
                 // query services
                 mapDecorator.queryCadasterService();
                 mapDecorator.queryResService();
+
             });
 
             // event handler for cadaster service response
