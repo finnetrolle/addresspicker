@@ -6,6 +6,60 @@ define([
     'dojo/domReady!'
 ], function(declare){
 
+    //region AdressObjectFunctions
+    function getAdressObject(inputStr){
+        if(inputStr){
+            return {
+                number: getHouseNumber(inputStr),
+                housing: getHousing(inputStr),
+                letter: getLetter(inputStr),
+                building: getBuilding(inputStr),
+                fraction: getForeignAdress(inputStr)
+            }
+        }
+        return null;
+    };
+
+    function getHouseNumber(inputStr){
+        return (/^\d+/.exec(inputStr))[0];
+    };
+
+    function getHousing(inputStr){
+        var housingPattern = /[к]\d+/;
+        var housing =  (/\d+/.exec(housingPattern.exec(inputStr)));
+        return housing ? housing[0] : null;
+    };
+
+    function getForeignAdress(inputStr){
+        var foreignAdressPattern = /[\/|-]\d+\s{0,}[А-Яа-я]{0,1}/;
+        var foreignAdress = foreignAdressPattern.exec(inputStr);
+        if(foreignAdress) {
+            var number = /\d+/.exec(foreignAdress[0]);
+            return {
+                numb: number ? number[0] : null,
+                letter: getLetter(foreignAdress[0].replace(/[\/|-]/, ''))
+            }
+        }
+        return null;
+    };
+
+    function getLetter(inputStr){
+        var singleAdressPattern = /^\d+\s{0,}([к]\d+){0,1}\s{0,}([(с|С)]\d+){0,1}\s{0,}[А-Яа-я]($|\/|-|\s)/;
+        var singleAdress = (singleAdressPattern.exec(inputStr));
+        if(singleAdress){
+            var letter = /[А-Яа-я]$/.exec(singleAdress[0].replace(/[\/|-]/,''));
+            return letter ? letter[0] : null;
+        }
+        return null;
+    };
+
+    function getBuilding(inputStr){
+        var buildingPattern = /[(с|С)]\d+/;
+        var building =  (/\d+/.exec(buildingPattern.exec(inputStr)));
+        return building ? building[0] : null;
+    };
+    //endregion
+
     // This returned object becomes the defined value of this module
     return declare(null, {
         text: null,
@@ -38,10 +92,6 @@ define([
 
         setHouseCorpus: function(corpus) {
             this.houseCorp = corpus;
-        },
-
-        setRes: function(res) {
-            this.res = res;
         },
 
         setGeometryType: function(geoType) {
