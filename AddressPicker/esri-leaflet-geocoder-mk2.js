@@ -5,14 +5,11 @@
 
     var adapter = null;
     var settings = null;
-    var webMercatorUtils = null;
 
     require([
         'AddressPicker/AbstractServiceAdapter',
-        'AddressPicker/AddressPickerSettings',
-        'esri/geometry/webMercatorUtils',
-    ], function (ServiceAdapter, AddressPickerSettings, WebMercatorUtils) {
-        webMercatorUtils = WebMercatorUtils;
+        'AddressPicker/AddressPickerSettings'
+    ], function (ServiceAdapter, AddressPickerSettings) {
         adapter = new ServiceAdapter();
         settings = new AddressPickerSettings();
         adapter.initService(settings.serviceAdapter);
@@ -32,31 +29,6 @@
             return adapter;
         },
 
-        getParams: function(latlng){
-            var point = webMercatorUtils.lngLatToXY(latlng.lng, latlng.lat, true);
-            return{
-                geometry:point[0] + ',' + point[1],
-                where: '1=1',
-                f:'json',
-                outFields: '*',
-                spatialRel: 'esriSpatialRelWithin',
-                geometryType: 'esriGeometryPoint',
-                returnGeometry: false,
-                maxAllowableOffset: '',
-                geometryPrecision: '',
-                outSR: '',
-                returnIdsOnly: false,
-                returnCountOnly: false,
-                orderByFields: '',
-                groupByFieldsForStatistics: '',
-                outStatistics: '',
-                returnZ: false,
-                returnM: false,
-                gdbVersion: '',
-                returnDistinctValues: false,
-            }
-        },
-
         geocode: function(text, opts, callback, context) {
             this.filterResult = null;
             if (this.previousSuggestResults !== null) {
@@ -67,7 +39,7 @@
                 }
             }
 
-            this.get(adapter.getQuery(), this.getParams(text), function(error, response){
+            this.get(adapter.getQuery(), adapter.getParams(text), function(error, response){
                 if(error) {
                     callback.call(context, error);
                 } else {
@@ -94,15 +66,18 @@
         },
 
         reverse: function(latlng, opts, callback, context) {
-            this.get(adapter.getReverseQuery(), this.getParams(latlng), function(error, response){
+            this.get(adapter.getReverseQuery(), adapter.getParams(latlng), function(error, response){
 
                 if(error) {
                     callback.call(context, error);
                 } else {
                     var error = null;
-                    var result = adapter.convertResults(response);
+                    var results = adapter.convertResults(response);
                     // get only first result (this result is best)
+                    if (results.length > 0) {
+                        var result = results[0];
                         callback.call(context, error, result, response);
+                    }
                 }
             }, this);
         },
