@@ -57,32 +57,25 @@ define([
         if (defaults.showLineToGeocodingResultPoint) {
             var A, B;
             A = B = latLng;
-            if (result && result.latlng) {
-                B = result.latlng;
-            } else {
-                // this is part for null address from KGIS geocoder
-                var geocodedObject = new GeocodedObject();
-                geocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province);
-                geocodedObject.setPostalCode('');
-                geocodedObject.setLatLng(latLng.lat, latLng.lng); // Todo
-                geocodedObject.setBounds(latLng, latLng); // Todo
-                geocodedObject.setAddress("Россия", region.Region, region.Province, null, null, null);
-                result = geocodedObject;
-            }
+            // this is part for null address from KGIS geocoder
+            var geocodedObject = new GeocodedObject();
+            geocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province);
+            geocodedObject.setPostalCode('');
+            geocodedObject.setLatLng(latLng.lat, latLng.lng); // Todo
+            geocodedObject.setBounds(latLng, latLng); // Todo
+            geocodedObject.setAddress("Россия", region.Region, region.Province, null, null, null);
+            geocodedObject.text += '' +  result;
             var poly = L.polygon([
                 [A.lat, A.lng],
                 [B.lat, B.lng]
             ]);
-            resultsLayerGroup.addLayer(poly);
         }
 
         var marker = L.marker(latLng);
         resultsLayerGroup.addLayer(marker);
-        var popup = marker.bindPopup(result.text);
+        var popup = marker.bindPopup(geocodedObject.text);
 
         popup.openPopup();
-
-        geocodedObject = result;
         self.emit('objectSelected');
         if (geocodedObject && !geocodedObject.isSuccessfullyGeocoded()) {
             setAlertWinState('', true);
@@ -236,7 +229,6 @@ define([
             getResultAfterClickOnMapCallBack(result, self, latLng);
         }, this);
     };
-
     // This returned object becomes the defined value of this module
     return declare([Evented], {
         // methods for creating controls
@@ -354,7 +346,9 @@ define([
                     createCadasterCheckbox();
                     initGeocodingService(self);
 
-                    on(map, 'click', function (e) {getResultByCoordinates(e.latlng, self);});
+                    on(map, 'click', function (e) {
+                        getResultByCoordinates(e.latlng, self);
+                    });
                 })
             })
         }
