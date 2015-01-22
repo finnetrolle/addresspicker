@@ -57,25 +57,32 @@ define([
         if (defaults.showLineToGeocodingResultPoint) {
             var A, B;
             A = B = latLng;
-            // this is part for null address from KGIS geocoder
-            var geocodedObject = new GeocodedObject();
-            geocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province);
-            geocodedObject.setPostalCode('');
-            geocodedObject.setLatLng(latLng.lat, latLng.lng); // Todo
-            geocodedObject.setBounds(latLng, latLng); // Todo
-            geocodedObject.setAddress("Россия", region.Region, region.Province, null, null, null);
-            geocodedObject.text += '' +  result;
+            if (result && result.latlng) {
+                B = result.latlng;
+            } else {
+                // this is part for null address from KGIS geocoder
+                var geocodedObject = new GeocodedObject();
+                geocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province);
+                geocodedObject.setPostalCode('');
+                geocodedObject.setLatLng(latLng.lat, latLng.lng); // Todo
+                geocodedObject.setBounds(latLng, latLng); // Todo
+                geocodedObject.setAddress("Россия", region.Region, region.Province, null, null, null);
+                result = geocodedObject;
+            }
             var poly = L.polygon([
                 [A.lat, A.lng],
                 [B.lat, B.lng]
             ]);
+            resultsLayerGroup.addLayer(poly);
         }
 
         var marker = L.marker(latLng);
         resultsLayerGroup.addLayer(marker);
-        var popup = marker.bindPopup(geocodedObject.text);
+        var popup = marker.bindPopup(result.text);
 
         popup.openPopup();
+
+        geocodedObject = result;
         self.emit('objectSelected');
         if (geocodedObject && !geocodedObject.isSuccessfullyGeocoded()) {
             setAlertWinState('', true);
@@ -96,12 +103,15 @@ define([
 
     function setAlertWinState(message, isVisible){
         var alertWindow =   dom.byId("alertWindow");
-        alertWindow.innerHTML = message != '' ? message : alertWindow.innerHTML;
-        alertWindow.style.visibility = isVisible ? 'visible': 'hidden';
+        if (alertWindow) {
+            alertWindow.innerHTML = message != '' ? message : alertWindow.innerHTML;
+            alertWindow.style.visibility = isVisible ? 'visible' : 'hidden';
+        }
     };
 
     function createElement(tagType, attributes, container) {
         return domConstruct.create(tagType, attributes, container || dom.byId('map_wrapper'));
+//        return domConstruct.create(tagType, attributes, container || dom.byId('map'));
     };
 
     function createAlertWindow() {
@@ -179,6 +189,7 @@ define([
             resultsLayerGroup.clearLayers();
 
             if (geocodedObject) {
+//                console.log(geocodedObject);
                 if (geocodedObject.isSuccessfullyGeocoded()) {
                     var marker = L.marker(data.results[0].latlng);
                     var popup = marker.bindPopup(geocodedObject.text);
@@ -229,6 +240,7 @@ define([
             getResultAfterClickOnMapCallBack(result, self, latLng);
         }, this);
     };
+
     // This returned object becomes the defined value of this module
     return declare([Evented], {
         // methods for creating controls
@@ -259,7 +271,7 @@ define([
         queryCadasterService: function() {
             var self = this;
             if (geocodedObject) {
-                console.log(new Date().getTime() + " " + "querying cadaster service");
+//                console.log(new Date().getTime() + " " + "querying cadaster service");
                 cadasterService.service.getResult(geocodedObject.latlng, {}, function (error, result) {
                     if ((result) && (result.hasOwnProperty(defaults.field.cadasterFieldName))) {
                         geocodedObject.setCadasterNumber(result[defaults.field.cadasterFieldName]);
@@ -270,14 +282,16 @@ define([
         },
 
         queryResService: function() {
+            var self = this;
             if (geocodedObject) {
-                console.log(new Date().getTime() + " " + "querying res service");
+//                console.log(new Date().getTime() + " " + "querying res service");
                 resService.service.getResult(geocodedObject.latlng, {}, function (error, result) {
                     if ((result) && (result.hasOwnProperty(defaults.field.resFieldName))) {
                         geocodedObject.setRes(result[defaults.field.resFieldName]);
                     }
+                    self.emit("resResponse", {});
                 });
-                this.emit("resResponse", {});
+
             }
         },
 
@@ -346,9 +360,7 @@ define([
                     createCadasterCheckbox();
                     initGeocodingService(self);
 
-                    on(map, 'click', function (e) {
-                        getResultByCoordinates(e.latlng, self);
-                    });
+                    on(map, 'click', function (e) {getResultByCoordinates(e.latlng, self);});
                 })
             })
         }

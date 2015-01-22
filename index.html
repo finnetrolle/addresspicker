@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- this css file reset standart browser settings. Please add "AddressPicker/ResetCSS.css" to your project if you are going to use our component-->
-    <link rel="stylesheet" href="AddressPicker/ResetCSS.css" />
+    <!--<link rel="stylesheet" href="AddressPicker/ResetCSS.css" />-->
     <link rel="stylesheet" href="leaflets/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="leaflets/esri-leaflet-geocoder.css">
     <link rel="stylesheet" href="dijit/themes/claro/claro.css">
@@ -13,9 +13,24 @@
 <body>
     <script src="AddressPicker/AddressPickerDojoConfig.js"></script>
     <script src="dojo/dojo.js"></script>
-    <div id="map_wrapper" class="map-wrapper">
-        <div id="map" class="base-map map-container"></div>
-    </div>
+
+    <table style="height: 100%; width: 100%" >
+        <tbody>
+            <tr>
+                <td style="height: 100%; vertical-align: top">
+                    <div id="map_wrapper" class="map-wrapper">
+                        <div id="map" class="base-map map-container"></div>
+                    </div>
+                </td>
+                <td style="width: 400px; vertical-align: top">
+                    &nbsp;
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+
     <script type="text/javascript">
         require([
             'AddressPicker/MapDecorator', 'dojo/on'
@@ -26,6 +41,11 @@
             var mapDecorator = new MapDecorator();
             mapDecorator.initMap(); // init default values
 
+            on(mapDecorator, "mapLoaded", function() {
+//                mapDecorator.highlightObjectByPosition(59.929975385524465,30.29464209883308);
+                mapDecorator.highlightObjectByAddress("Россия, Санкт-Петербург, Василеостровский район, 24-я линия В.О.");
+            });
+
             // event handler for object select
             on(mapDecorator, "objectSelected", function(){
                 console.log(">> Object selected:");
@@ -33,18 +53,19 @@
                 // query services
                 mapDecorator.queryCadasterService();
                 mapDecorator.queryResService();
+
             });
 
             // event handler for cadaster service response
             on(mapDecorator, "cadasterResponse", function() {
-                console.log(">> Cadaster Service responsed:");
-                console.log(mapDecorator.getResultObject());
+//                console.log(">> Cadaster Service responsed:");
+//                console.log(mapDecorator.getResultObject());
             });
 
             // event handler for RES service response
             on(mapDecorator, "resResponse", function() {
-                console.log(">> RES Service responsed :");
-                console.log(mapDecorator.getResultObject());
+//                console.log(">> RES Service responsed :");
+//                console.log(mapDecorator.getResultObject());
             });
             /*
              default values

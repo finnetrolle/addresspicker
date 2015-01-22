@@ -130,7 +130,7 @@
         },
 
         _geocode: function(text, key){
-            console.log('---> ' + text);
+//            console.log('---> ' + text);
             var options = {};
 
             if(key){
@@ -222,6 +222,8 @@
                         cb.get('store').add({ name: results[i].text, results: results[i] });
                     }
 
+//                    console.log(cb.get('store'));
+
                     cb.loadDropDown();
                 }
             }, this);
@@ -293,6 +295,7 @@
                 }
 
                 if(key === 13) {
+//                    this._suggest(this._input.value)
                     this._geocode(this._input.value);
                 }
             }, this);
