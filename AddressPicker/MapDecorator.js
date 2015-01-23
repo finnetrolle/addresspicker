@@ -47,6 +47,7 @@ define([
     var layer;
     var cadasterService;
     var resService;
+    var addressService;
     var geocodedObject;
 
     function searchControlServiceReverseCallBack(error, result, self, region, latLng){
@@ -61,19 +62,24 @@ define([
                 B = result.latlng;
             } else {
                 // this is part for null address from KGIS geocoder
-                geocodedObject = new GeocodedObject();
-                geocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province);
-                geocodedObject.setPostalCode('');
-                geocodedObject.setLatLng(latLng.lat, latLng.lng); // Todo
-                geocodedObject.setBounds(latLng, latLng); // Todo
-                geocodedObject.setAddress("Россия", region.Region, region.Province, null, null, null);
-                result = geocodedObject;
+                var myGeocodedObject = new GeocodedObject();
+                myGeocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province + (result.Street ? ', ' + result.Street : '') +  (result.Label ? ' ' + result.Label : ''));
+                myGeocodedObject.setPostalCode('');
+                myGeocodedObject.setLatLng(latLng.lat, latLng.lng); // Todo
+                myGeocodedObject.setBounds(latLng, latLng); // Todo
+                myGeocodedObject.setAddress("Россия", region.Region, region.Province, result.Region, result.Street, result.Label);
+                if(result.Label) {
+                    myGeocodedObject.parsedHouse = myGeocodedObject.parser.parse(result.Label);
+                }
+                result = myGeocodedObject;
             }
+            /*
             var poly = L.polygon([
                 [A.lat, A.lng],
                 [B.lat, B.lng]
             ]);
             resultsLayerGroup.addLayer(poly);
+            */
         }
 
         var marker = L.marker(latLng);
@@ -83,6 +89,7 @@ define([
         popup.openPopup();
 
         geocodedObject = result;
+
         self.emit('objectSelected');
         if (geocodedObject && !geocodedObject.isSuccessfullyGeocoded()) {
             setAlertWinState('', true);
@@ -92,7 +99,10 @@ define([
     function getResultAfterClickOnMapCallBack(result, self, latLng){
         if(result != '') {
             var region = result;
-            searchControl._service.reverse(latLng, {}, function(error, result){
+            if(!addressService){
+                initAddressService();
+            }
+            addressService.service.getResult(latLng, {}, function(error, result){
                 searchControlServiceReverseCallBack(error, result, self, region,  latLng);
             }, this);
         } else {
@@ -231,6 +241,11 @@ define([
         regionService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/"});
     };
 
+    function initAddressService(){
+        addressService = new Service();
+        addressService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/0/"});
+    }
+
     function getResultByCoordinates(latLng, self){
         setAlertWinState('', false);
         if(!regionService){
@@ -361,10 +376,6 @@ define([
                     initGeocodingService(self);
 
                     on(map, 'click', function (e) {getResultByCoordinates(e.latlng, self);});
-
-//                    console.log('map loaded successfully');
-                    self.emit('mapLoaded', {});
-
                 })
             })
         }

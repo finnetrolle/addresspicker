@@ -1,113 +1,163 @@
+/*styles for different browser sizes excepted IE8*/
+@media only screen and (min-width: 1531px) {
+    .dijit.dijitTextBox.dijitInline {
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .map-wrapper .base-maps-wrapper {
+        top: 9px;
+    }
+
+    .map-wrapper .cadaster-wrapper {
+        top: 50px;
+    }
+
+    .map-wrapper .cadaster-wrapper,
+    .map-wrapper .base-maps-wrapper {
+        right: 10px;
+        left: auto;
+    }
+
+    .dijit.dijitTextBox.dijitInline {
+        width: 75%;
+    }
+}
+
+@media only screen and (max-width: 1145px) {
+    .map-wrapper .base-maps-wrapper {
+        top: 9px;
+    }
+
+    .map-wrapper .cadaster-wrapper {
+        top: 50px;
+    }
+
+    .map-wrapper .cadaster-wrapper,
+    .map-wrapper .base-maps-wrapper {
+        right: 10px;
+        left: initial;
+    }
+
+    .dijit.dijitTextBox.dijitInline.dijitComboBox {
+        width: 65%;
+    }
+}
+
+@media only screen and (max-width: 735px) {
+    .map-wrapper .base-maps-wrapper {
+        right: initial;
+        top: 37px;
+        left: 45px;
+    }
+
+    .map-wrapper .cadaster-wrapper {
+        right: initial;
+        top: 40px;
+        left: 235px;
+    }
+}
+
+@media only screen and (max-width: 537px) {
+    .map-wrapper .dijit.dijitTextBox.dijitInline.dijitComboBox {
+        width: 350px;
+    }
+}
+
+/*styles for elements*/
 body, html {
     overflow: hidden;
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    padding: 0;
-    margin: 0;
-}
-
-/* wrappers class style */
-.igit-leaflet-wrapper-class {
-    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-    border-radius: 4px;
-    background: #FFFFFF;
-    position: absolute;
-    /*position: relative;*/
-}
-
-
-
-/* wrappers class-overriding styles*/
-#map_wrapper {
-    position: relative;
-    width: 100%;
     height: 100%;
 }
 
-#basemaps-wrapper {
+.alert-window,
+.base-maps-wrapper,
+.cadaster-wrapper,
+.dijit.dijitTextBox,
+.igit-leaflet-wrapper-class{
     position: absolute;
-    top: 10px;
-    /*right: 10px;*/
-    /*right: 320px;*/
-    right: 10px;
     z-index: 10;
-    padding: 3px;
-    height: 25px;
 }
 
-#geocoders-wrapper {
-    position: absolute;
+.base-map,
+.map-wrapper{
+    width: 100%;
+    height: 100%;
+}
+
+.base-maps-wrapper {
+    top: 9px;
+}
+
+.cadaster-wrapper {
     top: 50px;
-    /*right: 10px;*/
-    right: 320px;
-    z-index: 10;
-    padding: 3px;
-    height: 25px;
 }
 
-#cadaster-wrapper {
-    position: absolute;
-    top: 90px;
-    /*right: 10px;*/
+.cadaster-wrapper,
+.base-maps-wrapper {
     right: 10px;
-    z-index: 10;
-    padding: 3px;
+    left: auto;
+}
+
+.base-maps-wrapper,
+.cadaster-wrapper{
+    width: 180px;
+    text-align: center;
     height: 25px;
 }
 
-#address-searcher {
-    width: 80%;
-    top: 10px;
-    left: 50px;
-    z-index: 10;
-    padding: 3px;
+.dijit.dijitTextBox{
+    top: 9px;
+}
+
+.base-maps{
+    height: 27px;
+}
+
+.dijitInputInner,
+.dijitDownArrowButton{
     height: 25px;
 }
 
-.searchComboBox {
-    position: absolute;
-    width: 90%;
-    top: 0;
-}
-
-#savebutton-wrapper {
-    position: absolute;
-    bottom: 45px;
-    right: 10px;
-    z-index: 10;
+.alert-window {
+    right: 2%;
+    bottom: 5%;
+    padding: 10px;
+    text-align: center;
     background-color: #FF4444;
 }
-
-#alertWindow {
-    position: absolute;
-    bottom: 55px;
-    right: 10px;
-    padding: 4px;
-    z-index: 10;
-    height: 18px;
-    background-color: #FF4444;
-}
-.infoInput {
-    width: 300px;
+.dijitComboBox div input.dijitArrowButtonInner {
+    width: 17px;
+    color: #66707e;
+    padding-top: 5px;
 }
 
-#map {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    float: left;
+.dijit.dijitTextBox{
+    left: 45px;
+    background-color: #fff;
+    width: 65%;                 /*this width for IE8 because IE8 can not work with @media*/
+    border: 1px solid #999999;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    -khtml-border-radius:3px;
+    border-radius: 3px;
 }
 
-#info_panel {
-    width: 300px;
-    height: 100%;
-    z-index: 999;
-    position: fixed;
-    right: 0;
-    background-color: #f7f7f9;
-    padding-left: 10px;
-    padding-top: 10px;
+.dijitValidationTextBoxError input.dijitValidationInner,
+.dijitSelect input,
+.dijitTextBox input.dijitArrowButtonInner {
+    text-indent: 0 !important;          /*just for dojo css*/
+    text-align: left !important;        /*just for dojo css*/
+    height: auto !important;            /*just for dojo css*/
+}
+
+.leaflet-right .leaflet-control {
+    margin-top: 1px;
+}
+
+.dijitValidationContainer .dijitValidationInner {
+    display: none;
 }
 
 label {
@@ -116,54 +166,8 @@ label {
     text-align: right;
 }
 
-#alertWindow, #saveButton {
-    position: absolute;
-    right: 10px;
-}
-
-.leaflet-control-attribution {
-    right: 10px;
-}
-
-#widget_searchComboBox {
-    background-color: #fff;
-    width: 65%;
-    top: 20px;
-    left: 70px;
-    position: absolute;
-    z-index: 10;
-    padding: 2px;
-    border: 1px solid #999999;
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
-    -khtml-border-radius:3px;
-    border-radius: 3px;
-}
-
-#cadaster-wrapper {
-    top: 60px;
-}
-
-#basemaps-wrapper {
-    top: 20px;
-}
-
-.dijitComboBox div input.dijitArrowButtonInner {
-    width: 17px;
-    color: #66707e;
-}
-
-.dijitValidationTextBoxError input.dijitValidationInner, .dijitSelect input, .dijitTextBox input.dijitArrowButtonInner {
-    text-indent: 0 !important;
-    text-align: left !important;
-    height: auto !important;
-}
-
-
-.leaflet-right .leaflet-control {
-    margin-top: 1px;
-}
-
-.dijitValidationContainer .dijitValidationInner {
-    display: none;
+.igit-leaflet-wrapper-class {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 4px;
+    background: #FC6666;
 }

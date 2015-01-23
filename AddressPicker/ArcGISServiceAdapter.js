@@ -36,11 +36,10 @@ define([
         reverseParameter: 'location',
         suggestParameter: 'SingleLine',
 
-
-
         convertResponseToResults: function(response) {
+
             // Todo - define what type of response we have and what to do with
-//            console.log(response);
+            console.log(response);
 
             var results = [];
 
@@ -87,8 +86,6 @@ define([
             return results;
 
             function createEsriAddressObject(address) {
-                var self = this;
-
                 this.obj = null;
                 var geocodedObject = new GeocodedObject();
                 // geocodedObject.setText(address.Match_addr);
@@ -115,20 +112,13 @@ define([
                     address.Region = spiltstr[0];
                     address.Province = spiltstr[1];
                     address.StreetName = address.Match_addr;
-//                    console.log(spiltstr);
 
                     geocodedObject.setText("Россия, " + address.User_fld + ", " + address.Match_addr);
 
                     geocodedObject.setAddress(
                         "Россия",
                         address.User_fld
-//                        address.Region,
-//                        address.Province,
-//                        address.City,
-//                        address.StreetName,
-//                        address.House
                     );
-
                 } else {
                     geocodedObject.setText("Россия, " + address.Match_addr);
 
