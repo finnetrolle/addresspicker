@@ -42,10 +42,11 @@
 
     .dijit.dijitTextBox.dijitInline.dijitComboBox {
         width: 65%;
+        min-width: 350px;
     }
 }
 
-@media only screen and (max-width: 735px) {
+@media only screen and (max-width: 865px) {
     .map-wrapper .base-maps-wrapper {
         right: initial;
         top: 37px;
@@ -63,6 +64,10 @@
     .map-wrapper .dijit.dijitTextBox.dijitInline.dijitComboBox {
         width: 350px;
     }
+
+    .map-wrapper{
+        min-width: 410px;
+    }
 }
 
 /*styles for elements*/
@@ -78,6 +83,10 @@ body, html {
 .igit-leaflet-wrapper-class{
     position: absolute;
     z-index: 10;
+}
+
+.map-wrapper{
+    position: relative;
 }
 
 .base-map,
