@@ -256,6 +256,19 @@ define([
         }, this);
     };
 
+    function isCadasterNumberValid(cadasterNumber){
+        //this web page has cadaster number signature and cadaster number description ---------  http://www.gosthelp.ru/text/Postanovlenie475Obutverzh.html
+
+        var cadasterNumberParts = cadasterNumber.split(':');
+        if(cadasterNumberParts.length > 0 && cadasterNumberParts.length < 6)
+        for(var i = 0; i < cadasterNumberParts.length; i++){
+            if(!/^\d+$/.test(cadasterNumberParts[i])){
+                return false;
+            }
+        }
+        return true;
+    }
+
     // This returned object becomes the defined value of this module
     return declare([Evented], {
         // methods for creating controls
@@ -288,8 +301,11 @@ define([
             if (geocodedObject) {
 //                console.log(new Date().getTime() + " " + "querying cadaster service");
                 cadasterService.service.getResult(geocodedObject.latlng, {}, function (error, result) {
-                    if ((result) && (result.hasOwnProperty(defaults.field.cadasterFieldName))) {
+                    if ((result) && result[defaults.field.cadasterFieldName] && isCadasterNumberValid(result[defaults.field.cadasterFieldName])) {
                         geocodedObject.setCadasterNumber(result[defaults.field.cadasterFieldName]);
+                    }
+                    else{
+                        geocodedObject.setCadasterNumber('');
                     }
                     self.emit("cadasterResponse", {});
                 });
