@@ -40,6 +40,7 @@ define([
 
     //private region
     var defaults = new AddressPickerSettings();
+    var cadasterNumberRegexpPattern = /^(47:[a-zA-Zа-яА-Я0-9:]{0,})|78:((\d{7})|(\d{2}:\d{7})|(\d{7}:\d{5})|(\d{2}:\d{7}:\d{5})|(\d{7}:\d{5}:\d{4})|(\d{2}:\d{7}:\d{5}:\d{4})|(\d{7}:\d{5}:\d{4}:\d{3})|(\d{2}:\d{7}:\d{5}:\d{4}:\d{3}))$/;
     var regionService;
     var searchControl;
     var resultsLayerGroup;
@@ -219,14 +220,7 @@ define([
 
     function isCadasterNumberValid(cadasterNumber){
         //this web page has cadaster number signature and cadaster number description ---------  http://www.gosthelp.ru/text/Postanovlenie475Obutverzh.html
-
-        if(/^47:[a-zA-Zа-яА-Я0-9:]{0,}$/.test(cadasterNumber) || /^78:\d{7}$/.test(cadasterNumber) || /^78:\d{2}:\d{7}$/.test(cadasterNumber)
-           || /^78:\d{7}:\d{5}$/.test(cadasterNumber) || /^78:\d{2}:\d{7}:\d{5}$/.test(cadasterNumber)
-           || /^78:\d{7}:\d{5}:\d{4}$/.test(cadasterNumber) || /^78:\d{2}:\d{7}:\d{5}:\d{4}$/.test(cadasterNumber)
-           || /^78:\d{7}:\d{5}:\d{4}:\d{3}$/.test(cadasterNumber) || /^78:\d{2}:\d{7}:\d{5}:\d{4}:\d{3}$/.test(cadasterNumber)){
-            return true;
-        }
-        return false;
+        return cadasterNumberRegexpPattern.test(cadasterNumber);
     }
 
     // This returned object becomes the defined value of this module
