@@ -220,14 +220,13 @@ define([
     function isCadasterNumberValid(cadasterNumber){
         //this web page has cadaster number signature and cadaster number description ---------  http://www.gosthelp.ru/text/Postanovlenie475Obutverzh.html
 
-        var cadasterNumberParts = cadasterNumber.split(':');
-        if(cadasterNumberParts.length > 0 && cadasterNumberParts.length < 6)
-        for(var i = 0; i < cadasterNumberParts.length; i++){
-            if(!/^\d+$/.test(cadasterNumberParts[i])){
-                return false;
-            }
+        if(/^47:[a-zA-Zа-яА-Я0-9:]{0,}$/.test(cadasterNumber) || /^78:\d{7}$/.test(cadasterNumber) || /^78:\d{2}:\d{7}$/.test(cadasterNumber)
+           || /^78:\d{7}:\d{5}$/.test(cadasterNumber) || /^78:\d{2}:\d{7}:\d{5}$/.test(cadasterNumber)
+           || /^78:\d{7}:\d{5}:\d{4}$/.test(cadasterNumber) || /^78:\d{2}:\d{7}:\d{5}:\d{4}$/.test(cadasterNumber)
+           || /^78:\d{7}:\d{5}:\d{4}:\d{3}$/.test(cadasterNumber) || /^78:\d{2}:\d{7}:\d{5}:\d{4}:\d{3}$/.test(cadasterNumber)){
+            return true;
         }
-        return true;
+        return false;
     }
 
     // This returned object becomes the defined value of this module
