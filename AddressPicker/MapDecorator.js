@@ -156,38 +156,6 @@ define([
         });
     };
 
-    function createCadasterCheckbox() {
-        var cadasterCheckboxDiv = createElement('div', {id: 'cadaster-wrapper','class': 'cadaster-wrapper', innerHTML: defaults.strings.cadaster, title: defaults.strings.tooltips.cadaster});
-
-        var cadasterCheckbox = createElement('input', {id: 'cadasterCheckBox', 'class': 'cadaster-checkbox', type: 'checkbox', title: defaults.strings.tooltips.cadaster}, cadasterCheckboxDiv);
-
-        var cadasterLayer = L.esri.dynamicMapLayer(defaults.additionalLayers.cadasterLayer.link,{
-            opacity: defaults.additionalLayers.cadasterLayer.opacity
-        });
-
-        /* This block of code required to dodge error #12
-         Server gives layer data after some time
-         If user clears checkbox while response is not arrived, layer will be rendered
-         To dodge this shit we catch event "onload" for this layer
-         And if checkbox is off - remove this layer from map with
-         hacking refreshing - add layer (removed by checkbox event) and remove it once again
-          */
-        on(cadasterLayer, 'load', function() {
-            if (!cadasterCheckbox.checked) {
-                map.addLayer(cadasterLayer);
-                map.removeLayer(cadasterLayer);
-            }
-        });
-
-        on(cadasterCheckbox, 'change', function() {
-            if (cadasterCheckbox.checked) {
-                map.addLayer(cadasterLayer);
-            } else {
-                map.removeLayer(cadasterLayer);
-            }
-        });
-    };
-
     function initGeocodingService(self) {
         searchControl = new L.esri.Controls.Geosearch().addTo(map);
         searchControl.initService(new IGITGeocoding());
@@ -388,7 +356,6 @@ define([
 
                     createAlertWindow();
                     createBasemapCombobox();
-                    createCadasterCheckbox();
                     initGeocodingService(self);
 
                     on(map, 'click', function (e) {getResultByCoordinates(e.latlng, self);});
