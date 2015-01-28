@@ -73,13 +73,6 @@ define([
                 }
                 result = myGeocodedObject;
             }
-            /*
-            var poly = L.polygon([
-                [A.lat, A.lng],
-                [B.lat, B.lng]
-            ]);
-            resultsLayerGroup.addLayer(poly);
-            */
         }
 
         var marker = L.marker(latLng);
@@ -269,6 +262,9 @@ define([
             if (geocodedObject) {
 //                console.log(new Date().getTime() + " " + "querying cadaster service");
                 cadasterService.service.getResult(geocodedObject.latlng, {}, function (error, result) {
+                    if(error){
+                        console.log('error');
+                    }
                     if ((result) && result[defaults.field.cadasterFieldName] && isCadasterNumberValid(result[defaults.field.cadasterFieldName])) {
                         geocodedObject.setCadasterNumber(result[defaults.field.cadasterFieldName]);
                     }
