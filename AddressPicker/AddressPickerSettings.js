@@ -10,7 +10,7 @@ define([
         appinfo: {
             major: 0,   // application version
             minor: 5,   // first were prototype
-            build: 3,  // number of commit
+            build: 4,  // number of commit
             beta: true, // beta version
             demo: true, // demonstartion version
             developer: 'ООО ИГИТ',
@@ -21,6 +21,19 @@ define([
         field: {
             cadasterFieldName: 'PARCEL_ID',
             resFieldName: 'Name'
+        },
+
+        serviceUrls:{
+            cadasterServiceUrl: "http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer/0/",
+            addressServiceUrl: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/0/",
+            regionServiceUrl: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/",
+            resServiceUrl: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/CORE/Company/MapServer/0/"
+        },
+
+        //stringPatterns
+        patterns:{
+            cadasterNumberRegexpPattern : /^(47:[a-zA-Zа-яА-Я0-9:]{0,})|78:((\d{7})|(\d{2}:\d{7})|(\d{7}:\d{5})|(\d{2}:\d{7}:\d{5})|(\d{7}:\d{5}:\d{4})|(\d{2}:\d{7}:\d{5}:\d{4})|(\d{7}:\d{5}:\d{4}:\d{3})|(\d{2}:\d{7}:\d{5}:\d{4}:\d{3}))$/,
+            cadasterPkkIdPattern: /^(\d{9}|\d{11}|\d{14}|\d{16}|\d{18}|\d{20}|\d{21}|\d{23})$/
         },
 
         // strings for localization

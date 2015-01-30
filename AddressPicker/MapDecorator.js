@@ -19,6 +19,7 @@ define([
     'dijit/form/ComboBox',
     'dojo/store/Memory',
     'dojo/Evented',
+    'AddressPicker/CadasterNumberBuilder',
     'dojo/domReady!'
 ], function(declare,
         dom,
@@ -36,11 +37,12 @@ define([
         Service,
         ComboBox,
         Memory,
-        Evented){
+        Evented,
+        CadasterNumberBuilder){
 
     //private region
     var defaults = new AddressPickerSettings();
-    var cadasterNumberRegexpPattern = /^(47:[a-zA-Zа-яА-Я0-9:]{0,})|78:((\d{7})|(\d{2}:\d{7})|(\d{7}:\d{5})|(\d{2}:\d{7}:\d{5})|(\d{7}:\d{5}:\d{4})|(\d{2}:\d{7}:\d{5}:\d{4})|(\d{7}:\d{5}:\d{4}:\d{3})|(\d{2}:\d{7}:\d{5}:\d{4}:\d{3}))$/;
+    var cadasterNumberBuilder = new CadasterNumberBuilder();
     var regionService;
     var searchControl;
     var resultsLayerGroup;
@@ -200,12 +202,12 @@ define([
 
     function initRegionService(){
         regionService= new Service();
-        regionService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/4/"});
+        regionService.initialize({url: defaults.serviceUrls.regionServiceUrl});
     };
 
     function initAddressService(){
         addressService = new Service();
-        addressService.initialize({url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/GeoAddress/Address/MapServer/0/"});
+        addressService.initialize({url: defaults.serviceUrls.addressServiceUrl});
     }
 
     function getResultByCoordinates(latLng, self){
@@ -218,10 +220,27 @@ define([
         }, this);
     };
 
-    function isCadasterNumberValid(cadasterNumber){
-        //this web page has cadaster number signature and cadaster number description ---------  http://www.gosthelp.ru/text/Postanovlenie475Obutverzh.html
-        return cadasterNumberRegexpPattern.test(cadasterNumber);
-    }
+    function getValidCadasterNumber(cadasterObject){
+            if(defaults.patterns.cadasterNumberRegexpPattern.test(cadasterObject.CAD_NUM)){
+                return cadasterObject.CAD_NUM;
+            }
+            if (!defaults.patterns.cadasterPkkIdPattern.test(cadasterObject.PKK_ID)) {
+                return '';
+            }
+
+            var sum = 0;
+            var cadasterNumberElements = cadasterObject.CAD_NUM.split(':');
+
+            for (var j = 0; j < cadasterNumberElements.length; j++) {
+                sum += cadasterNumberElements[j].length;
+            }
+
+            if(sum < cadasterObject.PKK_ID.length) {
+                return cadasterNumberBuilder.getRightCadasterNumber(cadasterObject.PKK_ID, cadasterObject.PKK_ID.length);
+            }else if(sum >= cadasterObject.PKK_ID.length){
+               return '';
+            }
+        };
 
     // This returned object becomes the defined value of this module
     return declare([Evented], {
@@ -258,8 +277,8 @@ define([
                     if(error){
                         console.log('error');
                     }
-                    if ((result) && result[defaults.field.cadasterFieldName] && isCadasterNumberValid(result[defaults.field.cadasterFieldName])) {
-                        geocodedObject.setCadasterNumber(result[defaults.field.cadasterFieldName]);
+                    if ((result) && result[defaults.field.cadasterFieldName]) {
+                        geocodedObject.setCadasterNumber(getValidCadasterNumber(result));
                     }
                     else{
                         geocodedObject.setCadasterNumber('');
@@ -327,11 +346,11 @@ define([
                     map.addLayer(layer);
                     map.attributionControl.addAttribution(["<a href=" + defaults.appinfo.developerWebsite + ">" + defaults.appinfo.developer + "</a>", getVersion()]);
                     cadasterService = new Service();
-                    cadasterService.initialize({url: "http://maps.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreOriginal/MapServer/0/"});
+                    cadasterService.initialize({url: defaults.serviceUrls.cadasterServiceUrl});
                     resService = new Service();
                     resService.initialize(
                         {
-                            url: "http://gis-node-1.atr-sz.ru/arcgis/rest/services/CORE/Company/MapServer/0/",
+                            url: defaults.serviceUrls.resServiceUrl,
                             where: "CompanyCategoryId=2",
                             outFields: "Name"
                         }
