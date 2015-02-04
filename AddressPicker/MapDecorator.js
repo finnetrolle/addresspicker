@@ -367,6 +367,8 @@ define([
                     initGeocodingService(self);
 
                     on(map, 'click', function (e) {getResultByCoordinates(e.latlng, self);});
+
+                    self.emit("mapLoaded", {});
                 })
             })
         }
