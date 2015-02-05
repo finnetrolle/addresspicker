@@ -66,11 +66,11 @@ define([
             } else {
                 // this is part for null address from KGIS geocoder
                 var myGeocodedObject = new GeocodedObject();
-                myGeocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province + (result.Street ? ', ' + result.Street : '') +  (result.Label ? ' ' + result.Label : ''));
+                myGeocodedObject.setText('Россия, ' + region.Region + ', ' + region.Province + (result.Place ? (', ' + result.Place) : '') + (result.Street ? ', ' + result.Street : '') +  (result.Label ? ' ' + result.Label : ''));
                 myGeocodedObject.setPostalCode('');
                 myGeocodedObject.setLatLng(latLng.lat, latLng.lng); // Todo
                 myGeocodedObject.setBounds(latLng, latLng); // Todo
-                myGeocodedObject.setAddress("Россия", region.Region, region.Province, result.Region, result.Street, result.Label);
+                myGeocodedObject.setAddress("Россия", region.Region, region.Province, result.Place ? result.Place : result.Region, result.Street, result.Label);
                 if(result.Label) {
                     myGeocodedObject.parsedHouse = myGeocodedObject.parser.parse(result.Label);
                 }
